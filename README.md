@@ -15,7 +15,6 @@
 
 ## **2. User / Profile**
 
-Depending on your design, you might or might not expose these to the frontend. Often, user creation is handled automatically by Google OAuth. If you do want explicit endpoints for user details:
 
 | **Endpoint**            | **Method** | **Request Body**                             | **Description**                                                 | **Response**                          |
 |-------------------------|------------|----------------------------------------------|-----------------------------------------------------------------|---------------------------------------|
@@ -112,7 +111,6 @@ Depending on your design, you might or might not expose these to the frontend. O
 ---
 
 ## **6. Teacher Reviewing / Moderating Responses**  
-If you have features where the teacher can **edit open-ended answers** before publishing:
 
 | **Endpoint**                                                                   | **Method** | **Request Body**                                                 | **Description**                                                                                                                    | **Response**                                                                                        |
 |--------------------------------------------------------------------------------|-----------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
@@ -121,8 +119,6 @@ If you have features where the teacher can **edit open-ended answers** before pu
 | `/api/teacher/assessments/{assessment_id}/publish-results` (alternative name)  | `POST`     | *None*                                                           | **Teacher**: Final step to make all responses visible to students. (Same concept as `release-results` above, naming is flexible.)  | 200 OK, sets `results_released=true`.                                                               |
 
 ---
-
-
 
 
 
