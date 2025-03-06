@@ -25,7 +25,6 @@
 | **teacher_id**  | UUID / INT | FK → User.id   | YES        | Foreign key referencing **User** (the teacher).|
 | **created_at**  | TIMESTAMP  |      | YES (default) | Timestamp when the course was created.     |
 
-> _If needed, add fields like `semester` or `year` to store additional course info._
 
 ---
 
@@ -41,7 +40,6 @@
 ---
 
 ### **4. TeamMember Table**  
-_This is a junction table to represent which students belong to which team._
 
 | Field        | Data Type   | PK?  | Not Null? | Description                                     |
 |--------------|------------|------|-----------|-------------------------------------------------|
@@ -49,8 +47,6 @@ _This is a junction table to represent which students belong to which team._
 | **team_id**  | UUID / INT | FK → Team.id  | YES        | Foreign key referencing **Team**.               |
 | **user_id**  | UUID / INT | FK → User.id  | YES        | Foreign key referencing **User** (the student). |
 | **joined_at**| TIMESTAMP  |      | YES (default) | Timestamp when the student joined the team. |
-
-> _Consider adding a **unique constraint** on `(team_id, user_id)` to ensure a user is not added twice to the same team._
 
 ---
 
@@ -67,8 +63,6 @@ _This is a junction table to represent which students belong to which team._
 | **results_released** | BOOLEAN |      | YES (default: false) | Indicates whether the assessment results have been published to students. |
 | **created_at**    | TIMESTAMP  |      | YES (default) | Timestamp when the assessment was created.                                 |
 
-> _Use `results_released` to control if students can see their results._
-
 ---
 
 ### **6. AssessmentQuestion Table**
@@ -81,7 +75,6 @@ _This is a junction table to represent which students belong to which team._
 | **content**      | TEXT             |      | YES        | The actual question prompt.                                                               |
 | **order** (opt.) | INT              |      | NO         | Optional field to specify display order within the assessment.                            |
 
-> _For Likert questions, you might store the scale details in code (e.g., 1-5). For open questions, `content` is just the prompt text._
 
 ---
 
@@ -97,6 +90,5 @@ _This is a junction table to represent which students belong to which team._
 | **last_saved**     | DATETIME   |      | YES        | When the response was last saved.                                                                      |
 | **submitted** (opt.) | BOOLEAN  |      | NO         | Indicates if the response was fully submitted (versus a draft).                                        |
 
-> _If you need to moderate or modify open-ended answers, you can add a separate field (e.g., `edited_answer`) or store them in a child table. If you want more granular storage (one row per question), consider an additional table **AssessmentResponseDetail**._
 
 ---
