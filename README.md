@@ -28,7 +28,7 @@
 
 ### 3.1 **Courses**
 
-| **Endpoint**                   | **Method** | **Request Body**   | **Description**                                                                                | **Response**                                                                       |
+| **Endpoint**                   | **Method** | **Request Body**   | **Description**                                                                                     | **Response**                                                                       |
 |--------------------------------|------------|------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
 | `/api/teacher/courses/`        | `GET`      | *None*                                               | **Teacher**: Get list of courses created by this teacher.                                      | `[{ "id": 1, "course_number": "...", "course_name": "...", "teacher_id": 2 }, ...]` |
 | `/api/teacher/courses/`        | `POST`     | `{"course_number": "CS101", "course_name": "Intro to CS"}` | **Teacher**: Create a new course.                                                               | Newly created course object                                                       |
@@ -40,7 +40,7 @@
 
 ### 3.2 **Teams**
 
-| **Endpoint**                                      | **Method** | **Request Body**  | **Description**                                                                                            | **Response**                                                                                                                    |
+| **Endpoint**                                     | **Method** | **Request Body**  | **Description**                                                                                                | **Response**                                                                                                                    |
 |---------------------------------------------------|------------|----------------------------------------------------|------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | `/api/teacher/courses/{course_id}/teams/`         | `GET`      | *None*                                             | **Teacher**: List all teams under a specific course.                                                       | `[{ "id":1, "team_name": "...", "course_id": 10}, ...]`                                                                       |
 | `/api/teacher/courses/{course_id}/teams/`         | `POST`     | `{"team_name": "Team A"}`                         | **Teacher**: Create a new team under the given course.                                                     | Newly created team object                                                                                                      |
