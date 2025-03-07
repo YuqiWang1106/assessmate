@@ -1,10 +1,17 @@
 # A-Team
 
-## **Basic Configurations
+
+
+
+## **Basic Configurations**
 1. `cd A-TEAM`
 2. `python3 -m venv venv`
 3. `source venv/bin/activate`
 4. `pip install django`
+
+
+
+
 
 
 ## **API Endpoints**
