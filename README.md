@@ -5,7 +5,7 @@
 
 ## **1. Authentication**
 
-| **Endpoint**         | **Method** | **Request Body**               | **Description**                                                                                     | **Response**                                    |
+| **Endpoint**         | **Method** | **Request Body**  | **Description**                                                                                     | **Response**                                    |
 |----------------------|------------|--------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------------------------|
 | `/api/login/`        | `POST`     | - Possibly OAuth callback data | **Google OAuth** login. After a successful login, the server should create or verify a user record.   | Returns user info (e.g., `{id, name, role}`)    |
 | `/api/logout/`       | `POST`     | *None*                         | Logs out the user. Frontend should also clear any session/cookie.                                    | 200 OK or 204 No Content                       |
@@ -16,7 +16,7 @@
 ## **2. User / Profile**
 
 
-| **Endpoint**            | **Method** | **Request Body**                             | **Description**                                                 | **Response**                          |
+| **Endpoint**            | **Method** | **Request Body**  | **Description**                                                 | **Response**                          |
 |-------------------------|------------|----------------------------------------------|-----------------------------------------------------------------|---------------------------------------|
 | `/api/users/`           | `GET`      | *None*                                       | **(Admin/Teacher only)**: Retrieve all users (for admin, etc.). | List of users: `[{id, name, role}, ...]` |
 | `/api/users/{user_id}`  | `GET`      | *None*                                       | Fetch a specific user.                                          | `{id, name, email, role, ...}`       |
@@ -28,7 +28,7 @@
 
 ### 3.1 **Courses**
 
-| **Endpoint**                   | **Method** | **Request Body**                                     | **Description**                                                                                | **Response**                                                                       |
+| **Endpoint**                   | **Method** | **Request Body**   | **Description**                                                                                | **Response**                                                                       |
 |--------------------------------|------------|------------------------------------------------------|------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
 | `/api/teacher/courses/`        | `GET`      | *None*                                               | **Teacher**: Get list of courses created by this teacher.                                      | `[{ "id": 1, "course_number": "...", "course_name": "...", "teacher_id": 2 }, ...]` |
 | `/api/teacher/courses/`        | `POST`     | `{"course_number": "CS101", "course_name": "Intro to CS"}` | **Teacher**: Create a new course.                                                               | Newly created course object                                                       |
@@ -40,7 +40,7 @@
 
 ### 3.2 **Teams**
 
-| **Endpoint**                                      | **Method** | **Request Body**                                   | **Description**                                                                                            | **Response**                                                                                                                    |
+| **Endpoint**                                      | **Method** | **Request Body**  | **Description**                                                                                            | **Response**                                                                                                                    |
 |---------------------------------------------------|------------|----------------------------------------------------|------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
 | `/api/teacher/courses/{course_id}/teams/`         | `GET`      | *None*                                             | **Teacher**: List all teams under a specific course.                                                       | `[{ "id":1, "team_name": "...", "course_id": 10}, ...]`                                                                       |
 | `/api/teacher/courses/{course_id}/teams/`         | `POST`     | `{"team_name": "Team A"}`                         | **Teacher**: Create a new team under the given course.                                                     | Newly created team object                                                                                                      |
@@ -57,7 +57,7 @@
 
 ### 4.1 **Assessments**
 
-| **Endpoint**                                     | **Method** | **Request Body**                                                                      | **Description**                                                                                                                               | **Response**                                                                                                                  |
+| **Endpoint**                                     | **Method** | **Request Body**     | **Description**                                                                                                                               | **Response**                                                                                                                  |
 |--------------------------------------------------|-----------|---------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | `/api/teacher/courses/{course_id}/assessments/`  | `GET`      | *None*                                                                                | **Teacher**: Get a list of all assessments for this course (whether draft, published, or finished).                                           | `[{"id":1,"title":"...", "status":"draft","publish_date":null,"due_date":null}, ...]`                                        |
 | `/api/teacher/courses/{course_id}/assessments/`  | `POST`     | `{"title":"Exam 1","status":"draft"}`                                                | **Teacher**: Create a new assessment (initially as a draft).                                                                                  | Newly created assessment object                                                                                              |
@@ -71,7 +71,7 @@
 
 ### 4.2 **Assessment Questions**
 
-| **Endpoint**                                                 | **Method** | **Request Body**                                                                 | **Description**                                                                                                            | **Response**                                                                                |
+| **Endpoint**                                                 | **Method** | **Request Body**     | **Description**                                                                                                            | **Response**                                                                                |
 |--------------------------------------------------------------|-----------|----------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
 | `/api/teacher/assessments/{assessment_id}/questions/`        | `GET`      | *None*                                                                           | **Teacher**: Get list of questions for this assessment.                                                                    | `[{"id":1,"question_type":"likert","content":"Rate X","order":1}, ...]`                    |
 | `/api/teacher/assessments/{assessment_id}/questions/`        | `POST`     | e.g. `{"question_type":"likert","content":"Rate your teammate","order":1}`       | **Teacher**: Create a new question under this assessment.                                                                  | Newly created question object                                                               |
@@ -92,7 +92,7 @@
 
 ### 5.2 **Assessments (Student)**
 
-| **Endpoint**                                         | **Method** | **Request Body**                                                          | **Description**                                                                                               | **Response**                                                                                                                         |
+| **Endpoint**                                         | **Method** | **Request Body**  | **Description**                                                                                               | **Response**                                                                                                                         |
 |------------------------------------------------------|-----------|----------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
 | `/api/student/courses/{course_id}/assessments/`      | `GET`      | *None*                                                                     | **Student**: Get all **published or finished** assessments for this course.                                   | `[{"id":1,"title":"Exam 1","status":"published","due_date":"...","results_released":false},...]`                                     |
 | `/api/student/assessments/{assessment_id}/`          | `GET`      | *None*                                                                     | **Student**: Get detail of a single assessment, including whether they can still submit or see results.       | `{"id":1,"title":"Exam 1","status":"published","results_released":false, "questions":[...]}`                                          |
@@ -112,7 +112,7 @@
 
 ## **6. Teacher Reviewing / Moderating Responses**  
 
-| **Endpoint**                                                                   | **Method** | **Request Body**                                                 | **Description**                                                                                                                    | **Response**                                                                                        |
+| **Endpoint**                                                                   | **Method** | **Request Body**    | **Description**                                                                                                                    | **Response**                                                                                        |
 |--------------------------------------------------------------------------------|-----------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
 | `/api/teacher/assessments/{assessment_id}/responses/`                          | `GET`      | *None*                                                           | **Teacher**: List or search all responses for that assessment (e.g., by team, by student).                                         | Could return a structured JSON with each `from_user -> to_user -> answers`.                         |
 | `/api/teacher/assessments/{assessment_id}/responses/{response_id}/moderate`    | `PUT`      | `{"edited_answers":{"Q2":"Rewritten feedback"}}`                | **Teacher**: Modify open-ended answers to remove offensive content.                                                                | Updated response object, storing `edited_answer_open` or equivalent field.                         |
