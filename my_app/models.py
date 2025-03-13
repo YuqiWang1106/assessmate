@@ -1,7 +1,7 @@
 from django.db import models
 import uuid
 
-# 1. 用户表 (User)
+# 1. User Table
 class User(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
@@ -16,7 +16,7 @@ class User(models.Model):
     def __str__(self):
         return self.name
 
-# 2. 课程表 (Course)
+# 2. Course Table
 class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course_number = models.CharField(max_length=20, unique=True)
@@ -26,8 +26,22 @@ class Course(models.Model):
 
     def __str__(self):
         return f"{self.course_number} - {self.course_name}"
+    
 
-# 3. 团队表 (Team)
+# 3. CourseMember Table
+class CourseMember(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'student'})  # 只能是学生
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("course", "user")
+
+    def __str__(self):
+        return f"{self.user.name} in {self.course.course_number}"
+
+# 4. Team Table
 class Team(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -37,14 +51,20 @@ class Team(models.Model):
     def __str__(self):
         return self.team_name
 
-# 4. 团队成员表 (TeamMember)
+# 5. TeamMember Table
 class TeamMember(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    course_member = models.ForeignKey(CourseMember, on_delete=models.CASCADE)  # 📌 ForeignKey 改成 CourseMember
     joined_at = models.DateTimeField(auto_now_add=True)
 
-# 5. 评估表 (Assessment)
+    class Meta:
+        unique_together = ("team", "course_member")
+
+    def __str__(self):
+        return f"{self.course_member.user.name} in {self.team.team_name}"
+
+# 6. Assessment Table
 class Assessment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -57,13 +77,13 @@ class Assessment(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
     publish_date = models.DateTimeField(null=True, blank=True)
     due_date = models.DateTimeField(null=True, blank=True)
-    results_released = models.BooleanField(default=False)  # 结果是否已发布
+    results_released = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
 
-# 6. 评估问题表 (AssessmentQuestion)
+# 7. AssessmentQuestion Table
 class AssessmentQuestion(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
@@ -77,15 +97,15 @@ class AssessmentQuestion(models.Model):
     def __str__(self):
         return self.content
 
-# 7. 评估反馈表 (AssessmentResponse)
+# 8. AssessmentResponse Table
 class AssessmentResponse(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="responses_given")
     to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="responses_received")
-    answers = models.JSONField()  # 存储 Likert 和 Open-ended 回答
+    answers = models.JSONField()
     last_saved = models.DateTimeField(auto_now=True)
-    submitted = models.BooleanField(default=False)  # 是否提交
+    submitted = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Response from {self.from_user} to {self.to_user} ({self.assessment.title})"

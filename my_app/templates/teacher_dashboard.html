@@ -1,0 +1,58 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h1>Teacher Dashboard</h1>
+
+    <h2>Assessment</h2>
+    <ul>
+        {% for assessment in upcoming_assessments %}
+            <li>
+                <strong>{{ assessment.title }}</strong> 
+                (Due: {{ assessment.due_date|date:"Y-m-d H:i" }})
+            </li>
+        {% empty %}
+            <li>No recent assessments yet</li>
+        {% endfor %}
+    </ul>
+
+    <h2>My Course</h2>
+    {% for course in courses %}
+        <div class="course">
+            <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
+
+
+            <h4>Team</h4>
+            <ul>
+                {% for team in teams_dict|get_item:course.id %}
+                    <li>Team: {{ team.team_name }}</li>
+                {% empty %}
+                    <li>No teams yet</li>
+                {% endfor %}
+            </ul>
+
+            <h4>Assessment</h4>
+            <ul>
+                {% for assessment in assessments_dict|get_item:course.id %}
+                    <li>
+                        <strong>{{ assessment.title }}</strong> 
+                        (Due: {{ assessment.due_date|date:"Y-m-d H:i" }}, Status: {{ assessment.status }})
+                    </li>
+                {% empty %}
+                    <li>No assessment yet</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% empty %}
+        <p>No course yet</p>
+    {% endfor %}
+</body>
+</html>
