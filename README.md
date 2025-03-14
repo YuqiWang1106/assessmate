@@ -178,18 +178,27 @@
 
 ---
 
-### **4. TeamMember Table**  
-
+### **4. CourseMember Table**  
 | Field        | Data Type   | PK?  | Not Null? | Description                                     |
-|--------------|------------|------|-----------|-------------------------------------------------|
-| **id**       | UUID / INT | PK   | YES        | Primary key (team-member ID).                   |
-| **team_id**  | UUID / INT | FK → Team.id  | YES        | Foreign key referencing **Team**.               |
-| **user_id**  | UUID / INT | FK → User.id  | YES        | Foreign key referencing **User** (the student). |
-| **joined_at**| TIMESTAMP  |      | YES (default) | Timestamp when the student joined the team. |
+|-------------|------------|------|-----------|-------------------------------------------------|
+| **id**      | UUID / INT | PK   | YES       | Primary key (course-member ID).                 |
+| **course_id** | UUID / INT | FK  | YES       | Foreign key referencing **Course**.             |
+| **user_id** | UUID / INT | FK   | YES       | Foreign key referencing **User**.               |
+| **role**    | ENUM/VARCHAR |    | YES       | `student` or `teacher`, indicating the role in the course. |
+| **joined_at** | TIMESTAMP  |    | YES (default) | Timestamp when the user joined the course. |
 
 ---
 
-### **5. Assessment Table**
+### **5. TeamMember Table**  
+| Field       | Data Type   | PK?  | Not Null? | Description                                     |
+|------------|------------|------|-----------|-------------------------------------------------|
+| **id**     | UUID / INT | PK   | YES       | Primary key (team-member ID).                   |
+| **team_id** | UUID / INT | FK  | YES       | Foreign key referencing **Team**.               |
+| **user_id** | UUID / INT | FK  | YES       | Foreign key referencing **User**.               |
+| **joined_at** | TIMESTAMP  |    | YES (default) | Timestamp when the student joined the team. |
+---
+
+### **6. Assessment Table**
 
 | Field             | Data Type   | PK?  | Not Null? | Description                                                                      |
 |-------------------|------------|------|-----------|----------------------------------------------------------------------------------|
@@ -204,7 +213,7 @@
 
 ---
 
-### **6. AssessmentQuestion Table**
+### **7. AssessmentQuestion Table**
 
 | Field            | Data Type        | PK?  | Not Null? | Description                                                                               |
 |------------------|------------------|------|-----------|-------------------------------------------------------------------------------------------|
@@ -217,7 +226,7 @@
 
 ---
 
-### **7. AssessmentResponse Table**
+### **8. AssessmentResponse Table**
 
 | Field              | Data Type   | PK?  | Not Null? | Description                                                                                            |
 |--------------------|------------|------|-----------|--------------------------------------------------------------------------------------------------------|
@@ -231,3 +240,9 @@
 
 
 ---
+
+
+
+
+
+
