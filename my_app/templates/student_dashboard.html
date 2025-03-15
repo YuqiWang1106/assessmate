@@ -1,0 +1,45 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <h2>Student Dashboard</h2>
+    <h4>My Course</h4>
+    {% for course in courses %}
+        <div class="course">
+            <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
+
+        <h4>Team</h4>
+        <ul>
+            {% for team in teams_dict|get_item:course.id %}
+                <li>Team: {{ team.team_name }}</li>
+            {% empty %}
+                <li>No team assigned</li>
+            {% endfor %}
+        </ul>
+
+        <h4>Assessment</h4>
+        <ul>
+            {% for assessment in assessments_dict|get_item:course.id %}
+                <li>
+                    <strong>{{ assessment.title }}</strong> 
+                    (Due: {{ assessment.due_date|date:"Y-m-d H:i" }}, Status: {{ assessment.status }})
+                </li>
+            {% empty %}
+                <li>No assessments yet</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% empty %}
+    <p>No courses enrolled yet</p>
+{% endfor %}
+</body>
+
+</html>
