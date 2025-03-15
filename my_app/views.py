@@ -26,19 +26,6 @@ def teacher_dashboard(request, teacher_id):
         "assessments_dict": assessments_dict  # 直接改名
     })
 
-#def student_dashboard(request, teacher_id):
-    """Render student dashboard based on teacher ID"""
-
-   
-    
-    #courses = Course.objects.filter(teacher_id=teacher_id)
-   # assessments = Assessment.objects.filter(course__teacher_id=teacher_id).order_by("due_date")
-
-   # return render(request, "student_dashboard.html", {
-    #    "courses": courses,
-    #    "assessments": assessments,
-    #})
-
 
 def student_dashboard(request, user_id):
     """Render student dashboard based on student ID"""
@@ -56,7 +43,7 @@ def student_dashboard(request, user_id):
         team_memberships = TeamMember.objects.filter(course_member=cm)
         teams_dict[cm.course.id] = [tm.team for tm in team_memberships]
 
-    # Get assessments for those courses
+    # Get assessments courses
     assessments_dict = {course.id: list(Assessment.objects.filter(course=course)) for course in courses}
 
     return render(request, "student_dashboard.html", {

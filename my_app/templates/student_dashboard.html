@@ -11,6 +11,7 @@
 </head>
 <body>
     <h2>Student Dashboard</h2>
+
     <h4>My Course</h4>
     {% for course in courses %}
         <div class="course">
@@ -36,6 +37,8 @@
                 <li>No assessments yet</li>
             {% endfor %}
         </ul>
+
+        <h4>Assessment Feedback</h4>
     </div>
 {% empty %}
     <p>No courses enrolled yet</p>
