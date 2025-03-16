@@ -1,0 +1,156 @@
+/* Global Styles */
+body {
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    background-color: #5F62BE;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Dashboard Title */
+.text-0-1-2 {
+    font-size: 40px;
+    font-weight: bold;
+    color: white;
+    position: absolute;
+    top: 40px;
+    left: 260px;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+    display: flex;
+    gap: 60px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    padding: 20px;
+    margin-top: -20px; 
+}
+
+/* My Courses Box */
+.my-courses-box {
+    width: 500px; 
+    min-width: 350px;
+    height: 75vh; 
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px; 
+    position: relative;
+}
+
+.my-courses-box h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.my-courses-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.my-courses-box ul li {
+    font-size: 16px;
+    background: #f4f4f4;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    border-left: 5px solid #5F62BE;
+}
+
+.manage-btn {
+    background-color: #4A4EAE;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: auto;
+}
+
+.manage-btn:hover {
+    background-color: #3A3E9E;
+}
+
+/* Software Engineering Box */
+.software-engineering-box {
+    width: 750px; 
+    min-width: 350px;
+    height: 75vh;
+    background-color: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px; 
+    position: relative;
+}
+
+.software-engineering-box h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.edit-icon {
+    width: 16px; 
+    cursor: pointer;
+    margin-left: 5px; 
+    vertical-align: middle;
+}
+
+.assessment-section {
+    margin-top: 20vh;
+    padding-top: 20px;
+}
+
+.team-list, .assessment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.team-list li, .assessment-list li {
+    font-size: 16px;
+    background: #E6E6E6;
+    padding: 10px;
+    margin-bottom: 16px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.assessment-list .due-date {
+    font-size: 14px;
+    color: #6d6969;
+    font-weight: 300;
+}
