@@ -1,156 +1,173 @@
-/* Global Styles */
-body {
-    margin: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #5F62BE;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+/* 重置和字体保持原状 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Dashboard Title */
-.text-0-1-2 {
-    font-size: 40px;
-    font-weight: bold;
-    color: white;
-    position: absolute;
-    top: 40px;
-    left: 260px;
+body, html {
+    height: 100%;
+    font-family: "Helvetica Neue", Arial, sans-serif;
 }
+
+/* 
+  1) 多达近30个紫色停靠点，从 #5F62BE 逐渐变化到更浅的灰紫。
+  2) 通过 animation + background-size 实现“流光溢彩”效果。
+*/
+body {
+    background: linear-gradient(-45deg,
+    #4D51A8, /* 更深 */
+    #5458AF,
+    #5B5FB6,
+    #6266BD,
+    #696DC4,
+    #7074CB,
+    #777BD2,
+    #7E82D9,
+    #8589E0,
+    #8C90E7,
+    #9397EE,
+    #9A9EF5,
+    #A1A5FC 
+    );
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite; 
+    /* ↑ 动画 40s 更慢、更柔和，可自行改 30s/50s 等 */
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+}
+
+/* 
+   2) 动画关键帧 
+   让背景在水平方向上往返移动 (0%->100%->0%), 形成无限流动。
+*/
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ------ 其余布局的CSS保持原先即可 ------ */
 
 /* Dashboard Container */
 .dashboard-container {
+    width: 85%;
+    max-width: 1400px;
+    margin-top: 120px;
     display: flex;
-    gap: 60px;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    padding: 20px;
-    margin-top: -20px; 
+    gap: 30px;
 }
 
-/* My Courses Box */
+/* 标题 “Dashboard” */
+.text-0-1-2 {
+    position: absolute;
+    top: 20px;
+    left: 110px;
+    font-size: 42px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 左侧容器 .my-courses-box */
 .my-courses-box {
-    width: 500px; 
-    min-width: 350px;
-    height: 75vh; 
-    background-color: white;
+    width: 35%;
+    min-width: 300px;
+    background-color: #F5F6FC; 
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    margin-top: 40px; 
-    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    height: 600px;
 }
-
 .my-courses-box h2 {
-    font-size: 30px;
-    font-weight: bold;
+    font-size: 24px;
+    font-weight: 700;
     color: #333;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin-bottom: 16px;
 }
-
 .my-courses-box ul {
     list-style: none;
+    margin: 0;
     padding: 0;
 }
-
 .my-courses-box ul li {
+    background: #E3E3F0;     
+    border-left: 5px solid transparent;
     font-size: 16px;
-    background: #f4f4f4;
-    padding: 12px;
-    margin-bottom: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
     border-radius: 8px;
-    border-left: 5px solid #5F62BE;
-}
-
-.manage-btn {
-    background-color: #4A4EAE;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
+    transition: background 0.2s, border-left-color 0.2s;
     cursor: pointer;
-    width: 100%;
-    margin-top: auto;
+}
+.my-courses-box ul li:hover {
+    background: #D8D8ED;
+}
+.my-courses-box .active {
+    background: #5F62BE !important; 
+    color: #fff;
+    border-left-color: #3C3D88;
 }
 
-.manage-btn:hover {
-    background-color: #3A3E9E;
-}
-
-/* Software Engineering Box */
+/* 右侧容器 .software-engineering-box */
 .software-engineering-box {
-    width: 750px; 
-    min-width: 350px;
-    height: 75vh;
-    background-color: white;
+    width: 65%;
+    background-color: #F5F6FC; 
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    margin-top: 40px; 
-    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
-
 .software-engineering-box h2 {
-    font-size: 30px;
-    font-weight: bold;
+    font-size: 24px;
+    font-weight: 700;
     color: #333;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin-bottom: 18px;
 }
-
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    margin-bottom: 8px; 
+}
 .section-title {
     font-size: 18px;
-    font-weight: bold;
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    font-weight: 600;
+    color: #444;
 }
-
 .edit-icon {
-    width: 16px; 
+    width: 20px; 
+    height: 20px;
     cursor: pointer;
-    margin-left: 5px; 
-    vertical-align: middle;
 }
-
-.assessment-section {
-    margin-top: 20vh;
-    padding-top: 20px;
-}
-
 .team-list, .assessment-list {
     list-style: none;
+    margin: 0;
     padding: 0;
+    margin-bottom: 24px;
 }
-
 .team-list li, .assessment-list li {
-    font-size: 16px;
-    background: #E6E6E6;
-    padding: 10px;
-    margin-bottom: 16px;
+    background: #E3E3F0;
+    padding: 12px;
+    margin-bottom: 10px;
     border-radius: 8px;
+    font-size: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
+.team-list li:hover, .assessment-list li:hover {
+    background: #D8D8ED;
+}
 .assessment-list .due-date {
     font-size: 14px;
-    color: #6d6969;
+    color: #666;
     font-weight: 300;
 }

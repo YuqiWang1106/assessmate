@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/teacher_dashboard.css' %}">
-    <!-- 如果需要JS文件，可在此引入 -->
     <script defer src="{% static 'js/teacher_dashboard.js' %}"></script>
 </head>
 <body>
@@ -32,6 +31,7 @@
                     <li>No courses yet</li>
                 {% endfor %}
             </ul>
+            <!-- 这里你可以再加个按钮 Manage 或其他，如果需要 -->
         </div>
 
         <!-- 右侧：团队和评估 -->
@@ -41,7 +41,10 @@
             </h2>
 
             <!-- Course Team Section -->
-            <div class="section-title">Course Team</div>
+            <div class="section-header">
+                <span class="section-title">Course Team</span>
+                <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
+            </div>
             <ul class="team-list">
                 {% for team in teams_dict|get_item:selected_course.id %}
                     <li>{{ team.team_name }}</li>
@@ -51,19 +54,20 @@
             </ul>
 
             <!-- Assessment Section -->
-            <div class="assessment-section">
-                <div class="section-title">Assessment</div>
-                <ul class="assessment-list">
-                    {% for assessment in assessments_dict|get_item:selected_course.id %}
-                        <li>
-                            <span><strong>{{ assessment.title }}</strong></span>
-                            <span class="due-date">Due {{ assessment.due_date|date:"Y-m-d H:i" }}</span>
-                        </li>
-                    {% empty %}
-                        <li>No assessments yet</li>
-                    {% endfor %}
-                </ul>
+            <div class="section-header">
+                <span class="section-title">Assessment</span>
+                <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
             </div>
+            <ul class="assessment-list">
+                {% for assessment in assessments_dict|get_item:selected_course.id %}
+                    <li>
+                        <span>{{ assessment.title }}</span>
+                        <span class="due-date">Due {{ assessment.due_date|date:"Y-m-d H:i" }}</span>
+                    </li>
+                {% empty %}
+                    <li>No assessments yet</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </body>
