@@ -16,8 +16,8 @@
             <h1>Welcome to Assessmate</h1>
             <h2>Are you a student or a teacher?</h2>
             <div class="buttons">
-                <button class="btn">I'm a student</button>
-                <button class="btn">I'm a teacher</button>
+                <a href="{% url 'google_login' %}?role=student" class="btn">I'm a student</a>
+                <a href="{% url 'google_login' %}?role=student" class="btn">I'm a teacher</a>
             </div>
         </div>
         <!-- Right Section (40%) -->

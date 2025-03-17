@@ -7,6 +7,7 @@
 1. `cd A-TEAM`
 2. `python3 -m venv venv`
 3. `source venv/bin/activate`
+4. `pip install requests google-auth google-auth-oauthlib google-auth-httplib2`
 
 
 

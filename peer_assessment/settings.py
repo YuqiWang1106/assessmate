@@ -28,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Google OAuth
+GOOGLE_CLIENT_ID = "***REMOVED***"
+GOOGLE_CLIENT_SECRET = "***REMOVED***"
+GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
 
 # Application definition
 
@@ -49,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'my_app.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'peer_assessment.urls'
