@@ -1,0 +1,29 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{% static 'css/landing_page.css' %}">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section (60%) -->
+        <div class="left">
+            <h1>Welcome to Assessmate</h1>
+            <h2>Are you a student or a teacher?</h2>
+            <div class="buttons">
+                <button class="btn">I'm a student</button>
+                <button class="btn">I'm a teacher</button>
+            </div>
+        </div>
+        <!-- Right Section (40%) -->
+        <div class="right">
+            <img src="{% static 'images/landing-image.png' %}" alt="Teamwork Image">
+        </div>
+    </div>
+</body>
+</html>

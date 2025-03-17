@@ -70,6 +70,8 @@ def student_dashboard(request, user_id):
         "assessments_dict": assessments_dict,
     })
 
+def landing_page(request):
+    return render(request, 'landing_page.html')
 
 
 # def teacher_dashboard(request, teacher_id):
