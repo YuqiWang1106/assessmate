@@ -171,3 +171,23 @@ body {
     color: #666;
     font-weight: 300;
 }
+
+/*Manage Button*/
+.manage-btn {
+    background-color: #4A4EAE;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 320px;
+}
+
+.manage-btn:hover {
+    background-color: #3A3E9E;
+}
+
