@@ -11,22 +11,19 @@ from django.utils.timezone import now
 def teacher_dashboard(request, teacher_id):
     """获取教师 Dashboard 数据并渲染 HTML"""
 
-    # 1. 获取当前教师的所有课程
     courses = Course.objects.filter(teacher_id=teacher_id)
 
-    # 2. 检查 GET 参数中是否有 selected_course
     selected_course_id = request.GET.get("selected_course", None)
     
-    # 3. 如果有，就用它；如果没有，就默认选第一个课程
+
     if selected_course_id:
         selected_course = courses.filter(id=selected_course_id).first()
         if not selected_course:
-            # 如果 GET 里的 course_id 不在该老师的课程中，就 fallback
             selected_course = courses.first()
     else:
         selected_course = courses.first()
     
-    # 4. 构建 teams_dict 和 assessments_dict
+
     teams_dict = {course.id: list(Team.objects.filter(course=course)) for course in courses}
 
     assessments_dict = {course.id: list(Assessment.objects.filter(
@@ -36,7 +33,6 @@ def teacher_dashboard(request, teacher_id):
         )) for course in courses}
 
 
-    # 5. 渲染模板
     return render(request, "teacher_dashboard.html", {
         "courses": courses,
         "teams_dict": teams_dict,  
