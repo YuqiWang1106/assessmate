@@ -17,7 +17,7 @@
     <!-- Dashboard Container -->
     <div class="dashboard-container">
         
-        <!-- 左侧：我的课程 -->
+        <!-- Left Side -->
         <div class="my-courses-box">
             <h2>My Courses</h2>
             <ul id="course-list">
@@ -31,12 +31,15 @@
                     <li>No courses yet</li>
                 {% endfor %}
             </ul>
-            <!-- 这里你可以再加个按钮 Manage 或其他，如果需要 -->
              <button class="manage-btn">Manage</button>
         </div>
 
-        <!-- 右侧：团队和评估 -->
+        <!-- Right Side -->
         <div class="software-engineering-box">
+            {% if no_courses %}
+           
+            <h2>No teams and assessments yet</h2>
+            {% else %}
             <h2 id="selected-course-title">
                 {{ selected_course.course_number }} - {{ selected_course.course_name }}
             </h2>
@@ -69,6 +72,7 @@
                     <li>No assessments yet</li>
                 {% endfor %}
             </ul>
+            {% endif %}
         </div>
     </div>
 </body>

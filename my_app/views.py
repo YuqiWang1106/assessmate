@@ -84,22 +84,33 @@ def google_callback(request):
 
     # redirects user to their respective dashboard
     if user.role == "teacher":
-        return redirect("teacher_dashboard, teacher_id=user.id")
+        return redirect("teacher_dashboard", teacher_id=user.id)
     else:
         return redirect("student_dashboard", user_id=user.id)
 
 
 
 def teacher_dashboard(request, teacher_id):
-    """获取教师 Dashboard 数据并渲染 HTML"""
+    """Get Teacher Dashboard Data"""
     if "user_id" not in request.session:
         return redirect("landing")
 
     courses = Course.objects.filter(teacher_id=teacher_id)
 
-    selected_course_id = request.GET.get("selected_course", None)
-    
+    # New teacher without any course yet
+    if not courses.exists():
+            return render(request, "teacher_dashboard.html", {
+                "courses": courses,
+                "teams_dict": {},  
+                "assessments_dict": {},
+                "selected_course": None,
+                "no_courses": True,
+            })
 
+    # Teacher already has at least 1 course
+    selected_course_id = request.GET.get("selected_course")
+    selected_course = None
+    
     if selected_course_id:
         selected_course = courses.filter(id=selected_course_id).first()
         if not selected_course:
@@ -121,7 +132,8 @@ def teacher_dashboard(request, teacher_id):
         "courses": courses,
         "teams_dict": teams_dict,  
         "assessments_dict": assessments_dict,
-        "selected_course": selected_course,  
+        "selected_course": selected_course,
+        "no_courses": False,  
     })
 
 
@@ -154,24 +166,3 @@ def student_dashboard(request, user_id):
 
 def landing_page(request):
     return render(request, 'landing_page.html')
-
-
-# def teacher_dashboard(request, teacher_id):
-#     """获取教师 Dashboard 数据并渲染 HTML"""
-
-#     courses = Course.objects.filter(teacher_id=teacher_id)
-#     upcoming_assessments = Assessment.objects.filter(
-#         course__teacher_id=teacher_id,
-#         status="published",
-#         due_date__gte=now()
-#     ).order_by("due_date")[:5]
-
-#     teams_dict = {course.id: list(Team.objects.filter(course=course)) for course in courses}
-#     assessments_dict = {course.id: list(Assessment.objects.filter(course=course)) for course in courses}
-
-#     return render(request, "teacher_dashboard.html", {
-#         "courses": courses,
-#         "upcoming_assessments": upcoming_assessments,
-#         "teams_dict": teams_dict,  # 直接改名
-#         "assessments_dict": assessments_dict  # 直接改名
-#     })
