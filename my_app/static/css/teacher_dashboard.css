@@ -1,4 +1,3 @@
-/* 重置和字体保持原状 */
 * {
     margin: 0;
     padding: 0;
@@ -11,52 +10,14 @@ body, html {
     font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
-/* 
-  1) 多达近30个紫色停靠点，从 #5F62BE 逐渐变化到更浅的灰紫。
-  2) 通过 animation + background-size 实现“流光溢彩”效果。
-*/
 body {
-    background: linear-gradient(-45deg,
-    #4D51A8, /* 更深 */
-    #5458AF,
-    #5B5FB6,
-    #6266BD,
-    #696DC4,
-    #7074CB,
-    #777BD2,
-    #7E82D9,
-    #8589E0,
-    #8C90E7,
-    #9397EE,
-    #9A9EF5,
-    #A1A5FC 
-    );
+    background: #4346b2;
     background-size: 400% 400%;
-    animation: gradientBG 10s ease infinite; 
-    /* ↑ 动画 40s 更慢、更柔和，可自行改 30s/50s 等 */
-
     display: flex;
     justify-content: center;
     align-items: flex-start; 
 }
 
-/* 
-   2) 动画关键帧 
-   让背景在水平方向上往返移动 (0%->100%->0%), 形成无限流动。
-*/
-@keyframes gradientBG {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-/* ------ 其余布局的CSS保持原先即可 ------ */
 
 body .header {
     display: flex;
@@ -85,7 +46,7 @@ body .header button {
     padding: 10px 20px;
     font-size: 16px;
     color: white;
-    background-color: #4e44c6;
+    background-color: #4346b2;
     border: none;
     border-radius: 8px;
     cursor: pointer;
