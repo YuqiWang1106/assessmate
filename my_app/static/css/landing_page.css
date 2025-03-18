@@ -75,6 +75,8 @@ body {
 
 .btn:hover {
     opacity: 0.8;
+    
+    color:#E3E3F0;
 }
 
 /* Right Side (40%) */
