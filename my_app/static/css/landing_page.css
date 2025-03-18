@@ -47,8 +47,8 @@ body {
     color: #fff;
 }
 
-.left .buttons {
-    margin-top: 2vh;
+.buttons {
+    margin-top: 30px;
 }
 
 .btn {
@@ -58,17 +58,19 @@ body {
     border: none;
     cursor: pointer;
     border-radius: 1vw;
-    transition: 0.3s;
+    transition: 0.3s; 
 }
 
 .btn:first-child {
     background-color: #fff;
     color: #000;
+    text-decoration: none;
 }
 
 .btn:last-child {
     background-color: #fff;
     color: #000;
+    text-decoration: none;
 }
 
 .btn:hover {
