@@ -6,6 +6,7 @@
 }
 
 body, html {
+    padding-top: 20px;
     height: 100%;
     font-family: "Helvetica Neue", Arial, sans-serif;
 }
@@ -57,6 +58,44 @@ body {
 
 /* ------ 其余布局的CSS保持原先即可 ------ */
 
+body .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f4fc;
+    color: white;
+    position: fixed;
+    top: 0;  
+    left: 0;  
+    width: 100%;  
+    z-index: 10;
+}
+
+ body .header .welcome-text {
+    font-size: 24px; 
+    color: #6259c9;
+}
+
+body .header #username {
+    font-weight: bold;
+}
+
+body .header button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #4e44c6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+body .header button:hover {
+    background-color: #372f91;
+}
+
 /* Dashboard Container */
 .dashboard-container {
     width: 85%;
@@ -69,7 +108,7 @@ body {
 /* 标题 “Dashboard” */
 .text-0-1-2 {
     position: absolute;
-    top: 20px;
+    top: 100px;
     left: 110px;
     font-size: 42px;
     font-weight: 700;

@@ -1,0 +1,32 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Courses</title>
+    <link rel="stylesheet" href="{% static 'css/student_courses.css' %}">
+</head>
+<body>
+
+    <div class="header">
+        <span class="welcome-text">Welcome, <span id="username">{{ user.username }}</span></span>
+        <div classs="button-container">
+            <button class="back-button">Return</button>
+            <button class="logout-button">Logout</button>
+        </div>
+      </div>
+    <h2>{{ user.username }}'s Courses</h2> 
+
+    {% for course in courses %}
+        <div class="course">
+            <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
+    </div>
+{% empty %}
+    <p>No courses enrolled yet</p>
+{% endfor %}
+</body>
+
+</html>

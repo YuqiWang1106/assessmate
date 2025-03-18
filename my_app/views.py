@@ -86,7 +86,7 @@ def google_callback(request):
     if user.role == "teacher":
         return redirect("teacher_dashboard", teacher_id=user.id)
     else:
-        return redirect("student_dashboard", user_id=user.id)
+        return redirect("student_courses", user_id=user.id)
 
 
 
@@ -136,6 +136,20 @@ def teacher_dashboard(request, teacher_id):
         "no_courses": False,  
     })
 
+
+def student_courses(request, user_id):
+    if "user_id" not in request.session:
+        return redirect("landing")
+
+    # Ensure the user exists and is a student
+    student = get_object_or_404(User, id=user_id, role="student")
+
+    # Get the courses the student is enrolled in
+    course_memberships = CourseMember.objects.filter(user=student)
+    courses = [cm.course for cm in course_memberships]
+    return render(request, "student_courses.html", {
+        "courses": courses
+    })
 
 def student_dashboard(request, user_id):
     """Render student dashboard based on student ID"""

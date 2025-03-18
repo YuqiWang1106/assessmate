@@ -11,6 +11,15 @@
     <script defer src="{% static 'js/teacher_dashboard.js' %}"></script>
 </head>
 <body>
+
+    <div class="header">
+        <span class="welcome-text">Welcome, <span id="username">{{ user.username }}</span></span>
+        <div class="button-container">
+            <button class="back-button">Return</button>
+            <button class="logout-button">Logout</button>
+        </div>
+    </div>
+
     <!-- Dashboard Title -->
     <div class="text-0-1-2">Dashboard</div>
 
