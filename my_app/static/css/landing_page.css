@@ -42,17 +42,17 @@ body {
 }
 
 .left h2 {
-    margin-top: 1vh;
+    margin-top: 4vh;
     font-size: 2vw;
     color: #fff;
 }
 
 .buttons {
-    margin-top: 30px;
+    margin-top: 5vh;
 }
 
 .btn {
-    padding: 1vh 2vw;
+    padding: 2.5vh 3.5vw;
     margin: 1vw;
     font-size: 1.5vw;
     border: none;
