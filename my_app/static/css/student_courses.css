@@ -1,8 +1,10 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Helvetica Neue", Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f8f4fc;
+    background: #4346b2;
+   
+    
 }
 
 .header {
@@ -41,12 +43,19 @@ button:hover {
 
 
 h2 {
-    background-color: #6259c9;
+    background-color: #4346b2;
     color: white;
     margin: 0;
     padding: 20px;
     font-size: 36px;
+    font-weight: bold;
+
+   
+    
 }
+
+
+
 
 .course {
     background-color: white;
@@ -62,7 +71,8 @@ h2 {
 .course::after {
     content: "";
     display: block;
-    background-color: #d9d9d9;
+    background-color: #E3E3F0;
+    
     height: 80px;
     border-radius: 8px;
     margin-top: 12px;
@@ -75,8 +85,9 @@ h3 {
 }
 
 p {
-    color: #888;
-    padding: 20px;
+    
+    color: #888;    
+    padding: 0px;
 }
 
 @media (max-width: 768px) {

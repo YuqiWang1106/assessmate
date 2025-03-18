@@ -42,17 +42,17 @@ body {
 }
 
 .left h2 {
-    margin-top: 4vh;
+    margin-top: 1vh;
     font-size: 2vw;
     color: #fff;
 }
 
 .buttons {
-    margin-top: 5vh;
+    margin-top: 30px;
 }
 
 .btn {
-    padding: 2.5vh 3.5vw;
+    padding: 1vh 2vw;
     margin: 1vw;
     font-size: 1.5vw;
     border: none;
@@ -75,7 +75,6 @@ body {
 
 .btn:hover {
     opacity: 0.8;
-    
     color:#E3E3F0;
 }
 
