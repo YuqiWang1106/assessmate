@@ -95,11 +95,14 @@ def teacher_dashboard(request, teacher_id):
     if "user_id" not in request.session:
         return redirect("landing")
 
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+
     courses = Course.objects.filter(teacher_id=teacher_id)
 
     # New teacher without any course yet
     if not courses.exists():
             return render(request, "teacher_dashboard.html", {
+                "user": teacher,
                 "courses": courses,
                 "teams_dict": {},  
                 "assessments_dict": {},
@@ -129,11 +132,12 @@ def teacher_dashboard(request, teacher_id):
 
 
     return render(request, "teacher_dashboard.html", {
+        "user": teacher,
         "courses": courses,
         "teams_dict": teams_dict,  
         "assessments_dict": assessments_dict,
         "selected_course": selected_course,
-        "no_courses": False,  
+        "no_courses": False, 
     })
 
 
@@ -148,7 +152,8 @@ def student_courses(request, user_id):
     course_memberships = CourseMember.objects.filter(user=student)
     courses = [cm.course for cm in course_memberships]
     return render(request, "student_courses.html", {
-        "courses": courses
+        "courses": courses,
+        "user": student,
     })
 
 def student_dashboard(request, user_id):
