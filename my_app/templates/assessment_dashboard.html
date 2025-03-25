@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assessment Dashboard</title>
+</head>
+<body>
+
+    <h1>Assessment Dashboard for {{ teacher.name }}</h1>
+    <h3>Course: {{ selected_course.course_number }} - {{ selected_course.course_name }}</h3>
+
+    <p>
+        <a href="{% url 'create_assessment' teacher.id %}">
+            <button>Create New Assessment</button>
+        </a>
+    </p>
+
+    <p>
+        <a href="{% url 'teacher_dashboard' teacher.id %}">
+            <button>Return to Teacher Dashboard</button>
+        </a>
+    </p>
+
+    <h2>Draft Assessments</h2>
+    <ul>
+        {% for assessment in draft_assessments %}
+            <li>
+                {{ assessment.title }} - Created on {{ assessment.created_at|date:"Y-m-d" }}
+                <a href="{% url 'edit_assessment' teacher.id assessment.id %}">
+                    <button>Edit</button>
+                </a>
+            </li>
+        {% empty %}
+            <li>No draft assessments.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Published Assessments</h2>
+    <ul>
+        {% for assessment in published_assessments %}
+            <li>
+                {{ assessment.title }} - Due {{ assessment.due_date|date:"Y-m-d H:i" }}
+            </li>
+        {% empty %}
+            <li>No published assessments.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Finished Assessments</h2>
+    <ul>
+        {% for assessment in finished_assessments %}
+            <li>
+                {{ assessment.title }} - Closed on {{ assessment.due_date|date:"Y-m-d H:i" }}
+            </li>
+        {% empty %}
+            <li>No finished assessments.</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

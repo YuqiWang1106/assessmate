@@ -69,8 +69,11 @@
             <!-- Assessment Section -->
             <div class="section-header">
                 <span class="section-title">Assessment</span>
-                <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
+                <a href="{% url 'assessment_dashboard' user.id %}?course_id={{ selected_course.id }}">
+                    <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
+                </a>
             </div>
+            
             <ul class="assessment-list">
                 {% for assessment in assessments_dict|get_item:selected_course.id %}
                     <li>

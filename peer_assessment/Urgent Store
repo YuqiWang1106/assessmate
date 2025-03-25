@@ -1,20 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Course, Team, Assessment, TeamMember, CourseMember, User, AssessmentResponse, AssessmentQuestion
+from .models import Course, Team, Assessment, TeamMember, CourseMember, User, AssessmentQuestion, AssessmentResponse
 from django.utils.timezone import now
 from collections import defaultdict
-
-
 from django.shortcuts import render
 from .models import Course, Team, Assessment
 from django.utils.timezone import now
-
 import requests
 import urllib.parse
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
 from .models import User
-
-from .forms import CourseForm
 from django.utils import timezone
 import json
 
@@ -22,7 +17,6 @@ GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
 GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
-
 
 def google_login(request):
     """Sends user to correct login page, based on selected role"""
@@ -92,8 +86,6 @@ def google_callback(request):
     else:
         return redirect("student_courses", user_id=user.id)
 
-
-
 def teacher_dashboard(request, teacher_id):
     """Get Teacher Dashboard Data"""
     if "user_id" not in request.session:
@@ -103,11 +95,11 @@ def teacher_dashboard(request, teacher_id):
     courses = Course.objects.filter(teacher_id=teacher_id)
 
     for course in courses:
-            Assessment.objects.filter(
-                course=course,
-                status="published",
-                due_date__lt=timezone.now()
-            ).update(status="finished")
+        Assessment.objects.filter(
+            course=course,
+            status="published",
+            due_date__lt=timezone.now()
+        ).update(status="finished")
 
     # New teacher without any course yet
     if not courses.exists():
@@ -150,7 +142,6 @@ def teacher_dashboard(request, teacher_id):
         "selected_course": selected_course,
         "no_courses": False, 
     })
-
 
 def student_courses(request, user_id):
     if "user_id" not in request.session:
@@ -196,58 +187,6 @@ def student_dashboard(request, user_id):
 
 def landing_page(request):
     return render(request, 'landing_page.html')
-
-
-def teacher_courses(request, teacher_id):
-    """Get Teacher's Courses"""
-    if "user_id" not in request.session:
-        return redirect("landing")
-
-    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
-
-   
-    courses = Course.objects.filter(teacher_id=teacher_id)
-
-    
-    return render(request, "teacher_courses.html", {
-        "user": teacher,
-        "courses": courses,
-    })
-    
-
-'''
-def new_course(request, teacher_id):
-    """Get Teacher's Courses"""
-    if "user_id" not in request.session:
-        return redirect("landing")
-
-    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
-
-
-    
-    return render(request, "teacher_courses.html", {
-        "user": teacher,
-    })
-'''
-
-
-
-def new_course(request, teacher_id):
-    teacher = get_object_or_404(User, id=teacher_id, role='teacher')
-    if request.method == "POST":
-        form = CourseForm(request.POST)
-        if form.is_valid():
-            # Process the form data (e.g., save it to the database)
-            course = form.save(commit=False)
-            course.teacher = teacher  # Assign teacher from the URL
-            course.save()
-            return redirect('course_list')
-            # Save the course to the database or perform other actions
-           
-    else:
-        form = CourseForm()
-
-    return render(request, "new_course.html", {"form": form, "teacher": teacher})
 
 def assessment_dashboard(request, teacher_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
@@ -330,7 +269,7 @@ def create_assessment(request, teacher_id, assessment_id=None):
             i += 1
 
         return redirect("assessment_dashboard", teacher_id=teacher.id)
-    
+
     return render(request, "create_assessment.html", {
         "teacher": teacher,
         "assessment": assessment,
@@ -340,4 +279,47 @@ def create_assessment(request, teacher_id, assessment_id=None):
         for q in questions
     ])
     })
+
+
+
+
+
+
+
+#settings
+TIME_ZONE = "America/New_York"
+
+
+
+
+
+
+
+
+# urls.py
+from django.urls import path
+from . import views 
+
+urlpatterns = [
+    path("teacher_dashboard/<uuid:teacher_id>/", views.teacher_dashboard, name="teacher_dashboard"),
+    path("student_courses/<uuid:user_id>/", views.student_courses, name="student_courses"),
+    path("student_dashboard/<uuid:user_id>/", views.student_dashboard, name="student_dashboard"),
+    path("", views.landing_page, name="landing"), 
+    path("accounts/google/login/", views.google_login, name="google_login"),
+    path("accounts/google/callback/", views.google_callback, name="google_callback"),
+    path("assessment_dashboard/<uuid:teacher_id>/", views.assessment_dashboard, name="assessment_dashboard"),
+    path("create_assessment/<uuid:teacher_id>/", views.create_assessment, name="create_assessment"),
+    path("edit_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.create_assessment, name="edit_assessment"),
+
+]
+
+
+
+
+
+
+
+
+
+
 
