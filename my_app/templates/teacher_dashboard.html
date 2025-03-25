@@ -40,7 +40,10 @@
                     <li>No courses yet</li>
                 {% endfor %}
             </ul>
-             <button class="manage-btn">Manage</button>
+             
+             <a href="{% url 'teacher_courses' teacher.id %}">
+                <button class="manage-btn">Manage</button>
+            </a>
         </div>
 
         <!-- Right Side -->
@@ -69,7 +72,7 @@
             <!-- Assessment Section -->
             <div class="section-header">
                 <span class="section-title">Assessment</span>
-                <a href="{% url 'assessment_dashboard' user.id %}?course_id={{ selected_course.id }}">
+                <a href="{% url 'assessment_dashboard' teacher.id %}?course_id={{ selected_course.id }}">
                     <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
                 </a>
             </div>

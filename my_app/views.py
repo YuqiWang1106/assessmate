@@ -135,7 +135,7 @@ def teacher_dashboard(request, teacher_id):
 
 
     return render(request, "teacher_dashboard.html", {
-        "user": teacher,
+        "teacher": teacher,
         "courses": courses,
         "teams_dict": teams_dict,  
         "assessments_dict": assessments_dict,
