@@ -1,19 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Course, Team, Assessment, TeamMember, CourseMember, User, AssessmentResponse, AssessmentQuestion
-from django.utils.timezone import now
 from collections import defaultdict
-
-
-from django.shortcuts import render
-from .models import Course, Team, Assessment
 from django.utils.timezone import now
-
 import requests
 import urllib.parse
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from .models import User
-
 from .forms import CourseForm
 from django.utils import timezone
 import json
