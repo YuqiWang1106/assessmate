@@ -286,7 +286,12 @@ def create_assessment(request, teacher_id, assessment_id=None):
     if request.method == "POST":
         title = request.POST.get("assessment_title", "").strip()
         if not title:
-            title = f"Assessment {timezone.now().strftime('%Y-%m-%d %H:%M')}"
+            existing_count = Assessment.objects.filter(
+                course__teacher=teacher,
+                title__startswith="Untitled Assessment"
+            ).count()
+            title = f"Untitled Assessment {existing_count + 1}"
+
 
         status = "published" if request.POST.get("publish") == "true" else "draft"
         due_date = request.POST.get("due_date")
