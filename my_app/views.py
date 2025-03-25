@@ -323,3 +323,28 @@ def create_assessment(request, teacher_id, assessment_id=None):
     ])
     })
 
+def delete_assessment(request, teacher_id, assessment_id):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+    assessment = get_object_or_404(Assessment, id=assessment_id, course__teacher=teacher)
+
+    AssessmentQuestion.objects.filter(assessment=assessment).delete()
+    assessment.delete()
+
+    return redirect("assessment_dashboard", teacher_id=teacher.id)
+
+
+def view_assessment(request, teacher_id, assessment_id):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+    assessment = get_object_or_404(Assessment, id=assessment_id, course__teacher=teacher, status="published")
+    questions = AssessmentQuestion.objects.filter(assessment=assessment)
+
+    return render(request, "create_assessment.html", {
+        "teacher": teacher,
+        "assessment": assessment,
+        "questions": questions,
+        "questions_json": json.dumps([
+            {"question_type": q.question_type, "content": q.content}
+            for q in questions
+        ]),
+        "readonly": True
+    })

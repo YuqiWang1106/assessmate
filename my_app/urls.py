@@ -13,4 +13,6 @@ urlpatterns = [
     path("assessment_dashboard/<uuid:teacher_id>/", views.assessment_dashboard, name="assessment_dashboard"),
     path("create_assessment/<uuid:teacher_id>/", views.create_assessment, name="create_assessment"),
     path("edit_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.create_assessment, name="edit_assessment"),
+    path("delete_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.delete_assessment, name="delete_assessment"),
+    path("view_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.view_assessment, name="view_assessment"),
 ]

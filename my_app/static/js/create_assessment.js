@@ -2,48 +2,95 @@ document.addEventListener("DOMContentLoaded", function() {
     let questionCount = 0;
     const questionList = document.getElementById("question-list");
   
+    // function renderPreloadedQuestions() {
+    //     const preloadedDataTag = document.getElementById("preloaded-questions");
+    //     if (!preloadedDataTag) return;
+    
+    //     const questions = JSON.parse(preloadedDataTag.textContent);
+    
+    //     questions.forEach((q, index) => {
+    //       const newIndex = index + 1;
+    
+    //       let html = `
+    //         <div id="question-${newIndex}" class="question-block" style="margin-top: 20px; padding: 10px; border: 1px solid #aaa;">
+    //           <label>Question ${newIndex}:</label>
+    //           <input type="text" name="question_text_${newIndex}" value="${q.content}" style="width: 60%;" />
+    //           <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
+    //           <button type="button" onclick="removeQuestion('question-${newIndex}')">Delete</button>
+    //       `;
+    
+    //       if (q.question_type === "likert") {
+    //         html += `
+    //           <div>
+    //             Likert Scale:
+    //             1 <input type="radio" disabled />
+    //             2 <input type="radio" disabled />
+    //             3 <input type="radio" disabled />
+    //             4 <input type="radio" disabled />
+    //             5 <input type="radio" disabled />
+    //           </div>
+    //         `;
+    //       } else if (q.question_type === "open") {
+    //         html += `
+    //           <div>
+    //             <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
+    //           </div>
+    //         `;
+    //       }
+    
+    //       html += `</div>`;
+    //       questionList.insertAdjacentHTML("beforeend", html);
+    //     });
+    
+    //     questionCount = questions.length;
+    //   }
+    
     function renderPreloadedQuestions() {
         const preloadedDataTag = document.getElementById("preloaded-questions");
         if (!preloadedDataTag) return;
     
         const questions = JSON.parse(preloadedDataTag.textContent);
+        const isReadOnly = READ_ONLY === "true";
+        const disabledAttr = isReadOnly ? "disabled" : "";
     
         questions.forEach((q, index) => {
-          const newIndex = index + 1;
+            const newIndex = index + 1;
     
-          let html = `
+            let html = `
             <div id="question-${newIndex}" class="question-block" style="margin-top: 20px; padding: 10px; border: 1px solid #aaa;">
-              <label>Question ${newIndex}:</label>
-              <input type="text" name="question_text_${newIndex}" value="${q.content}" style="width: 60%;" />
-              <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
-              <button type="button" onclick="removeQuestion('question-${newIndex}')">Delete</button>
-          `;
-    
-          if (q.question_type === "likert") {
-            html += `
-              <div>
-                Likert Scale:
-                1 <input type="radio" disabled />
-                2 <input type="radio" disabled />
-                3 <input type="radio" disabled />
-                4 <input type="radio" disabled />
-                5 <input type="radio" disabled />
-              </div>
+                <label>Question ${newIndex}:</label>
+                <input type="text" name="question_text_${newIndex}" value="${q.content}" style="width: 60%;" ${disabledAttr} />
+                <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
             `;
-          } else if (q.question_type === "open") {
-            html += `
-              <div>
-                <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
-              </div>
-            `;
-          }
     
-          html += `</div>`;
-          questionList.insertAdjacentHTML("beforeend", html);
+            if (!isReadOnly) {
+                html += `<button type="button" onclick="removeQuestion('question-${newIndex}')">Delete</button>`;
+            }
+    
+            if (q.question_type === "likert") {
+                html += `
+                <div>
+                    Likert Scale:
+                    1 <input type="radio" disabled />
+                    2 <input type="radio" disabled />
+                    3 <input type="radio" disabled />
+                    4 <input type="radio" disabled />
+                    5 <input type="radio" disabled />
+                </div>`;
+            } else if (q.question_type === "open") {
+                html += `
+                <div>
+                    <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
+                </div>`;
+            }
+    
+            html += `</div>`;
+            questionList.insertAdjacentHTML("beforeend", html);
         });
     
         questionCount = questions.length;
-      }
+    }
+    
     
       renderPreloadedQuestions();
 
@@ -136,7 +183,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
   
-
   window.saveAssessment = function(publish) {
     const form = document.getElementById("assessment-form");
     const input = document.createElement("input");
@@ -146,29 +192,61 @@ document.addEventListener("DOMContentLoaded", function() {
     form.appendChild(input);
     form.submit();
   }
+
+    window.openQuitModal = function() {
+    document.getElementById("quit-modal").style.display = "block";
+  };
+
+    window.confirmQuitAndSave = function() {
+    document.getElementById("quit-modal").style.display = "none";
+    saveAssessment(false);
+  };
   
-  window.openPublishModal = function() {
-    document.getElementById("publish-modal").style.display = "block";
-  }
+
+    window.quitWithoutSaving = function() {
+        const teacherId = document.getElementById("teacher-id").value;
+        window.location.href = `/assessment_dashboard/${teacherId}/`;
+    };
+
+    window.openDeleteModal = function () {
+        document.getElementById("delete-modal").style.display = "block";
+    };
+    
+    window.closeDeleteModal = function () {
+        document.getElementById("delete-modal").style.display = "none";
+    };
+    
+    window.confirmDelete = function () {
+        const teacherId = document.getElementById("teacher-id").value;
+        const assessmentId = document.getElementById("assessment-id").value;
+        if (teacherId && assessmentId) {
+            window.location.href = `/delete_assessment/${teacherId}/${assessmentId}/`;
+        }
+    };
+    
   
-  window.closePublishModal = function() {
-    document.getElementById("publish-modal").style.display = "none";
-  }
-  
-  window.confirmPublish = function() {
-    const dueDate = document.getElementById("due-date").value;
-    if (!dueDate) {
-      alert("Please select a due date.");
-      return;
+    window.openPublishModal = function() {
+        document.getElementById("publish-modal").style.display = "block";
     }
-  
-    const form = document.getElementById("assessment-form");
-    const dateInput = document.createElement("input");
-    dateInput.type = "hidden";
-    dateInput.name = "due_date";
-    dateInput.value = dueDate;
-    form.appendChild(dateInput);
-  
-    saveAssessment(true);
-  }
-  
+    
+    window.closePublishModal = function() {
+        document.getElementById("publish-modal").style.display = "none";
+    }
+    
+    window.confirmPublish = function() {
+        const dueDate = document.getElementById("due-date").value;
+        if (!dueDate) {
+        alert("Please select a due date.");
+        return;
+        }
+    
+        const form = document.getElementById("assessment-form");
+        const dateInput = document.createElement("input");
+        dateInput.type = "hidden";
+        dateInput.name = "due_date";
+        dateInput.value = dueDate;
+        form.appendChild(dateInput);
+    
+        saveAssessment(true);
+    }
+    

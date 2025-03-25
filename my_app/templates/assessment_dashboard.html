@@ -6,8 +6,7 @@
 </head>
 <body>
 
-    <h1>Assessment Dashboard for {{ teacher.name }}</h1>
-    <h3>Course: {{ selected_course.course_number }} - {{ selected_course.course_name }}</h3>
+    <h1>Assessment Dashboard for {{ selected_course.course_number }} - {{ selected_course.course_name }}</h1>
 
     <p>
         <a href="{% url 'create_assessment' teacher.id %}">
@@ -40,10 +39,14 @@
         {% for assessment in published_assessments %}
             <li>
                 {{ assessment.title }} - Due {{ assessment.due_date|date:"Y-m-d H:i" }}
+                <a href="{% url 'view_assessment' teacher.id assessment.id %}">
+                    <button>View</button>
+                </a>
             </li>
         {% empty %}
             <li>No published assessments.</li>
         {% endfor %}
+    </ul>
     </ul>
 
     <h2>Finished Assessments</h2>
