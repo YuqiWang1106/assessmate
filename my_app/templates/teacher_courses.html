@@ -21,7 +21,7 @@
         <h3>Current Semester: Spring 2025 </h3>
         <h4>Active Courses: </h4>
             <div class="my-courses-box">
-                <h2>My Courses</h2>
+                <h2>My Courses </h2>
                 <ul id="course-list">
                     {% for course in courses %}
                         <li class="course-item {% if course.id == selected_course.id %}active{% endif %}"
@@ -35,7 +35,14 @@
                 </ul>
             </div>
     
-        <button class="addcourse-btn">Add New Course</button>
+        
+        <!--button class="addcourse-btn" onclick="window.location.href='new_course/{{ teacher.id }}/'">Add New Course</button-->
+        <button class="addcourse-btn" onclick="window.location.href='new_course.html'">Add New Course</button>
+
+        
+  
+
+
     </div>
 </body>
 </html>

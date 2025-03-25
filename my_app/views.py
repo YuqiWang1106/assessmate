@@ -204,8 +204,9 @@ def teacher_courses(request, teacher_id):
         "user": teacher,
         "courses": courses,
     })
+    
 
-
+'''
 def new_course(request, teacher_id):
     """Get Teacher's Courses"""
     if "user_id" not in request.session:
@@ -218,20 +219,23 @@ def new_course(request, teacher_id):
     return render(request, "teacher_courses.html", {
         "user": teacher,
     })
-
+'''
 
 
 
 def new_course(request, teacher_id):
+    teacher = get_object_or_404(User, id=teacher_id, role='teacher')
     if request.method == "POST":
         form = CourseForm(request.POST)
         if form.is_valid():
             # Process the form data (e.g., save it to the database)
-            course_number = form.cleaned_data["course_number"]
-            course_name = form.cleaned_data["course_name"]
+            course = form.save(commit=False)
+            course.teacher = teacher  # Assign teacher from the URL
+            course.save()
+            return redirect('course_list')
             # Save the course to the database or perform other actions
-            return redirect("success_page")  # Redirect to a success page or another view
+           
     else:
         form = CourseForm()
 
-    return render(request, "new_course.html", {"form": form})
+    return render(request, "new_course.html", {"form": form, "teacher": teacher})
