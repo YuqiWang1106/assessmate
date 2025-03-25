@@ -1,0 +1,43 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Page</title>
+    <link rel="stylesheet" href="{% static 'css/new_course.css' %}">
+</head>
+<body>
+    <div class="header">
+        <div classs="button-container">
+            <button class="back-button">Return</button>
+            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
+        </div>
+      </div>
+    <div class="add-new-header">
+        <h1>Add New Course</h1>
+    </div>
+
+    <div class="new-course-box">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="course-number">
+                <h3>Course Number</h3>
+                {{ form.course_number }}
+            </div>
+
+            <div class="course-name">
+                <h3>Course Name</h3>
+                {{ form.course_name }}
+            </div>
+
+            <div class="confirm-button">
+                <button type="submit" class="confirm-btn">Confirm</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

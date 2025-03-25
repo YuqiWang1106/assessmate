@@ -8,4 +8,6 @@ urlpatterns = [
     path("", views.landing_page, name="landing"), 
     path("accounts/google/login/", views.google_login, name="google_login"),
     path("accounts/google/callback/", views.google_callback, name="google_callback"),
+    path("teacher_courses/<uuid:teacher_id>/", views.teacher_courses, name="teacher_courses"),
+    path("new_course/<uuid:teacher_id>/", views.new_course, name="new_course"),
 ]

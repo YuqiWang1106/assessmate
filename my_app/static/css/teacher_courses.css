@@ -1,0 +1,138 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 30px;
+    background-color: #4346b2;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #eee;
+    padding: 10px 20px;
+  }
+  body .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f4fc;
+    color: white;
+    position: fixed;
+    top: 0;  
+    left: 0;  
+    width: 100%;  
+    z-index: 10;
+}
+
+ body .header .welcome-text {
+    font-size: 24px; 
+    color: #6259c9;
+}
+
+
+body .header button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #4346b2;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+body .header button:hover {
+    background-color: #372f91;
+}
+
+  .button-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  button {
+    background-color: #6a5acd;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #5a4acb;
+  }
+  
+  .container {
+    padding: 70px;
+  }
+  
+  h3, h4 {
+    margin: 10px 0;
+  }
+  
+  .dashboard-container {
+    background-color: #6a5acd;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .my-courses-box {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  #course-list {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .course-item {
+    background-color: #dcd6f7;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: inline-block;
+    width: calc(30% - 40px);
+    vertical-align: top;
+    text-align: center;
+}
+  
+  
+  
+  .course-item.active {
+    background-color: #b8aaff;
+  }
+  
+  
+  strong {
+    font-size: 18px;
+  }
+
+  .addcourse-btn {
+    background-color: #4A4EAE;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+
+    margin-top: auto; 
+}
+
+.addcourse-btn:hover {
+    background-color: #3A3E9E;
+}

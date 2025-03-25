@@ -14,6 +14,8 @@ from django.contrib.auth import login
 from django.http import HttpResponseForbidden
 from .models import User
 
+from .forms import CourseForm
+
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
@@ -185,3 +187,51 @@ def student_dashboard(request, user_id):
 
 def landing_page(request):
     return render(request, 'landing_page.html')
+
+
+def teacher_courses(request, teacher_id):
+    """Get Teacher's Courses"""
+    if "user_id" not in request.session:
+        return redirect("landing")
+
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+
+   
+    courses = Course.objects.filter(teacher_id=teacher_id)
+
+    
+    return render(request, "teacher_courses.html", {
+        "user": teacher,
+        "courses": courses,
+    })
+
+
+def new_course(request, teacher_id):
+    """Get Teacher's Courses"""
+    if "user_id" not in request.session:
+        return redirect("landing")
+
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+
+
+    
+    return render(request, "teacher_courses.html", {
+        "user": teacher,
+    })
+
+
+
+
+def new_course(request, teacher_id):
+    if request.method == "POST":
+        form = CourseForm(request.POST)
+        if form.is_valid():
+            # Process the form data (e.g., save it to the database)
+            course_number = form.cleaned_data["course_number"]
+            course_name = form.cleaned_data["course_name"]
+            # Save the course to the database or perform other actions
+            return redirect("success_page")  # Redirect to a success page or another view
+    else:
+        form = CourseForm()
+
+    return render(request, "new_course.html", {"form": form})

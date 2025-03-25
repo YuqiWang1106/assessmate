@@ -1,0 +1,41 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Page</title>
+    <link rel="stylesheet" href="{% static 'css/teacher_courses.css' %}">
+</head>
+<body>
+    <div class="header">
+        <div classs="button-container">
+            <button class="back-button">Return</button>
+            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
+        </div>
+      </div>
+    <div class="container">
+        <div class="dashboard-container">
+        <h3>Current Semester: Spring 2025 </h3>
+        <h4>Active Courses: </h4>
+            <div class="my-courses-box">
+                <h2>My Courses</h2>
+                <ul id="course-list">
+                    {% for course in courses %}
+                        <li class="course-item {% if course.id == selected_course.id %}active{% endif %}"
+                            data-course-id="{{ course.id }}"
+                            onclick="changeCourse('{{ course.id }}')">
+                            <strong>{{ course.course_number }} - {{ course.course_name }}</strong>
+                        </li>
+                    {% empty %}
+                        <li>No courses yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
+    
+        <button class="addcourse-btn">Add New Course</button>
+    </div>
+</body>
+</html>
