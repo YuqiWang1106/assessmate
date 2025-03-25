@@ -1,5 +1,6 @@
 {% load static %}
 {% load dict_extras %}
+{% load widget_tweaks %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,17 +26,20 @@
             {% csrf_token %}
             <div class="course-number">
                 <h3>Course Number</h3>
-                {{ form.course_number }}
+                
+                {{ form.course_number|add_class:"form-control" }}
             </div>
 
             <div class="course-name">
                 <h3>Course Name</h3>
-                {{ form.course_name }}
+                {{ form.course_name|add_class:"form-control" }}
             </div>
             
 
            
-            <button type="submit" class="confirm-btn">Confirm</button>
+            <button type="submit" class="confirm-btn">
+                Confirm
+            </button>
             </div>
         </form>
     </div>
