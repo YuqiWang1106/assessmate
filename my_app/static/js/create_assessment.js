@@ -1,49 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     let questionCount = 0;
     const questionList = document.getElementById("question-list");
-  
-    // function renderPreloadedQuestions() {
-    //     const preloadedDataTag = document.getElementById("preloaded-questions");
-    //     if (!preloadedDataTag) return;
-    
-    //     const questions = JSON.parse(preloadedDataTag.textContent);
-    
-    //     questions.forEach((q, index) => {
-    //       const newIndex = index + 1;
-    
-    //       let html = `
-    //         <div id="question-${newIndex}" class="question-block" style="margin-top: 20px; padding: 10px; border: 1px solid #aaa;">
-    //           <label>Question ${newIndex}:</label>
-    //           <input type="text" name="question_text_${newIndex}" value="${q.content}" style="width: 60%;" />
-    //           <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
-    //           <button type="button" onclick="removeQuestion('question-${newIndex}')">Delete</button>
-    //       `;
-    
-    //       if (q.question_type === "likert") {
-    //         html += `
-    //           <div>
-    //             Likert Scale:
-    //             1 <input type="radio" disabled />
-    //             2 <input type="radio" disabled />
-    //             3 <input type="radio" disabled />
-    //             4 <input type="radio" disabled />
-    //             5 <input type="radio" disabled />
-    //           </div>
-    //         `;
-    //       } else if (q.question_type === "open") {
-    //         html += `
-    //           <div>
-    //             <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
-    //           </div>
-    //         `;
-    //       }
-    
-    //       html += `</div>`;
-    //       questionList.insertAdjacentHTML("beforeend", html);
-    //     });
-    
-    //     questionCount = questions.length;
-    //   }
     
     function renderPreloadedQuestions() {
         const preloadedDataTag = document.getElementById("preloaded-questions");

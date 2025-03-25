@@ -1,64 +1,80 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Assessment Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/assessment_dashboard.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <h1>Assessment Dashboard for {{ selected_course.course_number }} - {{ selected_course.course_name }}</h1>
+<div class="ad-dashboard-container">
+    <!-- Header -->
+    <div class="ad-header">
+        <h1>Assessment - {{ selected_course.course_name }}</h1>
+        <a href="{% url 'create_assessment' teacher.id %}" class="ad-create-btn">Create</a>
+    </div>
 
-    <p>
-        <a href="{% url 'create_assessment' teacher.id %}">
-            <button>Create New Assessment</button>
-        </a>
-    </p>
+    <div class="row mt-4 ad-row-gap">
+        <!-- Published + Finished -->
+        <div class="col-md-5">
+            <!-- Published -->
+            <div class="ad-column-box-left">
+                <h2>Published</h2>
+                <div class="scrollable-content-left">
+                {% for assessment in published_assessments %}
+                    <div class="ad-assessment-card">
+                        <span>{{ assessment.title }}</span>
+                        <a href="{% url 'view_assessment' teacher.id assessment.id %}">View</a>
+                    </div>
+                {% empty %}
+                    <p class="ad-empty-msg">No published assessments.</p>
+                {% endfor %}
+            </div>
+        </div>
 
-    <p>
-        <a href="{% url 'teacher_dashboard' teacher.id %}">
-            <button>Return to Teacher Dashboard</button>
-        </a>
-    </p>
+            <!-- Finished -->
+            <div class="ad-column-box-left mt-4">
+                <h2>Finished</h2>
+                <div class="scrollable-content-left">
+                {% for assessment in finished_assessments %}
+                    <div class="ad-assessment-card">
+                        <span>{{ assessment.title }}</span>
+                        <a href="#">Results</a>
+                    </div>
+                {% empty %}
+                    <p class="ad-empty-msg">No finished assessments.</p>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
 
-    <h2>Draft Assessments</h2>
-    <ul>
-        {% for assessment in draft_assessments %}
-            <li>
-                {{ assessment.title }} - Created on {{ assessment.created_at|date:"Y-m-d" }}
-                <a href="{% url 'edit_assessment' teacher.id assessment.id %}">
-                    <button>Edit</button>
-                </a>
-            </li>
-        {% empty %}
-            <li>No draft assessments.</li>
-        {% endfor %}
-    </ul>
+        <!-- Draft -->
+        <div class="col-md-5">
+            <div class="ad-column-box-right">
+                <h2>Draft</h2>
+                <div class="scrollable-content-right">
+                {% for assessment in draft_assessments %}
+                    <div class="ad-assessment-card">
+                        <span>{{ assessment.title }}</span>
+                        <a href="{% url 'edit_assessment' teacher.id assessment.id %}">Edit</a>
+                    </div>
+                {% empty %}
+                    <p class="ad-empty-msg">No draft assessments.</p>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+    </div>
 
-    <h2>Published Assessments</h2>
-    <ul>
-        {% for assessment in published_assessments %}
-            <li>
-                {{ assessment.title }} - Due {{ assessment.due_date|date:"Y-m-d H:i" }}
-                <a href="{% url 'view_assessment' teacher.id assessment.id %}">
-                    <button>View</button>
-                </a>
-            </li>
-        {% empty %}
-            <li>No published assessments.</li>
-        {% endfor %}
-    </ul>
-    </ul>
-
-    <h2>Finished Assessments</h2>
-    <ul>
-        {% for assessment in finished_assessments %}
-            <li>
-                {{ assessment.title }} - Closed on {{ assessment.due_date|date:"Y-m-d H:i" }}
-            </li>
-        {% empty %}
-            <li>No finished assessments.</li>
-        {% endfor %}
-    </ul>
+    <!-- 返回链接 -->
+    <div class="ad-bottom-link mt-4">
+        <a href="{% url 'teacher_dashboard' teacher.id %}">Back to Teacher Dashboard</a>
+    </div>
+</div>
 
 </body>
 </html>
