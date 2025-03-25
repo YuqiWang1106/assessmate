@@ -202,25 +202,10 @@ def teacher_courses(request, teacher_id):
 
     
     return render(request, "teacher_courses.html", {
-        "user": teacher,
+        "teacher": teacher,
         "courses": courses,
     })
     
-
-'''
-def new_course(request, teacher_id):
-    """Get Teacher's Courses"""
-    if "user_id" not in request.session:
-        return redirect("landing")
-
-    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
-
-
-    
-    return render(request, "teacher_courses.html", {
-        "user": teacher,
-    })
-'''
 
 
 

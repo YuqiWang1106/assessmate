@@ -37,9 +37,11 @@
     
         
         <!--button class="addcourse-btn" onclick="window.location.href='new_course/{{ teacher.id }}/'">Add New Course</button-->
-        <button class="addcourse-btn" onclick="window.location.href='new_course.html'">Add New Course</button>
+        <!--button class="addcourse-btn" onclick="window.location.href='new_course.html'">Add New Course</button-->
 
-        
+        <a href="{% url 'new_course' teacher.id %}">
+            <button>Add More Courses</button>
+        </a>
   
 
 
