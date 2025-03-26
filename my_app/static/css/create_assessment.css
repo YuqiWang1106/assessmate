@@ -10,15 +10,18 @@
     background-color: #fff;
     margin: 40px auto;
     border-radius: 16px;
-    padding: 40px;
+    padding-top: 20px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 40px;
     box-shadow: 0 0 20px rgba(94, 93, 187, 0.15);
 }
 
 .create-page-title {
     text-align: center;
     font-size: 28px;
-    color: #5e5dbb;
     margin-bottom: 30px;
+    color:rgb(103, 101, 101);
 }
 
 .create-top-btns {
@@ -30,8 +33,8 @@
     background-color: #7a6cb3;
     color: white;
     font-weight: bold;
-    padding: 10px 24px;
-    border-radius: 20px;
+    padding: 15px 24px;
+    border-radius: 25px;
     border: none;
     cursor: pointer;
     box-shadow: 0 4px 10px rgba(122, 108, 179, 0.2);
@@ -74,7 +77,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 30px 40px;
+    padding: 20px 40px;
     border-radius: 20px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     z-index: 1000;
@@ -87,8 +90,9 @@
 .create-modal h3 {
     font-size: 20px;
     margin-bottom: 20px;
-    color: #5e5dbb;
+    color: #7a6cb3;
     font-weight: bold;
+    padding-bottom: 15px;
 }
 
 .create-modal p {
@@ -109,7 +113,7 @@
 }
 
 .create-modal button:first-of-type {
-    background-color: #b49bff;
+    background-color: #7a6cb3;
     color: white;
 }
 
@@ -131,11 +135,13 @@
 }
 
 .create-title-input {
-    width: 96%;
-    font-size: 18px;
+    width: 98%;
+    font-size: 30px;
     padding: 12px 16px;
-    border: 2px solid #ccc;
-    border-radius: 12px;
+    padding-left:0px;
+    border: none;
+    border-bottom: 5px solid #d7d7d7;
+    border-radius: 0;
     outline: none;
     transition: border-color 0.3s;
 }
@@ -149,12 +155,10 @@
 }
 
 .question-block {
-    background: #fdfbff;
     padding: 24px 28px;
     margin-bottom: 24px;
-    box-shadow: 0 6px 18px rgba(122, 108, 179, 0.12);
+    box-shadow: 1px 6px 18px rgba(0, 0, 0, 0.28);
     transition: all 0.3s ease;
-    border: 2px solid #ccc;
     border-radius: 12px;
     outline: none;
 }
@@ -166,46 +170,42 @@
 
 .question-block label {
     font-weight: 600;
-    font-size: 16px;
-    margin-bottom: 12px;
+    font-size: 19px;
+    margin-bottom: 6px;
     display: block;
     color: #444;
-    margin-left:5px;
 }
 
 .question-block input[type="text"] {
     width: 100%;
-    padding: 12px 16px;
     font-size: 16px;
-    border: 2px solid #d8d1f4;
-    border-radius: 12px;
-    background-color: #fefcff;
+    border:none;
+    border-color: #b0b0b0;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
     margin-bottom: 18px;
 }
 
-.question-block input[type="text"]:focus {
-    border-color: #a48dfc;
+/* .question-block input[type="text"]:focus {
+    border-color: #6353a0;
     box-shadow: 0 0 0 3px rgba(164, 141, 252, 0.2);
-}
+} */
 
 .question-block textarea {
-    width: 95%;
+    width: 80%;
     padding: 14px 18px;
     font-size: 16px;
-    border: 2px solid #d8d1f4;
     border-radius: 12px;
-    background-color: #fcfaff;
     resize: vertical;
     outline: none;
     transition: border-color 0.3s, box-shadow 0.3s;
+    height: 60px;
 }
 
-.question-block textarea:focus {
+/* .question-block textarea:focus {
     border-color: #a48dfc;
     box-shadow: 0 0 0 3px rgba(164, 141, 252, 0.2);
-}
+} */
 
 .question-block .likert-scale {
     display: flex;
@@ -240,21 +240,31 @@
 
 /* Delete Button */
 .question-block button {
-    background-color: #fcd6d6;
-    color: #4a0000;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: bold;
+    width: 55px;
+    height: 55px;
+    background-color: white;
+    color: #d11a2a;
+    border: 2px solid #ffd4d4;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(255, 173, 173, 0.3);
+    padding: 0;
+    margin-left: 210px;
+}
+
+.question-block button svg {
+    width: 25px;
+    height: 25px;
 }
 
 .question-block button:hover {
-    background-color: #ffb5b5;
-    transform: scale(1.05);
+    background-color: #d11a2a;
+    color: white;
+    border-color: #d11a2a;
+    transform: scale(1.1);
 }
 
 
@@ -275,7 +285,7 @@
 }
 
 .purple-btn {
-    background-color: #b49bff;
+    background-color: #7a6cb3;
     color: white;
 }
 
@@ -326,7 +336,7 @@
     border-color: #b49bff;
 }
 
-/* Dropdown Select 美化 */
+
 #create-modal select,
 #create-modal select#create-question-type,
 #create-modal select#question-type,
@@ -334,9 +344,8 @@
     width: 100%;
     padding: 10px 14px;
     font-size: 16px;
-    border: 2px solid #d1c4e9;
+    font-weight: 550;
     border-radius: 10px;
-    background-color: #f9f8ff;
     color: #333;
     font-family: Arial, sans-serif;
     outline: none;

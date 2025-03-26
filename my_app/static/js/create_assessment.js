@@ -15,19 +15,22 @@ document.addEventListener("DOMContentLoaded", function() {
     
             let html = `
             <div id="question-${newIndex}" class="question-block">
-                <label>Question ${newIndex}:</label>
+                <label>Question ${newIndex}</label>
                 <input type="text" name="question_text_${newIndex}" value="${q.content}" style="width: 60%;" ${disabledAttr} />
                 <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
             `;
     
             if (!isReadOnly) {
-                html += `<button type="button" onclick="removeQuestion('question-${newIndex}')">Delete</button>`;
+                html += `<button class="ca-delete-button" type="button" onclick="removeQuestion('question-${newIndex}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                            <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                            </svg>
+                        </button>`;
             }
     
             if (q.question_type === "likert") {
                 html += `
                 <div>
-                    Likert Scale:
                     1 <input type="radio" disabled />
                     2 <input type="radio" disabled />
                     3 <input type="radio" disabled />
@@ -64,16 +67,19 @@ document.addEventListener("DOMContentLoaded", function() {
   
       let html = `
         <div id="question-temp" class="question-block">
-          <label>Question X:</label>
+          <label>Question X</label>
           <input type="text" placeholder="Enter your question text here" style="width: 60%;" />
           <input type="hidden" value="${type}" />
-          <button type="button">Delete</button>
+          <button type="button" class="ca-delete-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+          </button>
       `;
   
       if (type === "likert") {
         html += `
           <div style="margin-top: 10px;">
-            <label>Likert Scale: </label>
             1 <input type="radio" disabled />
             2 <input type="radio" disabled />
             3 <input type="radio" disabled />
@@ -84,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
       } else if (type === "open") {
         html += `
           <div style="margin-top: 10px;">
-            <label>Open Response:</label>
             <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
           </div>
         `;
