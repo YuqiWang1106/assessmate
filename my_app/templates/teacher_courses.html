@@ -17,7 +17,7 @@
 <body>
     <div class="header">
         <div classs="button-container">
-            <button class="back-button">Return</button>
+            <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
             <button class="logout-button" onclick="window.location.href='/'">Logout</button>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <!--button class="addcourse-btn" onclick="window.location.href='new_course.html'">Add New Course</button-->
         
         <a href="{% url 'new_course' teacher.id %}">
-            <button>Add More Courses</button>
+            <button class ="addcourse-btn">Add More Courses</button>
         </a>
        
         
