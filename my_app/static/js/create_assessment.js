@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const newIndex = index + 1;
     
             let html = `
-            <div id="question-${newIndex}" class="question-block" style="margin-top: 20px; padding: 10px; border: 1px solid #aaa;">
+            <div id="question-${newIndex}" class="question-block">
                 <label>Question ${newIndex}:</label>
                 <input type="text" name="question_text_${newIndex}" value="${q.content}" style="width: 60%;" ${disabledAttr} />
                 <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const type = document.getElementById("question-type").value;
   
       let html = `
-        <div id="question-temp" class="question-block" style="margin-top: 20px; padding: 10px; border: 1px solid #aaa;">
+        <div id="question-temp" class="question-block">
           <label>Question X:</label>
           <input type="text" placeholder="Enter your question text here" style="width: 60%;" />
           <input type="hidden" value="${type}" />
@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
       } else if (type === "open") {
         html += `
           <div style="margin-top: 10px;">
-            <label>Open Response:</label><br>
+            <label>Open Response:</label>
             <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
           </div>
         `;

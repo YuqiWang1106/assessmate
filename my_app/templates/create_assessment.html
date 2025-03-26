@@ -5,103 +5,105 @@
 <head>
     <meta charset="UTF-8">
     <title>{% if readonly %}View{% else %}Create{% endif %} Assessment</title>
+    <link rel="stylesheet" href="{% static 'css/create_assessment.css' %}">
     <script src="{% static 'js/create_assessment.js' %}"></script>
-
     <script>
         var READ_ONLY = "{{ readonly|yesno:'true,false' }}";
     </script>
-    
-    
 </head>
-<body>
+<body class="create-body">
 
-    <h1>{% if readonly %}View{% else %}Create{% endif %} Assessment</h1>
+    <div class="create-container">
+        <h1 class="create-page-title">{% if readonly %}View{% else %}Create{% endif %} Assessment</h1>
 
-    <!-- Add Question Button -->
-    {% if not readonly %}
-    <button onclick="openModal()">Add Question</button>
-    {% endif %}
+        {% if not readonly %}
+        <div class="create-top-btns">
+            <button class="create-add-question-btn" onclick="openModal()">Add Question</button>
+        </div>
+        {% endif %}
 
-    <!-- Question List Area -->
+        <!-- Question List Area -->
     <form id="assessment-form" method="POST">
         {% csrf_token %}
 
         <!-- Assessment Title -->
-        <label for="assessment-title">Assessment Title:</label>
-        <input
-            type="text"
-            id="assessment-title"
-            name="assessment_title"
-            placeholder="Enter assessment title"
-            style="width: 60%;"
-            value="{{ assessment.title|default_if_none:'' }}"
-            {% if readonly %}disabled{% endif %}
-        />
-        <br><br>
+        <div class="create-title-input-box">
+            <label for="assessment-title" class="create-title-label">Assessment Title:</label>
+            <input
+                type="text"
+                id="assessment-title"
+                class="create-title-input"
+                name="assessment_title"
+                placeholder="Enter assessment title"
+                value="{{ assessment.title|default_if_none:'' }}"
+                {% if readonly %}disabled{% endif %}
+            />
+        </div>
 
-        <div id="question-list">
-        <!-- Questions will be inserted here -->
+        <div id="question-list" class="create-question-list">
+            <!-- questions will go here -->
         </div>
 
         <!-- Control Buttons -->
-        <br>
-        {% if readonly %}
-            <button type="button" onclick="quitWithoutSaving()">Quit</button>
-        {% else %}
-            <button type="button" onclick="openQuitModal()">Quit</button>
-            <button type="button" onclick="openPublishModal()">Publish</button>
-        {% endif %}
+        <div class="create-button-group">
+            {% if readonly %}
+                <button type="button" class="create-btn purple-btn" onclick="quitWithoutSaving()">Quit</button>
+            {% else %}
+                <button type="button" class="create-btn grey-btn" onclick="openQuitModal()">Quit</button>
+                <button type="button" class="create-btn purple-btn" onclick="openPublishModal()">Publish</button>
+            {% endif %}
+        </div>
     </form>
 
-    <!-- Delete Assessment Button (always shown if editing) -->
+    <!-- Delete Assessment -->
     {% if assessment %}
         <input type="hidden" id="assessment-id" value="{{ assessment.id }}">
-        <button type="button" onclick="openDeleteModal()">Delete Assessment</button>
+        <div class="create-delete-wrapper">
+            <button type="button" class="create-btn delete-btn" onclick="openDeleteModal()">Delete Assessment</button>
+        </div>
     {% endif %}
 
-    <input type="hidden" id="teacher-id" value="{{ teacher.id }}">
 
-    <!-- Question Type Modal -->
-    <div id="question-modal" style="display: none; position: fixed; top: 20%; left: 30%; background: white; border: 1px solid #ccc; padding: 20px;">
-        <h3>Select Question Type</h3>
-        <select id="question-type">
-            <option value="likert">Likert Scale</option>
-            <option value="open">Open-Ended</option>
-        </select>
-        <br><br>
-        <button onclick="confirmAddQuestion()">Confirm</button>
-        <button onclick="closeModal()">Cancel</button>
+        <input type="hidden" id="teacher-id" value="{{ teacher.id }}">
+
+        <!-- Modals -->
+        <div id="question-modal" class="create-modal">
+            <h3>Select Question Type</h3>
+            <select id="question-type" class="create-select">
+                <option value="likert">Likert Scale</option>
+                <option value="open">Open-Ended</option>
+            </select>
+            <br><br>
+            <button onclick="confirmAddQuestion()">Confirm</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+
+        <div id="publish-modal" class="create-modal">
+            <h3>Select Due Date</h3>
+            <input type="date" id="due-date" />
+            <br><br>
+            <button onclick="confirmPublish()">OK</button>
+            <button onclick="closePublishModal()">Cancel</button>
+        </div>
+
+        <div id="quit-modal" class="create-modal">
+            <h3>Are you sure you want to quit?</h3>
+            <p>You can save your changes or discard them.</p>
+            <button onclick="confirmQuitAndSave()">Save & Quit</button>
+            <button onclick="quitWithoutSaving()">Quit Anyway</button>
+        </div>
+
+        <div id="delete-modal" class="create-modal">
+            <h3>Are you sure you want to delete this assessment?</h3>
+            <p>This action cannot be undone.</p>
+            <button onclick="confirmDelete()">Yes, Delete</button>
+            <button onclick="closeDeleteModal()">Cancel</button>
+        </div>
+
+        <script id="preloaded-questions" type="application/json">
+            {{ questions_json|safe }}
+        </script>
     </div>
-
-    <!-- Publish Modal -->
-    <div id="publish-modal" style="display: none; position: fixed; top: 25%; left: 30%; background: white; border: 1px solid #ccc; padding: 20px;">
-        <h3>Select Due Date</h3>
-        <input type="date" id="due-date" />
-        <br><br>
-        <button onclick="confirmPublish()">OK</button>
-        <button onclick="closePublishModal()">Cancel</button>
-    </div>
-
-    <!-- Quit Confirmation Modal -->
-    <div id="quit-modal" style="display: none; position: fixed; top: 30%; left: 30%; background: white; border: 1px solid #ccc; padding: 20px;">
-        <h3>Are you sure you want to quit?</h3>
-        <p>You can save your changes or discard them.</p>
-        <button onclick="confirmQuitAndSave()">Save & Quit</button>
-        <button onclick="quitWithoutSaving()">Quit Anyway</button>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="delete-modal" style="display: none; position: fixed; top: 35%; left: 30%; background: white; border: 1px solid #ccc; padding: 20px;">
-        <h3>Are you sure you want to delete this assessment?</h3>
-        <p>This action cannot be undone.</p>
-        <button onclick="confirmDelete()">Yes, Delete</button>
-        <button onclick="closeDeleteModal()">Cancel</button>
-    </div>
-
-    <!-- Preloaded Questions JSON -->
-    <script id="preloaded-questions" type="application/json">
-        {{ questions_json|safe }}
-    </script>
 
 </body>
 </html>
