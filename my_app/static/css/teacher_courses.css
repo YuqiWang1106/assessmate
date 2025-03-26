@@ -119,8 +119,8 @@ body .header button:hover {
   }
 
   .addcourse-btn {
-    background-color: #4A4EAE;
-    color: white;
+    background-color: white; 
+    color: black;
     font-size: 16px;
     font-weight: bold;
     text-align: center;
@@ -135,4 +135,14 @@ body .header button:hover {
 
 .addcourse-btn:hover {
     background-color: #3A3E9E;
+}
+
+.delete-btn{
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
 }

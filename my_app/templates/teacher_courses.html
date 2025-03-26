@@ -9,6 +9,11 @@
     <title>Course Page</title>
     <link rel="stylesheet" href="{% static 'css/teacher_courses.css' %}">
 </head>
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this course? This action cannot be undone.");
+    }
+</script>
 <body>
     <div class="header">
         <div classs="button-container">
@@ -28,7 +33,14 @@
                             data-course-id="{{ course.id }}"
                             onclick="changeCourse('{{ course.id }}')">
                             <strong>{{ course.course_number }} - {{ course.course_name }}</strong>
+                            <!--button class="delete-btn">Delete</button-->
+                            <!-- Delete Course Button -->
+                            <form action="{% url 'delete_course' teacher.id course.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                                <button type="submit" class="delete-btn" onclick="return confirmDelete()">Delete</button>
+                            </form>
                         </li>
+                        
                     {% empty %}
                         <li>No courses yet</li>
                     {% endfor %}
@@ -38,11 +50,13 @@
         
         <!--button class="addcourse-btn" onclick="window.location.href='new_course/{{ teacher.id }}/'">Add New Course</button-->
         <!--button class="addcourse-btn" onclick="window.location.href='new_course.html'">Add New Course</button-->
-
+        
         <a href="{% url 'new_course' teacher.id %}">
             <button>Add More Courses</button>
         </a>
-  
+       
+        
+   
 
 
     </div>

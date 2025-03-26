@@ -9,6 +9,9 @@ from django.http import HttpResponseForbidden
 from .forms import CourseForm
 from django.utils import timezone
 import json
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+
 
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -218,12 +221,14 @@ def new_course(request, teacher_id):
             course = form.save(commit=False)
             course.teacher = teacher  # Assign teacher from the URL
             course.save()
-            return redirect('course_list')
+            #return redirect('teacher_courses')
+            return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))
             # Save the course to the database or perform other actions
            
     else:
         form = CourseForm()
 
+    
     return render(request, "new_course.html", {"form": form, "teacher": teacher})
 
 def assessment_dashboard(request, teacher_id):
@@ -348,3 +353,14 @@ def view_assessment(request, teacher_id, assessment_id):
         ]),
         "readonly": True
     })
+
+@csrf_exempt
+def delete_course(request, teacher_id, course_id):
+    """Delete a course"""
+    course = get_object_or_404(Course, id=course_id, teacher_id=teacher_id)
+    
+    if request.method == "POST":  # Only allow POST requests for deletion
+        course.delete()
+        return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))
+
+    return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))  # Fallback redirect

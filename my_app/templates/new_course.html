@@ -22,27 +22,17 @@
     </div>
 
     <div class="new-course-box">
-        <form method="POST">
+        <h3>Create a New Course</h3>
+        <form method="POST" action="{% url 'new_course' teacher.id %}">
             {% csrf_token %}
-            <div class="course-number">
-                <h3>Course Number</h3>
-                
-                {{ form.course_number|add_class:"form-control" }}
-            </div>
-
-            <div class="course-name">
-                <h3>Course Name</h3>
-                {{ form.course_name|add_class:"form-control" }}
-            </div>
-            
-
-           
-            <button type="submit" class="confirm-btn">
-                Confirm
-            </button>
-            </div>
+            {{ form.as_p }}
+            <button type="submit">Create Course</button>
         </form>
     </div>
+   
+        
+    
+
 
 </body>
 </html>
