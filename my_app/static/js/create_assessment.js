@@ -99,6 +99,15 @@ document.addEventListener("DOMContentLoaded", function() {
   
       html += `</div>`;
       questionList.insertAdjacentHTML("beforeend", html);
+
+
+      // 给新添加的 block 添加动画类名
+        const newBlock = document.getElementById("question-temp");
+        if (newBlock) {
+        newBlock.classList.add("animate-slide-in");
+        newBlock.id = `question-${questionCount + 1}`;  // 确保 id 合理
+        }
+
   
       closeModal();
       reIndexQuestions();
