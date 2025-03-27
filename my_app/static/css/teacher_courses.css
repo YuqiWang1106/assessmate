@@ -146,3 +146,36 @@ body .header button:hover {
   cursor: pointer;
   border-radius: 8px;
 }
+
+.semester-year-container {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Adds spacing between labels and dropdowns */
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #f4f4f4; /* Light background for contrast */
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.semester-year-container label {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+}
+
+.styled-dropdown {
+  padding: 10px 15px;
+  border: 2px solid #007bff; /* Blue border for contrast */
+  border-radius: 8px;
+  background-color: white;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none; /* Removes default dropdown arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23007bff' d='M2 0L0 2h4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size:
