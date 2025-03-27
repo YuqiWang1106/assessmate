@@ -225,11 +225,17 @@ def teacher_courses(request, teacher_id):
 
    
     courses = Course.objects.filter(teacher_id=teacher_id)
+    semesters = Course.objects.filter(teacher_id=teacher_id).values_list('course_semester', flat=True).distinct()
+    years = Course.objects.filter(teacher_id=teacher_id).values_list('course_year', flat=True).distinct()
+
 
     
     return render(request, "teacher_courses.html", {
         "teacher": teacher,
         "courses": courses,
+        "semesters": semesters, 
+        "years": years,
+        
     })
     
 
@@ -251,8 +257,10 @@ def new_course(request, teacher_id):
     else:
         form = CourseForm()
 
-    
-    return render(request, "new_course.html", {"form": form, "teacher": teacher})
+    semesters = Course.objects.values_list('course_semester', flat=True).distinct()
+    years = Course.objects.values_list('course_year', flat=True).distinct()
+
+    return render(request, "new_course.html", {"form": form, "teacher": teacher, "semesters": semesters, "years": years})
 
 def assessment_dashboard(request, teacher_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")

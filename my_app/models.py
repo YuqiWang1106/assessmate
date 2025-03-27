@@ -21,6 +21,8 @@ class Course(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course_number = models.CharField(max_length=20, unique=True)
     course_name = models.CharField(max_length=100)
+    course_semester =models.CharField(max_length = 20)
+    course_year = models.CharField(max_length = 20)
     teacher = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
