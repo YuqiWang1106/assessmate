@@ -255,8 +255,8 @@ def new_course(request, teacher_id):
 def assessment_dashboard(request, teacher_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     courses = Course.objects.filter(teacher=teacher)
-
     selected_course_id = request.GET.get("course_id")
+
     if selected_course_id:
         selected_course = get_object_or_404(Course, id=selected_course_id, teacher=teacher)
     else:
@@ -284,9 +284,9 @@ def assessment_dashboard(request, teacher_id):
         "finished_assessments": finished_assessments,
     })
 
-def create_assessment(request, teacher_id, assessment_id=None):
+def create_assessment(request, teacher_id, course_id, assessment_id=None):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
-
+    course = get_object_or_404(Course, id=course_id, teacher=teacher)
     assessment = None
     questions = []
 
@@ -298,7 +298,7 @@ def create_assessment(request, teacher_id, assessment_id=None):
         title = request.POST.get("assessment_title", "").strip()
         if not title:
             existing_count = Assessment.objects.filter(
-                course__teacher=teacher,
+                course=course,
                 title__startswith="Untitled Assessment"
             ).count()
             title = f"Untitled Assessment {existing_count + 1}"
@@ -316,7 +316,7 @@ def create_assessment(request, teacher_id, assessment_id=None):
             AssessmentQuestion.objects.filter(assessment=assessment).delete()
         else:
             assessment = Assessment.objects.create(
-                course=Course.objects.filter(teacher=teacher).first(),
+                course=course,
                 title=title,
                 status=status,
                 publish_date=timezone.now() if status == "published" else None,
@@ -337,10 +337,14 @@ def create_assessment(request, teacher_id, assessment_id=None):
             )
             i += 1
 
-        return redirect("assessment_dashboard", teacher_id=teacher.id)
+        # return redirect("assessment_dashboard", teacher_id=teacher.id)
+        return redirect(f"/assessment_dashboard/{teacher.id}/?course_id={course.id}")
+
     
     return render(request, "create_assessment.html", {
         "teacher": teacher,
+        "course": course,
+        "course_id": course.id,
         "assessment": assessment,
         "questions": questions,
         "questions_json": json.dumps([
@@ -352,22 +356,25 @@ def create_assessment(request, teacher_id, assessment_id=None):
 def delete_assessment(request, teacher_id, assessment_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     assessment = get_object_or_404(Assessment, id=assessment_id, course__teacher=teacher)
+    course_id = request.GET.get("course_id", assessment.course.id)
 
     AssessmentQuestion.objects.filter(assessment=assessment).delete()
     assessment.delete()
 
-    return redirect("assessment_dashboard", teacher_id=teacher.id)
-
+    # return redirect("assessment_dashboard", teacher_id=teacher.id)
+    return redirect(f"/assessment_dashboard/{teacher_id}/?course_id={course_id}")
 
 def view_assessment(request, teacher_id, assessment_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     assessment = get_object_or_404(Assessment, id=assessment_id, course__teacher=teacher, status="published")
     questions = AssessmentQuestion.objects.filter(assessment=assessment)
+    course_id = request.GET.get("course_id", assessment.course.id)
 
     return render(request, "create_assessment.html", {
         "teacher": teacher,
         "assessment": assessment,
         "questions": questions,
+        "course_id": course_id,
         "questions_json": json.dumps([
             {"question_type": q.question_type, "content": q.content}
             for q in questions

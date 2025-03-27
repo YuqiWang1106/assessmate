@@ -54,13 +54,36 @@ document.addEventListener("DOMContentLoaded", function() {
     
       renderPreloadedQuestions();
 
-    window.openModal = function() {
-      document.getElementById("question-modal").style.display = "block";
-    }
+    // window.openModal = function() {
+    //   document.getElementById("question-modal").style.display = "block";
+    // }
   
-    window.closeModal = function() {
-      document.getElementById("question-modal").style.display = "none";
-    }
+    // window.closeModal = function() {
+    //   document.getElementById("question-modal").style.display = "none";
+    // }
+
+
+    window.openModal = function () {
+        const modal = document.getElementById("question-modal");
+        modal.classList.remove("fade-out"); // 移除之前的淡出动画
+        modal.style.display = "block";
+        modal.classList.add("fade-in"); // 添加淡入动画
+      };
+      
+
+    window.closeModal = function () {
+        const modal = document.getElementById("question-modal");
+        modal.classList.remove("fade-in"); // 移除淡入动画
+        modal.classList.add("fade-out");
+      
+        modal.addEventListener("animationend", function handler() {
+          modal.classList.remove("fade-out");
+          modal.style.display = "none";
+          modal.removeEventListener("animationend", handler);
+        });
+      };
+      
+      
   
     window.confirmAddQuestion = function() {
       const type = document.getElementById("question-type").value;
@@ -101,11 +124,10 @@ document.addEventListener("DOMContentLoaded", function() {
       questionList.insertAdjacentHTML("beforeend", html);
 
 
-      // 给新添加的 block 添加动画类名
         const newBlock = document.getElementById("question-temp");
         if (newBlock) {
         newBlock.classList.add("animate-slide-in");
-        newBlock.id = `question-${questionCount + 1}`;  // 确保 id 合理
+        newBlock.id = `question-${questionCount + 1}`; 
         }
 
   
@@ -176,10 +198,18 @@ document.addEventListener("DOMContentLoaded", function() {
   };
   
 
-    window.quitWithoutSaving = function() {
+    window.quitWithoutSaving = function () {
         const teacherId = document.getElementById("teacher-id").value;
-        window.location.href = `/assessment_dashboard/${teacherId}/`;
+        const courseIdInput = document.getElementById("course-id");
+        const courseId = courseIdInput ? courseIdInput.value : null;
+    
+        if (courseId) {
+            window.location.href = `/assessment_dashboard/${teacherId}/?course_id=${courseId}`;
+        } else {
+            window.location.href = `/assessment_dashboard/${teacherId}/`;
+        }
     };
+    
 
     window.openDeleteModal = function () {
         document.getElementById("delete-modal").style.display = "block";
@@ -189,14 +219,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("delete-modal").style.display = "none";
     };
     
+    // window.confirmDelete = function () {
+    //     const teacherId = document.getElementById("teacher-id").value;
+    //     const assessmentId = document.getElementById("assessment-id").value;
+    //     if (teacherId && assessmentId) {
+    //         window.location.href = `/delete_assessment/${teacherId}/${assessmentId}/`;
+    //     }
+    // };
+    
     window.confirmDelete = function () {
         const teacherId = document.getElementById("teacher-id").value;
         const assessmentId = document.getElementById("assessment-id").value;
-        if (teacherId && assessmentId) {
-            window.location.href = `/delete_assessment/${teacherId}/${assessmentId}/`;
+        const courseId = document.getElementById("course-id").value;
+        if (teacherId && assessmentId && courseId) {
+            window.location.href = `/delete_assessment/${teacherId}/${assessmentId}/?course_id=${courseId}`;
         }
     };
-    
   
     window.openPublishModal = function() {
         document.getElementById("publish-modal").style.display = "block";

@@ -89,6 +89,18 @@
 }
 
 
+  /* 淡入动画 */
+  .create-modal.fade-in {
+    animation: fadeInUp 0.4s ease forwards;
+  }
+  
+  /* 淡出动画 */
+  .create-modal.fade-out {
+    animation: fadeOut 0.3s forwards;
+  }
+  
+
+
 @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -99,6 +111,21 @@
       transform: translate(-50%, -50%);
     }
   }
+
+
+@keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+  
+
+
 
 .create-modal h3 {
     font-size: 20px;
@@ -253,8 +280,8 @@
 
 /* Delete Button */
 .question-block button {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     background-color: rgb(255, 255, 255);
     color: #8e8c8c;
     border: 2px solid #68686887;
@@ -269,8 +296,8 @@
 }
 
 .question-block button svg {
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
 }
 
 .question-block button:hover {
@@ -606,5 +633,6 @@ input[disabled] {
   }
   
   .question-block.animate-slide-in {
-    animation: slideInUp 0.4s ease forwards;
+    animation: slideInUp 0.7s ease forwards;
   }
+

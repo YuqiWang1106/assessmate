@@ -24,13 +24,12 @@
         </div>
         {% endif %}
 
-        <!-- Question List Area -->
+
     <form id="assessment-form" method="POST">
         {% csrf_token %}
 
-        <!-- Assessment Title -->
+
         <div class="create-title-input-box">
-            <!-- <label for="assessment-title" class="create-title-label">Assessment Title:</label> -->
             <input
                 type="text"
                 id="assessment-title"
@@ -43,12 +42,10 @@
         </div>
 
         <div id="question-list" class="create-question-list">
-            <!-- questions will go here -->
         </div>
 
         <div class="create-button-group">
             {% if not readonly %}
-            <!-- 第一行：Add Question -->
             <div class="mb-3 text-center">
                 <svg onclick="openModal()" xmlns="http://www.w3.org/2000/svg"
                     width="46" height="46" viewBox="0 0 16 16"
@@ -57,7 +54,6 @@
                     <path class="icon-plus" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
                 </svg>
             </div>
-            <!-- 第二行：Delete + Quit，受 assessment 控制 -->
             {% if assessment %}
             <div class="d-flex justify-content-end gap-3">
                 <input type="hidden" id="assessment-id" value="{{ assessment.id }}">
@@ -75,8 +71,26 @@
             </div>
             {% endif %}
         </div>
-    </form>
+        <!-- ✅ 关键：隐藏字段 -->
+        {% if assessment %}
+            <input type="hidden" id="course-id" value="{{ assessment.course.id }}">
+        {% else %}
+            <input type="hidden" id="course-id" value="{{ course_id }}">
+        {% endif %}
+
+        {% if assessment %}
+            <input type="hidden" name="course_id" value="{{ assessment.course.id }}">
+        {% else %}
+            <input type="hidden" name="course_id" value="{{ course_id }}">
+        {% endif %}
         <input type="hidden" id="teacher-id" value="{{ teacher.id }}">
+    </form>
+
+    <!-- {% if assessment %}
+        <input type="hidden" id="course-id" value="{{ assessment.course.id }}">
+    {% endif %}
+
+        <input type="hidden" id="teacher-id" value="{{ teacher.id }}"> -->
 
         <!-- Modals -->
         <div id="question-modal" class="create-modal">

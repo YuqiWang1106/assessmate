@@ -12,23 +12,20 @@
 <body>
 
 <div class="ad-dashboard-container">
-    <!-- Header -->
     <div class="ad-header">
         <h1>Assessment - {{ selected_course.course_name }}</h1>
-        <a href="{% url 'create_assessment' teacher.id %}" class="ad-create-btn">Create</a>
+        <a href="{% url 'create_assessment' teacher.id selected_course.id %}" class="ad-create-btn">Create</a>
     </div>
 
     <div class="row mt-4 ad-row-gap">
-        <!-- Published + Finished -->
         <div class="col-md-5">
-            <!-- Published -->
             <div class="ad-column-box-left">
                 <h2>Published</h2>
                 <div class="scrollable-content-left">
                 {% for assessment in published_assessments %}
                     <div class="ad-assessment-card">
                         <span>{{ assessment.title }}</span>
-                        <a href="{% url 'view_assessment' teacher.id assessment.id %}">View</a>
+                        <a href="{% url 'view_assessment' teacher.id assessment.id %}?course_id={{ selected_course.id }}">View</a>
                     </div>
                 {% empty %}
                     <p class="ad-empty-msg">No published assessments.</p>
@@ -36,7 +33,6 @@
             </div>
         </div>
 
-            <!-- Finished -->
             <div class="ad-column-box-left mt-4">
                 <h2>Finished</h2>
                 <div class="scrollable-content-left">
@@ -52,7 +48,6 @@
             </div>
         </div>
 
-        <!-- Draft -->
         <div class="col-md-5">
             <div class="ad-column-box-right">
                 <h2>Draft</h2>
@@ -60,7 +55,7 @@
                 {% for assessment in draft_assessments %}
                     <div class="ad-assessment-card">
                         <span>{{ assessment.title }}</span>
-                        <a href="{% url 'edit_assessment' teacher.id assessment.id %}">Edit</a>
+                        <a href="{% url 'edit_assessment' teacher.id assessment.id selected_course.id %}">Edit</a>
                     </div>
                 {% empty %}
                     <p class="ad-empty-msg">No draft assessments.</p>
@@ -70,7 +65,6 @@
         </div>
     </div>
 
-    <!-- 返回链接 -->
     <div class="ad-bottom-link mt-4">
         <a href="{% url 'teacher_dashboard' teacher.id %}">Back to Teacher Dashboard</a>
     </div>
