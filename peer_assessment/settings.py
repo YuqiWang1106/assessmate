@@ -129,3 +129,13 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "my_app/static")]
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#Email Sending Settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #I put this here to make sure all email outputs are sent to the terminal for testing
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'assessmate101@gmail.com' 
+EMAIL_HOST_PASSWORD = 'assessmate101!#!' 
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+

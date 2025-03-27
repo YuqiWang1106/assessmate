@@ -11,6 +11,10 @@ from django.utils import timezone
 import json
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import send_mail
+from django.http import JsonResponse
 
 
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -80,6 +84,23 @@ def google_callback(request):
     request.session["user_id"] = str(user.id)
     request.session["user_email"] = user.email
     request.session["user_role"] = user.role
+    #Empty course logic (if we want it)
+    if created:
+        if role == "teacher":
+            Course.objects.create(
+                teacher=user,
+                course_name="Welcome to Assessmate!",
+                course_number="Teacher101",
+                created_at=now()
+            )
+        elif role == "student":
+            # Find or create a default "Intro Course"
+            intro_course, _ = Course.objects.get_or_create(
+                course_name="Welcome to Assessmate!",
+                course_number="Student101",
+                defaults={"teacher": None, "created_at": now()}
+            )
+            CourseMember.objects.create(course=intro_course, user=user)
 
     # redirects user to their respective dashboard
     if user.role == "teacher":
@@ -107,7 +128,7 @@ def teacher_dashboard(request, teacher_id):
     # New teacher without any course yet
     if not courses.exists():
             return render(request, "teacher_dashboard.html", {
-                "user": teacher,
+                "teacher": teacher,
                 "courses": courses,
                 "teams_dict": {},  
                 "assessments_dict": {},
@@ -364,3 +385,40 @@ def delete_course(request, teacher_id, course_id):
         return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))
 
     return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))  # Fallback redirect
+
+# Sending Invite to Student
+@csrf_exempt
+@require_POST
+def invite_student(request):
+    """Invite a student to a course by email."""
+    try:
+        data = json.loads(request.body)
+        email = data.get("email")
+        course_id = data.get("course_id")
+
+        if not email or not course_id:
+            return JsonResponse({"success": False, "message": "Missing email or course ID."}, status=400)
+
+        course = get_object_or_404(Course, id=course_id)
+
+        # Get or create user
+        student, _ = User.objects.get_or_create(
+            email=email,
+            defaults={"name": email.split("@")[0], "role": "student", "created_at": timezone.now()}
+        )
+
+        # Create CourseMember if they don't already exist
+        course_member, created = CourseMember.objects.get_or_create(course=course, user=student)
+
+        # send email
+        send_mail(
+            subject="You're invited to join a course on Assessmate!",
+            message=f"You have been invited to join the course '{course.course_name}' on Assessmate.",
+            from_email="no-reply@assessmate.edu",
+            recipient_list=[email],
+            fail_silently=True
+        )
+
+        return JsonResponse({"success": True, "message": f"{email} has been invited!"})
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)}, status=500)
