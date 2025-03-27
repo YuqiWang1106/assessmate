@@ -23,7 +23,18 @@
       </div>
     <div class="container">
         <div class="dashboard-container">
-        <h3>Current Semester: Spring 2025 </h3>
+        <h3>Current Semester:  </h3>
+        <select name="semester">
+            {% for semester in semesters %}
+                <option value="{{ semester }}">{{ semester }}</option>
+            {% endfor %}
+        </select>
+        
+        <select name="year">
+            {% for year in years %}
+                <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
         <h4>Active Courses: </h4>
             <div class="my-courses-box">
                 <h2>My Courses </h2>
