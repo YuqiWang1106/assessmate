@@ -71,7 +71,6 @@
             </div>
             {% endif %}
         </div>
-        <!-- ✅ 关键：隐藏字段 -->
         {% if assessment %}
             <input type="hidden" id="course-id" value="{{ assessment.course.id }}">
         {% else %}
@@ -86,11 +85,6 @@
         <input type="hidden" id="teacher-id" value="{{ teacher.id }}">
     </form>
 
-    <!-- {% if assessment %}
-        <input type="hidden" id="course-id" value="{{ assessment.course.id }}">
-    {% endif %}
-
-        <input type="hidden" id="teacher-id" value="{{ teacher.id }}"> -->
 
         <!-- Modals -->
         <div id="question-modal" class="create-modal">

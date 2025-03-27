@@ -54,26 +54,19 @@ document.addEventListener("DOMContentLoaded", function() {
     
       renderPreloadedQuestions();
 
-    // window.openModal = function() {
-    //   document.getElementById("question-modal").style.display = "block";
-    // }
-  
-    // window.closeModal = function() {
-    //   document.getElementById("question-modal").style.display = "none";
-    // }
 
 
     window.openModal = function () {
         const modal = document.getElementById("question-modal");
-        modal.classList.remove("fade-out"); // 移除之前的淡出动画
+        modal.classList.remove("fade-out"); 
         modal.style.display = "block";
-        modal.classList.add("fade-in"); // 添加淡入动画
+        modal.classList.add("fade-in");
       };
       
 
     window.closeModal = function () {
         const modal = document.getElementById("question-modal");
-        modal.classList.remove("fade-in"); // 移除淡入动画
+        modal.classList.remove("fade-in");
         modal.classList.add("fade-out");
       
         modal.addEventListener("animationend", function handler() {
@@ -219,13 +212,6 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("delete-modal").style.display = "none";
     };
     
-    // window.confirmDelete = function () {
-    //     const teacherId = document.getElementById("teacher-id").value;
-    //     const assessmentId = document.getElementById("assessment-id").value;
-    //     if (teacherId && assessmentId) {
-    //         window.location.href = `/delete_assessment/${teacherId}/${assessmentId}/`;
-    //     }
-    // };
     
     window.confirmDelete = function () {
         const teacherId = document.getElementById("teacher-id").value;
