@@ -128,6 +128,7 @@ def teacher_dashboard(request, teacher_id):
     # New teacher without any course yet
     if not courses.exists():
             return render(request, "teacher_dashboard.html", {
+                "user": teacher,
                 "teacher": teacher,
                 "courses": courses,
                 "teams_dict": {},  
@@ -159,6 +160,7 @@ def teacher_dashboard(request, teacher_id):
 
 
     return render(request, "teacher_dashboard.html", {
+        "user": teacher,
         "teacher": teacher,
         "courses": courses,
         "teams_dict": teams_dict,  
