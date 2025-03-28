@@ -2,6 +2,7 @@
     background: #6a69c7;
     margin: 0;
     font-family: Arial, sans-serif;
+    animation: fadeInUpp 0.5s ease-out;
 }
 
 .create-container {
@@ -16,6 +17,15 @@
     padding-bottom: 40px;
     box-shadow: 0 0 20px rgba(94, 93, 187, 0.15);
 }
+
+@keyframes fadeInUpp {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
 .create-page-title {
     text-align: center;
@@ -693,7 +703,7 @@ input[disabled] {
 
 
 
-  
+
 
   .likert-options input[type="radio"].filled {
     background-color: #7a6cb3;
