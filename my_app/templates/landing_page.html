@@ -25,5 +25,13 @@
             <img src="{% static 'images/landing-image.png' %}" alt="Teamwork Image">
         </div>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("error") === "role_mismatch") {
+            alert("You have already registered as a student or teacher. Please log in using the correct role.");
+            window.history.replaceState(null, "", window.location.pathname); // 清除 ?error 参数
+        }
+    </script>
+    
 </body>
 </html>

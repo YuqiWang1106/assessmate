@@ -75,17 +75,22 @@ def google_callback(request):
         return HttpResponseForbidden("Please use a @bc.edu email")
     
     # checks if user exists, if not, creates user
-    user, created = User.objects.get_or_create(
-        email=email,
-        defaults={"name": name, "role": role, "created_at": now()},
-    )
+    # user, created = User.objects.get_or_create(
+    #     email=email,
+    #     defaults={"name": name, "role": role, "created_at": now()},
+    # )
+    try:
+        user = User.objects.get(email=email)
+        if user.role != role:
+            return redirect(f"/?error=role_mismatch")
+    except User.DoesNotExist:
 
-    # store the user session to restrict access to protected pages -> done in dashboard views
-    request.session["user_id"] = str(user.id)
-    request.session["user_email"] = user.email
-    request.session["user_role"] = user.role
-    #Empty course logic (if we want it)
-    if created:
+        user = User.objects.create(
+            email=email,
+            name=name,
+            role=role,
+            created_at=now()
+        )
         if role == "teacher":
             Course.objects.create(
                 teacher=user,
@@ -94,13 +99,34 @@ def google_callback(request):
                 created_at=now()
             )
         elif role == "student":
-            # Find or create a default "Intro Course"
             intro_course, _ = Course.objects.get_or_create(
                 course_name="Welcome to Assessmate!",
                 course_number="Student101",
                 defaults={"teacher": None, "created_at": now()}
             )
             CourseMember.objects.create(course=intro_course, user=user)
+
+    # store the user session to restrict access to protected pages -> done in dashboard views
+    request.session["user_id"] = str(user.id)
+    request.session["user_email"] = user.email
+    request.session["user_role"] = user.role
+    #Empty course logic (if we want it)
+    # if created:
+    #     if role == "teacher":
+    #         Course.objects.create(
+    #             teacher=user,
+    #             course_name="Welcome to Assessmate!",
+    #             course_number="Teacher101",
+    #             created_at=now()
+    #         )
+    #     elif role == "student":
+    #         # Find or create a default "Intro Course"
+    #         intro_course, _ = Course.objects.get_or_create(
+    #             course_name="Welcome to Assessmate!",
+    #             course_number="Student101",
+    #             defaults={"teacher": None, "created_at": now()}
+    #         )
+    #         CourseMember.objects.create(course=intro_course, user=user)
 
     # redirects user to their respective dashboard
     if user.role == "teacher":
