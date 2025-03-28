@@ -288,6 +288,26 @@ def new_course(request, teacher_id):
 
     return render(request, "new_course.html", {"form": form, "teacher": teacher, "semesters": semesters, "years": years})
 
+def teams_dashboard(request, teacher_id):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+    courses = Course.objects.filter(teacher=teacher)
+    selected_course_id = request.GET.get("course_id")
+
+    if selected_course_id:
+        selected_course = get_object_or_404(Course, id=selected_course_id, teacher=teacher)
+    else:
+        selected_course = courses.first()
+
+    current_course_teams = Team.objects.filter(
+        course=selected_course
+    )
+
+    return render(request, "teams_dashboard.html", {
+        "teacher": teacher,
+        "selected_course": selected_course,
+        "teams": current_course_teams
+    })
+
 def assessment_dashboard(request, teacher_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     courses = Course.objects.filter(teacher=teacher)

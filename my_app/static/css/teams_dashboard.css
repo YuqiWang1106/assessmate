@@ -1,0 +1,108 @@
+body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #4346b2;
+   
+    
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f4fc;
+    color: white;
+}
+
+.welcome-text {
+    font-size: 24px; 
+    color: #6259c9;
+}
+
+#username {
+    font-weight: bold;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #4e44c6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #6658a7;
+}
+
+h2 {
+    background-color: #4346b2;
+    color: white;
+    margin: 0;
+    padding: 20px;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.teams-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px; 
+    flex-wrap: wrap; 
+    width: 100%;
+    padding: 20px;
+}
+
+.teams {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+    width: 300px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    justify-content: center;
+    align-items: center;
+}
+
+h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+    text-align: center;
+}
+
+.edi-button {
+    background-color: #7c6bc7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.edi-button:hover {
+    background-color: #6658a7;
+}
+
+.add-button {
+    background-color: #7c6bc7;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    display: block;
+    margin: 40px auto;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.add-button:hover {
+    background-color: #6658a7;
+}

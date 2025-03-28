@@ -1,0 +1,37 @@
+{% load static %}
+{% load dict_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams Page</title>
+    <link rel="stylesheet" href="{% static 'css/teams_dashboard.css' %}">
+</head>
+<body>
+
+    <div class="header">
+        <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
+        <div class="button-container">
+            <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
+            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
+        </div>
+    </div>
+    <h2>Teams for {{ selected_course }}</h2> 
+
+
+    {% for team in teams %}
+        <div class="teams-container">
+            <div class="teams">
+                <h3>{{ team.team_name }}</h3>
+                <button class="edi-button">Edit</button>
+            </div>
+        </div>
+    {% empty %}
+        <p>No teams created yet</p>
+    {% endfor %}
+    <button class="add-button">Add New Team</button>
+</body>
+
+</html>

@@ -59,7 +59,9 @@
             <!-- Course Team Section -->
             <div class="section-header">
                 <span class="section-title">Course Team</span>
-                <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
+                <a href="{% url 'teams_dashboard' teacher.id %}?course_id={{ selected_course.id }}">
+                    <img src="{% static 'images/edit-button.png' %}" alt="Edit" class="edit-icon">
+                </a>
             </div>
             <ul class="team-list">
                 {% for team in teams_dict|get_item:selected_course.id %}
