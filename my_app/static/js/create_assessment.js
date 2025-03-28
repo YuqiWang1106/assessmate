@@ -28,16 +28,34 @@ document.addEventListener("DOMContentLoaded", function() {
               <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
             `;
 
+            // if (q.question_type === "likert") {
+            //     html += `
+            //     <div>
+            //         1 <input type="radio" disabled />
+            //         2 <input type="radio" disabled />
+            //         3 <input type="radio" disabled />
+            //         4 <input type="radio" disabled />
+            //         5 <input type="radio" disabled />
+            //     </div>`;
+            // } 
             if (q.question_type === "likert") {
-                html += `
-                <div>
-                    1 <input type="radio" disabled />
-                    2 <input type="radio" disabled />
-                    3 <input type="radio" disabled />
-                    4 <input type="radio" disabled />
-                    5 <input type="radio" disabled />
-                </div>`;
-            } else if (q.question_type === "open") {
+              html += `
+                <div class="likert-track-container">
+                  <div class="likert-line">
+                    <div class="likert-progress" style="width: 0%;"></div>
+                  </div>
+                  <div class="likert-options">
+                    <label><input type="radio" name="likert_${newIndex}" value="1" ${disabledAttr}><span>Strongly Agree</span></label>
+                    <label><input type="radio" name="likert_${newIndex}" value="2" ${disabledAttr}><span>Agree</span></label>
+                    <label><input type="radio" name="likert_${newIndex}" value="3" ${disabledAttr}><span>Neutral</span></label>
+                    <label><input type="radio" name="likert_${newIndex}" value="4" ${disabledAttr}><span>Disagree</span></label>
+                    <label><input type="radio" name="likert_${newIndex}" value="5" ${disabledAttr}><span>Strongly Disagree</span></label>
+                  </div>
+                </div>
+              `;
+          }
+            
+            else if (q.question_type === "open") {
                 html += `
                 <div>
                     <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
@@ -95,17 +113,35 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
 
   
+      // if (type === "likert") {
+      //   html += `
+      //     <div style="margin-top: 10px;">
+      //       1 <input type="radio" disabled />
+      //       2 <input type="radio" disabled />
+      //       3 <input type="radio" disabled />
+      //       4 <input type="radio" disabled />
+      //       5 <input type="radio" disabled />
+      //     </div>
+      //   `;
+      // } 
       if (type === "likert") {
         html += `
-          <div style="margin-top: 10px;">
-            1 <input type="radio" disabled />
-            2 <input type="radio" disabled />
-            3 <input type="radio" disabled />
-            4 <input type="radio" disabled />
-            5 <input type="radio" disabled />
+          <div class="likert-track-container">
+            <div class="likert-line">
+              <div class="likert-progress"></div>
+            </div>
+            <div class="likert-options">
+              <label><input type="radio" name="likert_temp" value="1"><span>Strongly Agree</span></label>
+              <label><input type="radio" name="likert_temp" value="2"><span>Agree</span></label>
+              <label><input type="radio" name="likert_temp" value="3"><span>Neutral</span></label>
+              <label><input type="radio" name="likert_temp" value="4"><span>Disagree</span></label>
+              <label><input type="radio" name="likert_temp" value="5"><span>Strongly Disagree</span></label>
+            </div>
           </div>
         `;
-      } else if (type === "open") {
+      }
+      
+      else if (type === "open") {
         html += `
           <div style="margin-top: 10px;">
             <textarea disabled rows="3" cols="60" placeholder="Student will answer here..."></textarea>
@@ -246,4 +282,45 @@ document.addEventListener("DOMContentLoaded", function() {
     
         saveAssessment(true);
     }
+    
+    // document.addEventListener("click", function (e) {
+    //   if (e.target.name && e.target.name.startsWith("likert_")) {
+    //     const container = e.target.closest(".likert-track-container");
+    //     if (!container) return;
+    
+    //     const progress = container.querySelector(".likert-progress");
+    //     const value = parseInt(e.target.value);
+    //     if (!isNaN(value)) {
+    //       const percentage = (value - 1) * 25;
+    //       progress.style.width = `${percentage}%`;
+    //     }
+    //   }
+    // });
+    
+
+    document.addEventListener("click", function (e) {
+      if (e.target.name && e.target.name.startsWith("likert_")) {
+        const container = e.target.closest(".likert-track-container");
+        if (!container) return;
+    
+        const progress = container.querySelector(".likert-progress");
+        const value = parseInt(e.target.value);
+        if (!isNaN(value)) {
+          const percentage = (value - 1) * 25;
+          progress.style.width = `${percentage}%`;
+        }
+    
+        const radios = container.querySelectorAll('input[type="radio"]');
+        radios.forEach(radio => {
+          const radioValue = parseInt(radio.value);
+          if (!isNaN(radioValue)) {
+            if (radioValue <= value) {
+              radio.classList.add("filled");
+            } else {
+              radio.classList.remove("filled");
+            }
+          }
+        });
+      }
+    });
     

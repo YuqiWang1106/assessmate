@@ -7,6 +7,7 @@ html body {
     color: white;
     line-height: 1.6;
     min-height: 100vh;
+    perspective: 1000px; 
 }
 
 @keyframes gradientBG {
@@ -22,6 +23,22 @@ html body {
     padding-bottom:5px;
     max-width: 1400px;
     margin: 0 auto;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInSlideUp 1s ease-out forwards;
+}
+
+
+
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .ad-header {
@@ -356,3 +373,26 @@ html body {
         max-height: 200px;
     }
 }
+
+
+/* 页面元素渐进式加载动画 */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ad-dashboard-container > * {
+    opacity: 0;
+    animation: fadeInSlideUp 1s ease-out forwards;
+}
+
+.ad-header { animation-delay: 0.2s; }
+.ad-column-box-left { animation-delay: 0.6s; }
+.ad-column-box-right { animation-delay: 0.6s; }
+.ad-bottom-link { animation-delay: 0.8s; }

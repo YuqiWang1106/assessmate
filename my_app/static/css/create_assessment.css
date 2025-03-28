@@ -634,3 +634,69 @@ input[disabled] {
     animation: slideInUp 0.7s ease forwards;
   }
 
+  .likert-track-container {
+    position: relative;
+    width: 100%;
+    margin: 30px 0 10px;
+  }
+  
+  .likert-line {
+    position: absolute;
+    top: 12px;
+    left: 4%;
+    right: 7%;
+    height: 4px;
+    background-color: #ddd;
+    z-index: 0;
+    border-radius: 2px;
+  }
+  
+  .likert-progress {
+    height: 100%;
+    background: #7a6cb3;
+    width: 0%;
+    transition: width 0.4s ease-in-out;
+    border-radius: 2px;
+  }
+  
+  .likert-options {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .likert-options label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  
+  .likert-options input[type="radio"] {
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #bbb;
+    border-radius: 50%;
+    background-color: #fff;
+    margin-bottom: 6px;
+    transition: border-color 0.2s ease;
+  }
+  
+  .likert-options input[type="radio"]:checked {
+    background-color: #7a6cb3;
+    border-color: #7a6cb3;
+  }
+  
+
+
+
+  
+
+  .likert-options input[type="radio"].filled {
+    background-color: #7a6cb3;
+    border-color: #7a6cb3;
+  }
+  
