@@ -249,18 +249,25 @@ def teacher_courses(request, teacher_id):
 
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
 
-   
+    selected_semester = request.GET.get("semester")
+    selected_year = request.GET.get("year")
     courses = Course.objects.filter(teacher_id=teacher_id)
     semesters = Course.objects.filter(teacher_id=teacher_id).values_list('course_semester', flat=True).distinct()
     years = Course.objects.filter(teacher_id=teacher_id).values_list('course_year', flat=True).distinct()
 
-
+    courses = Course.objects.filter(teacher=teacher)
+    if selected_semester:
+        courses = courses.filter(course_semester=selected_semester)
+    if selected_year:
+        courses = courses.filter(course_year=selected_year)
     
     return render(request, "teacher_courses.html", {
         "teacher": teacher,
         "courses": courses,
         "semesters": semesters, 
         "years": years,
+        "selected_semester": selected_semester,
+        "selected_year": selected_year,
         
     })
     

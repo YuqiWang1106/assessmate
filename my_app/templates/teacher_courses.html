@@ -10,6 +10,22 @@
     <link rel="stylesheet" href="{% static 'css/teacher_courses.css' %}">
 </head>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const semesterSelect = document.getElementById("semester-select");
+        const yearSelect = document.getElementById("year-select");
+
+        function updateCourses() {
+            const semester = semesterSelect.value;
+            const year = yearSelect.value;
+            const urlParams = new URLSearchParams(window.location.search);
+            urlParams.set('semester', semester);
+            urlParams.set('year', year);
+            window.location.search = urlParams.toString();
+        }
+
+        semesterSelect.addEventListener("change", updateCourses);
+        yearSelect.addEventListener("change", updateCourses);
+    });
     function confirmDelete() {
         return confirm("Are you sure you want to delete this course? This action cannot be undone.");
     }
@@ -27,14 +43,14 @@
                 <label for="semester-select"><strong>Current Semester:</strong></label>
                 <select id="semester-select" name="semester" class="styled-dropdown">
                     {% for semester in semesters %}
-                        <option value="{{ semester }}">{{ semester }}</option>
+                        <option value="{{ semester }}" {% if semester == selected_semester %}selected{% endif %}>{{ semester }}</option>
                     {% endfor %}
                 </select>
             
                 <label for="year-select"><strong>Year:</strong></label>
                 <select id="year-select" name="year" class="styled-dropdown">
                     {% for year in years %}
-                        <option value="{{ year }}">{{ year }}</option>
+                        <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
                     {% endfor %}
                 </select>
             </div>
