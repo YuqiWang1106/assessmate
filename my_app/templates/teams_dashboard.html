@@ -31,7 +31,8 @@
     {% empty %}
         <p>No teams created yet</p>
     {% endfor %}
-    <button class="add-button">Add New Team</button>
+    <button class="add-button" onclick="window.location.href='{% url 'new_team' teacher.id selected_course.id %}'">Add New Team</button>
+
 </body>
 
 </html>

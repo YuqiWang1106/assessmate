@@ -6,7 +6,7 @@ import requests
 import urllib.parse
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from .forms import CourseForm
+from .forms import CourseForm, TeamForm
 from django.utils import timezone
 import json
 from django.urls import reverse
@@ -294,6 +294,24 @@ def new_course(request, teacher_id):
     years = Course.objects.values_list('course_year', flat=True).distinct()
 
     return render(request, "new_course.html", {"form": form, "teacher": teacher, "semesters": semesters, "years": years})
+
+def new_team(request, teacher_id, course_id):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+    course = get_object_or_404(Course, id=course_id, teacher=teacher)
+    if request.method == "POST":
+        form = TeamForm(request.POST)
+        if form.is_valid():
+            # Process the form data (e.g., save it to the database)
+            team = form.save(commit=False)
+            team.course = course
+            team.save()
+            #return redirect('teacher_courses')
+            return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))
+            # Save the course to the database or perform other actions
+           
+    else:
+        form = TeamForm()
+    return render(request, "new_team.html", {"form": form, "teacher": teacher, "course": course})
 
 def teams_dashboard(request, teacher_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
