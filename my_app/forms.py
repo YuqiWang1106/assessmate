@@ -73,11 +73,3 @@ class TeamForm(forms.ModelForm):
             'team_name': forms.TextInput(attrs={'placeholder': 'ex. Team1'})
         }
 
-class InvStuForm(forms.ModelForm):
-    class Meta:
-        model = TeamMember
-        fields = ["team"]
-        widgets = {
-            'team': forms.TextInput(attrs={'placeholder': 'ex. student@bc.edu'}),
-        }
-

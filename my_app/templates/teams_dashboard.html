@@ -9,31 +9,6 @@
     <title>Teams Page</title>
     <link rel="stylesheet" href="{% static 'css/teams_dashboard.css' %}">
 </head>
-{% comment %} <body>
-
-    <div class="header">
-        <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
-        <div class="button-container">
-            <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
-            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
-        </div>
-    </div>
-    <h2>Teams for {{ selected_course }}</h2> 
-
-
-    {% for team in teams %}
-        <div class="teams-container">
-            <div class="teams">
-                <h3>{{ team.team_name }}</h3>
-                <button class="edi-button" onclick="window.location.href='{% url 'edit_team' teacher.id selected_course.id team.id %}'">Edit</button>
-            </div>
-        </div>
-    {% empty %}
-        <p>No teams created yet</p>
-    {% endfor %}
-    <button class="add-button" onclick="window.location.href='{% url 'new_team' teacher.id selected_course.id %}'">Add New Team</button>
-
-</body> {% endcomment %}
 
 <body>
   <div class="header">
@@ -52,10 +27,11 @@
       <div class="my-courses-box">
         <h2>My Teams</h2>
         <ul class="team-list">
-          {% for team in teams %}
+          {% for data in team_data %}
             <li class="course-item">
-              <strong>{{ team.team_name }}</strong>
-              <a href="{% url 'edit_team' teacher.id selected_course.id team.id %}">
+              <strong>{{ data.team.team_name }}</strong>
+              <strong>{{ data.member_count }} Members</strong>
+              <a href="{% url 'edit_team' teacher.id selected_course.id data.team.id %}">
                 <button class="edit-btn">Edit</button>
               </a>
             </li>

@@ -328,10 +328,16 @@ def teams_dashboard(request, teacher_id):
 
     teams = Team.objects.filter(course=selected_course)
 
+    team_data = []
+    for team in teams:
+        member_count = TeamMember.objects.filter(team=team).count()
+        team_data.append({"team": team, "member_count": member_count})
+
     return render(request, "teams_dashboard.html", {
         "teacher": teacher,
         "selected_course": selected_course,
         "teams": teams,
+        "team_data":team_data
     })
 
 def assessment_dashboard(request, teacher_id):
