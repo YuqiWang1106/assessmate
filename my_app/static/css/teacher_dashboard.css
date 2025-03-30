@@ -31,11 +31,25 @@ body .header {
     left: 0;  
     width: 100%;  
     z-index: 10;
+
+    box-sizing: border-box;
 }
+
+body .site-title {
+    font-size: 33px;
+    color: #6259c9;
+    text-decoration: none;
+    font-weight: bold;
+    padding-left: 1rem;
+  }
 
  body .header .welcome-text {
     font-size: 24px; 
     color: #6259c9;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 body .header #username {

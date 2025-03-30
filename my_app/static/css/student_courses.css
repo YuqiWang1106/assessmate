@@ -14,11 +14,27 @@ body {
     padding: 20px;
     background-color: #f8f4fc;
     color: white;
+    position: fixed;
+
+    width: 100%;
+    box-sizing: border-box;
 }
+
+.site-title {
+    font-size: 33px;
+    font-weight: bold;
+    color: #6259c9;
+    text-decoration: none;
+    padding-left: 1rem;
+  }
 
 .welcome-text {
     font-size: 24px; 
     color: #6259c9;
+    
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 #username {
@@ -34,6 +50,8 @@ button {
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
+
+    margin-left: auto;
 }
 
 button:hover {
@@ -49,9 +67,6 @@ h2 {
     padding: 20px;
     font-size: 36px;
     font-weight: bold;
-
-   
-    
 }
 
 

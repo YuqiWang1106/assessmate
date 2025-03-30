@@ -8,7 +8,6 @@ body {
   color: #333;
 }
 
-
 /* === 顶部导航栏 === */
 .header {
   position: sticky;
@@ -21,6 +20,14 @@ body {
   align-items: center;
   box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
   border-bottom: 2px solid #eee;
+}
+
+.header .site-title {
+  font-size: 33px;
+  font-weight: bold;
+  color: #6259c9;
+  text-decoration: none;
+  padding-left: 1rem;
 }
 
 .header button {

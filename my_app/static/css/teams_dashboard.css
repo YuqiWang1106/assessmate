@@ -20,6 +20,14 @@ body {
     z-index: 10;
   }
   
+  body .site-title {
+    font-size: 33px;
+    color: #6259c9;
+    text-decoration: none;
+    font-weight: bold;
+    padding-left: 1rem;
+  }
+  
   .header button {
     background-color: #7a6cb3;
     color: white;

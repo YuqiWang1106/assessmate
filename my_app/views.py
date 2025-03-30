@@ -71,8 +71,8 @@ def google_callback(request):
     name = user_info.get("name")
 
     # ensures only BC emails can have further access
-    if not email.endswith("@bc.edu"):
-        return HttpResponseForbidden("Please use a @bc.edu email")
+    #if not email.endswith("@bc.edu"):
+    #    return HttpResponseForbidden("Please use a @bc.edu email")
     
     # checks if user exists, if not, creates user
     # user, created = User.objects.get_or_create(
