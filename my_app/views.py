@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
+from django.conf import settings
 from django.http import JsonResponse
 
 
@@ -71,14 +72,9 @@ def google_callback(request):
     name = user_info.get("name")
 
     # ensures only BC emails can have further access
-    #if not email.endswith("@bc.edu"):
-    #    return HttpResponseForbidden("Please use a @bc.edu email")
+    if not email.endswith("@bc.edu"):
+        return HttpResponseForbidden("Please use a @bc.edu email")
     
-    # checks if user exists, if not, creates user
-    # user, created = User.objects.get_or_create(
-    #     email=email,
-    #     defaults={"name": name, "role": role, "created_at": now()},
-    # )
     try:
         user = User.objects.get(email=email)
         if user.role != role:
@@ -106,33 +102,40 @@ def google_callback(request):
             )
             CourseMember.objects.create(course=intro_course, user=user)
 
+    
+
     # store the user session to restrict access to protected pages -> done in dashboard views
     request.session["user_id"] = str(user.id)
     request.session["user_email"] = user.email
     request.session["user_role"] = user.role
-    #Empty course logic (if we want it)
-    # if created:
-    #     if role == "teacher":
-    #         Course.objects.create(
-    #             teacher=user,
-    #             course_name="Welcome to Assessmate!",
-    #             course_number="Teacher101",
-    #             created_at=now()
-    #         )
-    #     elif role == "student":
-    #         # Find or create a default "Intro Course"
-    #         intro_course, _ = Course.objects.get_or_create(
-    #             course_name="Welcome to Assessmate!",
-    #             course_number="Student101",
-    #             defaults={"teacher": None, "created_at": now()}
-    #         )
-    #         CourseMember.objects.create(course=intro_course, user=user)
+
+    # Invitation Logic
+    # 取出邀请信息
+    invited_email = request.session.get("invited_email")
+    invited_course_id = request.session.get("invited_course_id")
+
+    # 如果当前用户是学生，并且是通过邀请链接进来的
+    if user.role == "student" and invited_email == email and invited_course_id:
+        try:
+            invited_course = Course.objects.get(id=invited_course_id)
+            # 如果还没有加入该课程，就创建 CourseMember
+            if not CourseMember.objects.filter(user=user, course=invited_course).exists():
+                CourseMember.objects.create(user=user, course=invited_course)
+        except Course.DoesNotExist:
+            pass  # 课程不合法就忽略
+
+        # 清除 session 中的邀请信息
+        request.session.pop("invited_email", None)
+        request.session.pop("invited_course_id", None)
+
+    
 
     # redirects user to their respective dashboard
     if user.role == "teacher":
         return redirect("teacher_dashboard", teacher_id=user.id)
     else:
         return redirect("student_courses", user_id=user.id)
+
 
 
 
@@ -499,7 +502,7 @@ def delete_course(request, teacher_id, course_id):
 @csrf_exempt
 @require_POST
 def invite_student(request):
-    """Invite a student to a course by email."""
+    """Invite a student to a course by email (sends email with special invite link)."""
     try:
         data = json.loads(request.body)
         email = data.get("email")
@@ -510,24 +513,85 @@ def invite_student(request):
 
         course = get_object_or_404(Course, id=course_id)
 
-        # Get or create user
-        student, _ = User.objects.get_or_create(
-            email=email,
-            defaults={"name": email.split("@")[0], "role": "student", "created_at": timezone.now()}
-        )
+        invite_link = f"http://127.0.0.1:8000/invite/accept/?course_id={course_id}&email={email}"
 
-        # Create CourseMember if they don't already exist
-        course_member, created = CourseMember.objects.get_or_create(course=course, user=student)
+        message = f"""
+Hi,
 
-        # send email
+You have been invited to join the course: "{course.course_name}" on Assessmate!
+
+Click the link below to join:
+{invite_link}
+
+After clicking the link, you’ll be prompted to log in or register using your @bc.edu Google account.
+
+See you on Assessmate!
+"""
+
         send_mail(
-            subject="You're invited to join a course on Assessmate!",
-            message=f"You have been invited to join the course '{course.course_name}' on Assessmate.",
+            subject=f"Invitation to join {course.course_name} on Assessmate",
+            message=message,
             from_email="no-reply@assessmate.edu",
             recipient_list=[email],
-            fail_silently=True
+            fail_silently=False,  # True for production if you want to avoid errors
         )
 
-        return JsonResponse({"success": True, "message": f"{email} has been invited!"})
+        return JsonResponse({"success": True, "message": f"Invitation sent to {email}"})
+    
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)}, status=500)
+
+# @csrf_exempt
+# @require_POST
+# def invite_student(request):
+#     """Invite a student to a course by email."""
+#     try:
+#         data = json.loads(request.body)
+#         email = data.get("email")
+#         course_id = data.get("course_id")
+
+#         if not email or not course_id:
+#             return JsonResponse({"success": False, "message": "Missing email or course ID."}, status=400)
+
+#         course = get_object_or_404(Course, id=course_id)
+        
+
+#         # Get or create user
+#         student, _ = User.objects.get_or_create(
+#             email=email,
+#             defaults={"name": email.split("@")[0], "role": "student", "created_at": timezone.now()}
+#         )
+
+#         # Create CourseMember if they don't already exist
+#         course_member, created = CourseMember.objects.get_or_create(course=course, user=student)
+
+#         # send email
+#         send_mail(
+#             subject="You're invited to join a course on Assessmate!",
+#             message=f"You have been invited to join the course '{course.course_name}' on Assessmate.",
+#             from_email="no-reply@assessmate.edu",
+#             recipient_list=[email],
+#             fail_silently=True
+#         )
+
+#         return JsonResponse({"success": True, "message": f"{email} has been invited!"})
+#     except Exception as e:
+#         return JsonResponse({"success": False, "message": str(e)}, status=500)
+
+
+
+
+# Student Accept Invitation
+def accept_invitation(request):
+    email = request.GET.get("email")
+    course_id = request.GET.get("course_id")
+
+    if not email or not course_id:
+        return HttpResponseForbidden("Invalid invitation link.")
+
+    request.session["invited_email"] = email
+    request.session["invited_course_id"] = course_id
+
+    return redirect(f"/accounts/google/login/?role=student")
+
+
