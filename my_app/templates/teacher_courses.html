@@ -47,7 +47,10 @@
                             data-course-id="{{ course.id }}"
                             onclick="changeCourse('{{ course.id }}')">
                             <strong>{{ course.course_number }} - {{ course.course_name }}</strong>
-                            <!--button class="delete-btn">Delete</button-->
+                            <p class="course-details">
+                            {{ course.course_semester }}
+                            {{ course.course_year }}
+                            </p>
                             <!-- Delete Course Button -->
                             <form action="{% url 'delete_course' teacher.id course.id %}" method="POST" style="display:inline;">
                             {% csrf_token %}

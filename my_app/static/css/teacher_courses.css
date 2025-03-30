@@ -156,10 +156,17 @@ body {
 .course-item strong {
   font-size: 19px;
   font-weight: bold;
-  color: #4a407a;
+  color: #e4ddff;
   display: block;
   margin-bottom: 10px;
 }
+
+.course-details {
+  font-size: 14px;
+  color: #e4ddff;
+  margin-top: 5px;
+}
+
 
 /* === 删除按钮 === */
 .delete-btn {
@@ -179,7 +186,7 @@ body {
   background-color: #e74c3c;
 }
 
-/* === 添加课程按钮 === */
+
 .addcourse-btn {
   width: 100%;
   padding: 14px;
