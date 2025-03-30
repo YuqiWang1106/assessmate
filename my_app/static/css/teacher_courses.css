@@ -1,181 +1,260 @@
-
-
+/* === 页面背景与字体设定 === */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 30px;
-    background-color: #4346b2;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #eee;
-    padding: 10px 20px;
-  }
-  body .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-    background-color: #f8f4fc;
-    color: white;
-    position: fixed;
-    top: 0;  
-    left: 0;  
-    width: 100%;  
-    z-index: 10;
-}
-
- body .header .welcome-text {
-    font-size: 24px; 
-    color: #6259c9;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #6a69c7;
+  background-size: 400% 400%;
+  color: #333;
 }
 
 
-body .header button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #4346b2;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+/* === 顶部导航栏 === */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #fff;
+  padding: 16px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
+  border-bottom: 2px solid #eee;
 }
 
-body .header button:hover {
-    background-color: #372f91;
-}
-
-  .button-container {
-    display: flex;
-    gap: 10px;
-  }
-  
-  button {
-    background-color: #6a5acd;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  button:hover {
-    background-color: #5a4acb;
-  }
-  
-  .container {
-    padding: 70px;
-  }
-  
-  h3, h4 {
-    margin: 10px 0;
-  }
-  
-  .dashboard-container {
-    background-color: #6a5acd;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  .my-courses-box {
-    background-color: white;
-    color: black;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-  }
-  
-  #course-list {
-    list-style-type: none;
-    padding: 0;
-  }
-
-  .course-item {
-    background-color: #dcd6f7;
-    padding: 20px;
-    margin: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: inline-block;
-    width: calc(30% - 40px);
-    vertical-align: top;
-    text-align: center;
-}
-  
-  
-  
-  .course-item.active {
-    background-color: #b8aaff;
-  }
-  
-  
-  strong {
-    font-size: 18px;
-  }
-
-  .addcourse-btn {
-    background-color: white; 
-    color: black;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-
-    margin-top: auto; 
-}
-
-.addcourse-btn:hover {
-    background-color: #3A3E9E;
-}
-
-.delete-btn{
-  background-color: #6a5acd;
+.header button {
+  background-color: #7a6cb3;
   color: white;
+  padding: 10px 20px;
+  font-weight: 500;
   border: none;
-  padding: 5px 10px;
-  font-size: 16px;
-  cursor: pointer;
   border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
+.header button:hover {
+  background-color: #5e54aa;
+}
+
+/* === 页面主容器 === */
+.container {
+  max-width: 1200px;
+  margin: 0px auto;
+  padding: 20px;
+  animation: fadeInSlideUp 1s ease-out forwards;
+}
+
+/* === 页面标题 === */
+.manage-title {
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 30px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  margin-left: -100px;
+}
+
+/* === 学期/年份选择区域 === */
 .semester-year-container {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 15px; /* Adds spacing between labels and dropdowns */
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 30px;
   padding: 10px;
-  background: #f4f4f4; /* Light background for contrast */
-  border-radius: 10px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 12px rgba(122, 108, 179, 0.15);
 }
 
 .semester-year-container label {
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
+  font-weight: 600;
+  color: white;
 }
 
 .styled-dropdown {
-  padding: 10px 15px;
-  border: 2px solid #007bff; /* Blue border for contrast */
+  padding: 10px 14px;
+  border: none;
   border-radius: 8px;
+  background-color: #f3f0ff;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.styled-dropdown:hover {
+  background-color: #e4ddff;
+}
+
+/* === 课程盒子区域 === */
+.my-courses-box {
   background-color: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 6px 16px rgba(122, 108, 179, 0.2);
+  margin-bottom: 40px;
+}
+
+.my-courses-box h2 {
+  background: linear-gradient(135deg, #6a69c7, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 50px;
+  color: transparent;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(to right, #6a69c7, #ffffff);
+  border-image-slice: 1;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background-size: 300% auto;
+  background-position: left;
+  margin-top: 0px;
+  padding-bottom: 10px;
+}
+
+#course-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.course-item {
+  /* flex: 1 1 calc(33.333% - 24px); */
+  width: 310px;
+  height:130px;
+  min-width: 250px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 16px;
+  /* box-shadow: 0 4px 10px rgba(110, 99, 165, 0.08); */
+  box-shadow: 
+  0 4px 6px rgba(0,0,0,0.05), 
+  0 1px 3px rgba(0,0,0,0.04);
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.course-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(122, 108, 179, 0.2);
+}
+
+.course-item strong {
+  font-size: 19px;
+  font-weight: bold;
+  color: #4a407a;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* === 删除按钮 === */
+.delete-btn {
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
   font-size: 16px;
-  color: #333;
-  outline: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: 35px;
+  width: 100px;
+}
+
+.delete-btn:hover {
+  background-color: #e74c3c;
+}
+
+/* === 添加课程按钮 === */
+.addcourse-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(to right, #7a6cb3, #8c7ae6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.addcourse-btn:hover {
+  background: linear-gradient(to right, #685aaa, #7665d4);
+}
+
+/* === 页面渐入动画 === */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* === 添加课程按钮 === */
+.addcourse-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(to right, #ffffff, #e2e0ff);
+  color: #4a407a;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  appearance: none; /* Removes default dropdown arrow */
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23007bff' d='M2 0L0 2h4z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  background-size:
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+}
+
+.addcourse-btn:hover {
+  background: linear-gradient(to right, #e2e0ff, #ffffff);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.addcourse-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Optional: Add this to create a subtle glow effect on hover */
+.addcourse-btn:after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.addcourse-btn:hover:after {
+  opacity: 0.5;
+}

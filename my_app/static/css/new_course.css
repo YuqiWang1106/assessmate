@@ -63,15 +63,78 @@ body .header button:hover {
 
 }
 
-.new-course-box{
-    background-color: white;
-    color: black;
-    text-align: center;
-    width: 66.67%;  
-    margin: 0 auto; 
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 8px; 
+.new-course-box {
+  background-color: #ffffff;
+  color: #333;
+  width: 60%;
+  margin: 100px auto;
+  padding: 40px 50px;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.new-course-box h3 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #4A4EAE;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* 表单 input 和 select 的统一样式 */
+.new-course-box input[type="text"],
+.new-course-box input[type="number"],
+.new-course-box select {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1.8px solid #dedddd;
+  border-radius: 10px;
+  background-color: #edecec;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  margin-top:10px;
+}
+
+.new-course-box input:focus,
+.new-course-box select:focus {
+  outline: none;
+  border-color: #4A4EAE;
+  background-color: #ffffff;
+}
+
+/* 按钮统一样式（覆盖默认 form button） */
+.new-course-box button[type="submit"] {
+  background: linear-gradient(to right, #4A4EAE, #6a69c7);
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.new-course-box button[type="submit"]:hover {
+  background: linear-gradient(to right, #3A3E9E, #574fa3);
+  transform: translateY(-2px);
+}
+
+/* 动画淡入效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
