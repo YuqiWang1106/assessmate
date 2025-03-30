@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams Page</title>
-    <link rel="stylesheet" href="{% static 'css/teams_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/edit_team.css' %}">
 </head>
 <body>
 
@@ -18,21 +18,25 @@
             <button class="logout-button" onclick="window.location.href='/'">Logout</button>
         </div>
     </div>
-    <h2>Teams for {{ selected_course }}</h2> 
+    <h2>Teams Members in {{ team }}</h2> 
 
-
-    {% for team in teams %}
+    <h3>Current Members:</h3>
+{% for member in members %}
         <div class="teams-container">
             <div class="teams">
-                <h3>{{ team.team_name }}</h3>
-                <button class="edi-button" onclick="window.location.href='{% url 'edit_team' teacher.id selected_course.id team.id %}'">Edit</button>
+                <h3>{{ member.course_member }}</h3>
+                <button class="edi-button">Remove</button>
             </div>
         </div>
     {% empty %}
         <p>No teams created yet</p>
     {% endfor %}
-    <button class="add-button" onclick="window.location.href='{% url 'new_team' teacher.id selected_course.id %}'">Add New Team</button>
 
-</body>
-
-</html>
+    <div class="new-course-box">
+        <h3>Invite Students</h3>
+        <form method="POST" action="{% url 'edit_team' teacher.id course.id team.id%}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Invite Students</button>
+        </form>
+    </div>

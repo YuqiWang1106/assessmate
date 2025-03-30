@@ -323,14 +323,12 @@ def teams_dashboard(request, teacher_id):
     else:
         selected_course = courses.first()
 
-    current_course_teams = Team.objects.filter(
-        course=selected_course
-    )
+    teams = Team.objects.filter(course=selected_course)
 
     return render(request, "teams_dashboard.html", {
         "teacher": teacher,
         "selected_course": selected_course,
-        "teams": current_course_teams
+        "teams": teams,
     })
 
 def assessment_dashboard(request, teacher_id):
@@ -363,6 +361,23 @@ def assessment_dashboard(request, teacher_id):
         "draft_assessments": draft_assessments,
         "published_assessments": published_assessments,
         "finished_assessments": finished_assessments,
+    })
+
+def edit_team(request, teacher_id, course_id, team_id=None):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+    course = get_object_or_404(Course, id=course_id, teacher=teacher)
+    team = None 
+
+    if team_id:
+        team = get_object_or_404(Team, id=team_id, course=course)
+    
+    members = TeamMember.objects.filter(team=team)
+
+    return render(request, "edit_team.html", {
+        "teacher":teacher,
+        "course": course,
+        "team":team,
+        "members": members
     })
 
 def create_assessment(request, teacher_id, course_id, assessment_id=None):

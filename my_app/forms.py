@@ -1,5 +1,5 @@
 from django import forms
-from .models import Course, User, Team
+from .models import Course, User, Team, TeamMember
 '''
 class CourseForm(forms.Form):
     #course_number = forms.CharField(max_length=20, label="Course Number")
@@ -34,5 +34,13 @@ class TeamForm(forms.ModelForm):
         fields = ['team_name']
         widgets = {
             'team_name': forms.TextInput(attrs={'placeholder': 'ex. Team1'})
+        }
+
+class InvStuForm(forms.ModelForm):
+    class Meta:
+        model = TeamMember
+        fields = {"team"}
+        widgets = {
+            'team': forms.TextInput(attrs={'placeholder': 'ex. student@bc.edu'}),
         }
 

@@ -12,6 +12,7 @@ urlpatterns = [
     path("teacher_courses/<uuid:teacher_id>/", views.teacher_courses, name="teacher_courses"),
     path("new_course/<uuid:teacher_id>/", views.new_course, name="new_course"),
     path("new_team/<uuid:teacher_id>/<uuid:course_id>/", views.new_team, name="new_team"),
+    path("edit_team/<uuid:teacher_id>/<uuid:course_id>/<uuid:team_id>/", views.edit_team, name="edit_team"),
     path("teams_dashboard/<uuid:teacher_id>/", views.teams_dashboard, name="teams_dashboard"),
     path("assessment_dashboard/<uuid:teacher_id>/", views.assessment_dashboard, name="assessment_dashboard"),
     path("create_assessment/<uuid:teacher_id>/<uuid:course_id>/", views.create_assessment, name="create_assessment"),
