@@ -380,6 +380,12 @@ def edit_team(request, teacher_id, course_id, team_id=None):
         "members": members
     })
 
+def remove_from_team(request, teacher_id, course_id, team_id, member_id):
+    if request.method == 'POST':
+        member = get_object_or_404(TeamMember, id=member_id, team_id=team_id)
+        member.delete()
+    return redirect('edit_team', teacher_id=teacher_id, course_id=course_id, team_id=team_id)
+
 def create_assessment(request, teacher_id, course_id, assessment_id=None):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     course = get_object_or_404(Course, id=course_id, teacher=teacher)

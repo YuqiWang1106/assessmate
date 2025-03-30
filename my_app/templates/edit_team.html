@@ -1,5 +1,6 @@
 {% load static %}
 {% load dict_extras %}
+{% load widget_tweaks %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +15,7 @@
     <div class="header">
         <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
         <div class="button-container">
-            <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
+            <button class="back-button" onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}'">Return</button>
             <button class="logout-button" onclick="window.location.href='/'">Logout</button>
         </div>
     </div>
@@ -25,11 +26,14 @@
         <div class="teams-container">
             <div class="teams">
                 <h3>{{ member.course_member }}</h3>
-                <button class="edi-button">Remove</button>
+                <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id member.id %}">
+                    {% csrf_token %}
+                    <button class="edi-button" type="submit">Remove</button>
+                </form>
             </div>
         </div>
     {% empty %}
-        <p>No teams created yet</p>
+        <p>No members added yet</p>
     {% endfor %}
 
     <div class="new-course-box">
