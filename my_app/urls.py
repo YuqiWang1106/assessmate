@@ -18,9 +18,10 @@ urlpatterns = [
     path("assessment_dashboard/<uuid:teacher_id>/", views.assessment_dashboard, name="assessment_dashboard"),
     path("create_assessment/<uuid:teacher_id>/<uuid:course_id>/", views.create_assessment, name="create_assessment"),
     path("edit_assessment/<uuid:teacher_id>/<uuid:assessment_id>/<uuid:course_id>/", views.create_assessment, name="edit_assessment"),
-    # path("edit_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.create_assessment, name="edit_assessment"),
     path("delete_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.delete_assessment, name="delete_assessment"),
     path("view_assessment/<uuid:teacher_id>/<uuid:assessment_id>/", views.view_assessment, name="view_assessment"),
     path("delete_course/<uuid:teacher_id>/<uuid:course_id>/", delete_course, name="delete_course"),
     path('invite-student/', invite_student, name='invite_student'),
+    path("invite/accept/", views.accept_invitation, name="accept_invitation"),
+
 ]
