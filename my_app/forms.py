@@ -1,5 +1,5 @@
 from django import forms
-from .models import Course, User
+from .models import Course, User, Team
 '''
 class CourseForm(forms.Form):
     #course_number = forms.CharField(max_length=20, label="Course Number")
@@ -27,3 +27,12 @@ class CourseForm(forms.ModelForm):
             'course_year': forms.TextInput(attrs={'placeholder': 'ex. 2025'})
 
         }
+
+class TeamForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        fields = ['team_name']
+        widgets = {
+            'team_name': forms.TextInput(attrs={'placeholder': 'ex. Team1'})
+        }
+
