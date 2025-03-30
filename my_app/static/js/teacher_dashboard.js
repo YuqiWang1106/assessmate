@@ -71,3 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+document.querySelectorAll('.my-courses-box ul li').forEach(item => {
+    item.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        ripple.classList.add('ripple');
+        this.appendChild(ripple);
+        
+        const x = e.clientX - this.getBoundingClientRect().left;
+        const y = e.clientY - this.getBoundingClientRect().top;
+        
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+});

@@ -1,108 +1,173 @@
 body {
-    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
-    background: #4346b2;
-   
-    
-}
-
-.header {
+    background: #6a69c7;
+    background-size: 400% 400%;
+    color: #333;
+  }
+  
+  .header {
+    background-color: #fff;
+    padding: 16px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background-color: #f8f4fc;
+    box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
+    border-bottom: 2px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .header button {
+    background-color: #7a6cb3;
     color: white;
-}
-
-.welcome-text {
-    font-size: 24px; 
-    color: #6259c9;
-}
-
-#username {
-    font-weight: bold;
-}
-
-button {
     padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #4e44c6;
+    font-weight: 500;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #6658a7;
-}
-
-h2 {
-    background-color: #4346b2;
-    color: white;
-    margin: 0;
-    padding: 20px;
-    font-size: 36px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .header button:hover {
+    background-color: #5e54aa;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    animation: fadeInSlideUp 1s ease-out forwards;
+  }
+  
+  .manage-title {
+    font-size: 28px;
     font-weight: bold;
-}
-
-.teams-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px; 
-    flex-wrap: wrap; 
-    width: 100%;
-    padding: 20px;
-}
-
-.teams {
-    background-color: #ffffff;
-    border-radius: 10px;
+    color: white;
+    margin-bottom: 30px;
+    text-align: center;
+    margin-left: -570px;
+    margin-bottom: 60px;
+  }
+  
+  .my-courses-box {
+    background-color: white;
+    border-radius: 20px;
     padding: 30px;
-    width: 300px;
-    height: 180px;
+    box-shadow: 0 10px 20px rgba(122, 108, 179, 0.15);
+    margin-bottom: 40px;
+  }
+  
+  .my-courses-box h2 {
+    /* font-size: 22px;
+    color: #4a407a;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e4e0f3;
+    padding-bottom: 10px; */
+    background: linear-gradient(135deg, #6a69c7, #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 50px;
+    color: transparent;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, #6a69c7, #ffffff);
+    border-image-slice: 1;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background-size: 300% auto;
+    background-position: left;
+    margin-top: 0px;
+    padding-bottom: 10px;
+  }
+  
+  .team-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 0;
+    list-style: none;
+    justify-content: center;
+  }
+  
+  .course-item {
+    width: 280px;
+    height: 130px;
+    background-color: #f5f5f5;
+    border-radius: 16px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-}
-
-h3 {
-    margin: 0 0 10px 0;
-    font-size: 24px;
     text-align: center;
-}
-
-.edi-button {
-    background-color: #7c6bc7;
+    transition: all 0.3s ease;
+  }
+  
+  .course-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(122, 108, 179, 0.2);
+  }
+  
+  .course-item strong {
+    font-size: 18px;
+    font-weight: bold;
+    color: #292855;
+  }
+  
+  .edit-btn {
+    background-color: #7d80c7;
     color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 8px 20px;
+    font-size: 15px;
+    border: 1px solid transparent;  /* 初始就有 border */
+    border-radius: 8px;
     cursor: pointer;
-}
-
-.edi-button:hover {
-    background-color: #6658a7;
-}
-
-.add-button {
-    background-color: #7c6bc7;
-    color: white;
+    transition: 
+      background-color 0.4s ease,
+      color 0.4s ease,
+      border-color 0.4s ease;  /* 多个 transition 写在一起 */
+  }
+  
+  .edit-btn:hover {
+    background-color: rgba(250, 250, 250, 0.885);
+    color: #7d80c7;
+    border-color: #7d80c7;
+  }
+  
+  
+  .addcourse-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(to right, #ffffff, #e2e0ff);
+    color: #4a407a;
     border: none;
-    padding: 15px 30px;
-    border-radius: 30px;
-    display: block;
-    margin: 40px auto;
+    border-radius: 12px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
-}
-
-.add-button:hover {
-    background-color: #6658a7;
-}
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .addcourse-btn:hover {
+    background: linear-gradient(to right, #e2e0ff, #ffffff);
+    transform: translateY(-3px);
+  }
+  
+  @keyframes fadeInSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

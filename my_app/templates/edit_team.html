@@ -12,35 +12,37 @@
 </head>
 <body>
 
-    <div class="header">
-        <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
-        <div class="button-container">
-            <button class="back-button" onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}'">Return</button>
-            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
-        </div>
-    </div>
-    <h2>Teams Members in {{ team }}</h2> 
+<div class="header">
+  <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
+  <div class="button-container">
+    <button onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}'">Return</button>
+    <button onclick="window.location.href='/'">Logout</button>
+  </div>
+</div>
 
-    <h3>Current Members:</h3>
-{% for member in members %}
-        <div class="teams-container">
-            <div class="teams">
-                <h3>{{ member.course_member }}</h3>
-                <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id member.id %}">
-                    {% csrf_token %}
-                    <button class="edi-button" type="submit">Remove</button>
-                </form>
-            </div>
-        </div>
-    {% empty %}
-        <p>No members added yet</p>
-    {% endfor %}
+<h2>Team Members in {{ team }}</h2>
 
-    <div class="new-course-box">
-        <h3>Invite Students</h3>
-        <form method="POST" action="{% url 'edit_team' teacher.id course.id team.id%}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Invite Students</button>
-        </form>
+<div class="members-section">
+  <h3>Current Members</h3>
+  {% for member in members %}
+    <div class="member-card">
+      <h4>{{ member.course_member }}</h4>
+      <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id member.id %}">
+        {% csrf_token %}
+        <button class="remove-button" type="submit">Remove</button>
+      </form>
     </div>
+  {% empty %}
+    <p style="text-align: center;">No members added yet</p>
+  {% endfor %}
+</div>
+
+<div class="invite-box">
+  <h3>Invite Students</h3>
+  <form method="POST" action="{% url 'edit_team' teacher.id course.id team.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Invite Students</button>
+  </form>
+</div>
+

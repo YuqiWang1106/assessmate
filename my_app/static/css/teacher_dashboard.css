@@ -11,7 +11,7 @@ body, html {
 }
 
 body {
-    background: #4346b2;
+    background: #6a69c7;
     background-size: 400% 400%;
     display: flex;
     justify-content: center;
@@ -95,7 +95,7 @@ body .header button:hover {
     color: #333;
     margin-bottom: 16px;
 }
-.my-courses-box ul {
+/* .my-courses-box ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -119,8 +119,76 @@ body .header button:hover {
     background: #5F62BE !important; 
     color: #fff;
     border-left-color: #3C3D88;
+} */
+
+
+.my-courses-box ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;     
+    overflow-y: auto;
 }
 
+.my-courses-box ul li {
+    background: #E3E3F0;     
+    border-left: 5px solid transparent;
+    font-size: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s, border-left-color 0.3s;
+}
+
+/* 增强的动态光影效果 */
+.my-courses-box ul li::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 120%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(126, 128, 223, 0.3) 15%, 
+        rgba(106, 108, 217, 0.5) 30%,
+        rgba(106, 108, 217, 0.5) 50%,
+        rgba(126, 128, 223, 0.3) 70%,
+        transparent 100%);
+    transform: skewX(-25deg);
+    transition: left 0.5s ease-out;
+    pointer-events: none;
+}
+
+.my-courses-box ul li:hover::before {
+    left: 100%;
+    transition: left 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.my-courses-box ul li:hover {
+    background: #D8D8ED;
+    border-left-color: #8385D0;
+}
+
+.my-courses-box .active {
+    background: #5F62BE !important; 
+    color: #fff;
+    border-left-color: #3C3D88;
+}
+
+/* 激活状态的光影效果增强 */
+.my-courses-box .active::before {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0.15) 15%, 
+        rgba(255, 255, 255, 0.25) 30%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0.15) 70%,
+        transparent 100%);
+}
 
 /* 右侧容器 .software-engineering-box */
 .software-engineering-box {
@@ -177,9 +245,9 @@ body .header button:hover {
     font-weight: 300;
 }
 
-/*Manage Button*/
-.manage-btn {
-    background-color: #4A4EAE;
+/* 通用按钮样式 */
+.manage-btn, .invite-btn {
+    background-color: #6a69c7;
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -189,31 +257,34 @@ body .header button:hover {
     border-radius: 10px;
     cursor: pointer;
     width: 100%;
-
-    margin-top: auto; 
+    margin-top: auto;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(106, 105, 199, 0.3);
 }
 
-.manage-btn:hover {
-    background-color: #3A3E9E;
+/* 优雅的 hover 效果 */
+.manage-btn:hover, .invite-btn:hover {
+    background-color: #5d5cb0;
+    box-shadow: 0 4px 8px rgba(106, 105, 199, 0.4);
+    transform: translateY(-2px);
 }
 
-/* Invite Students Button */
-.invite-btn {
-    background-color: #4A4EAE;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: auto; 
+/* 点击效果 */
+.manage-btn:active, .invite-btn:active {
+    background-color: #4f4e9a;
+    box-shadow: 0 2px 3px rgba(106, 105, 199, 0.3);
+    transform: translateY(0);
 }
 
-.invite-btn:hover {
-    background-color: #3A3E9E;
+/* 可选：添加微妙的渐变背景 */
+.manage-btn, .invite-btn {
+    background-image: linear-gradient(45deg, #6a69c7, #7776d2);
+}
+
+.manage-btn:hover, .invite-btn:hover {
+    background-image: linear-gradient(45deg, #5d5cb0, #6a69c7);
 }
 
 .software-engineering-box {
