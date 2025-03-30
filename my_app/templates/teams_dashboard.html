@@ -37,6 +37,8 @@
 
 <body>
   <div class="header">
+    <!-- Assessmate title -->
+    <a href="{{ user_dashboard_url }}" class="site-title">Assessmate</a>
     <div class="button-container">
       <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
       <button class="logout-button" onclick="window.location.href='/'">Logout</button>

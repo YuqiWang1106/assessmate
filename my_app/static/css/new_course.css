@@ -23,11 +23,26 @@ body {
     left: 0;  
     width: 100%;  
     z-index: 10;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+body .site-title {
+  font-size: 33px;
+  font-weight: bold;
+  color: #6259c9;
+  text-decoration: none;
+  padding-left: 1rem;
 }
 
  body .header .welcome-text {
     font-size: 24px; 
     color: #6259c9;
+
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 
@@ -35,7 +50,7 @@ body .header button {
     padding: 10px 20px;
     font-size: 16px;
     color: white;
-    background-color: #4346b2;
+    background-color: #7a6cb3;
     border: none;
     border-radius: 8px;
     cursor: pointer;

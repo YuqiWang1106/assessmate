@@ -13,7 +13,9 @@
 
 <body>
     <div class="header">
-        <div classs="button-container">
+        <!-- Assessmate title -->
+        <a href="{{ user_dashboard_url }}" class="site-title">Assessmate</a>
+        <div class="button-container">
             <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
             <button class="logout-button" onclick="window.location.href='/'">Logout</button>
         </div>
@@ -47,7 +49,10 @@
                             data-course-id="{{ course.id }}"
                             onclick="changeCourse('{{ course.id }}')">
                             <strong>{{ course.course_number }} - {{ course.course_name }}</strong>
-                            <!--button class="delete-btn">Delete</button-->
+                            <p class="course-details">
+                            {{ course.course_semester }}
+                            {{ course.course_year }}
+                            </p>
                             <!-- Delete Course Button -->
                             <form action="{% url 'delete_course' teacher.id course.id %}" method="POST" style="display:inline;">
                             {% csrf_token %}

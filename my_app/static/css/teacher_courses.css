@@ -8,19 +8,26 @@ body {
   color: #333;
 }
 
-
 /* === 顶部导航栏 === */
 .header {
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: #fff;
+  background-color: #f8f4fc;
   padding: 16px 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
   border-bottom: 2px solid #eee;
+}
+
+.header .site-title {
+  font-size: 33px;
+  font-weight: bold;
+  color: #6259c9;
+  text-decoration: none;
+  padding-left: 1rem;
 }
 
 .header button {
@@ -156,10 +163,17 @@ body {
 .course-item strong {
   font-size: 19px;
   font-weight: bold;
-  color: #4a407a;
+  color: #e4ddff;
   display: block;
   margin-bottom: 10px;
 }
+
+.course-details {
+  font-size: 14px;
+  color: #e4ddff;
+  margin-top: 5px;
+}
+
 
 /* === 删除按钮 === */
 .delete-btn {
@@ -179,7 +193,7 @@ body {
   background-color: #e74c3c;
 }
 
-/* === 添加课程按钮 === */
+
 .addcourse-btn {
   width: 100%;
   padding: 14px;
