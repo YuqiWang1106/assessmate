@@ -139,13 +139,13 @@ html body {
 }
 
 .ad-column-box-right {
-    height: 664px;
+    height: 584px;
     position: relative;
     width: 580px;
 }
 
 .ad-column-box-left {
-    height: 320px;
+    height: 280px;
     position: relative;
     width: 600px;
 }
