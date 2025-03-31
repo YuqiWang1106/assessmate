@@ -514,6 +514,15 @@ def view_assessment(request, teacher_id, assessment_id):
         "readonly": True
     })
 
+def delete_team(request, teacher_id, course_id, team_id):
+    team = get_object_or_404(Team, id=team_id, course=course_id)
+
+    if request.method == "POST":  # Only allow POST requests for deletion
+        team.delete()
+        return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))
+
+    return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))  # Fallback redirect
+
 @csrf_exempt
 def delete_course(request, teacher_id, course_id):
     """Delete a course"""

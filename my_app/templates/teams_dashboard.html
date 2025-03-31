@@ -34,6 +34,14 @@
               <a href="{% url 'edit_team' teacher.id selected_course.id data.team.id %}">
                 <button class="edit-btn">Edit</button>
               </a>
+              <form action="{% url 'delete_team' teacher.id selected_course.id data.team.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="edit-btn">Delete</button>
+              </form>
+              
+              <!-- <a href="{% url 'delete_team' teacher.id selected_course.id data.team.id %}">
+                <button class="edit-btn">Delete</button>
+              </a> -->
             </li>
           {% empty %}
             <li>No teams created yet.</li>
