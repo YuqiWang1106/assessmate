@@ -11,13 +11,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 16px 32px;
     background-color: #f8f4fc;
     color: white;
     position: fixed;
-
     width: 100%;
     box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
+    border-bottom: 2px solid #eee;
 }
 
 .site-title {
