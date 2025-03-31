@@ -380,13 +380,18 @@ def edit_team(request, teacher_id, course_id, team_id=None):
     if team_id:
         team = get_object_or_404(Team, id=team_id, course=course)
     
-    members = TeamMember.objects.filter(team=team)
+    course_members = CourseMember.objects.filter(course=course)
+    team_members = TeamMember.objects.filter(team=team)
+
+    team_member_ids = team_members.values_list('course_member_id', flat=True)
+    course_members = course_members.exclude(id__in=team_member_ids)
 
     return render(request, "edit_team.html", {
         "teacher":teacher,
         "course": course,
         "team":team,
-        "members": members
+        "team_members": team_members,
+        "course_members": course_members
     })
 
 def remove_from_team(request, teacher_id, course_id, team_id, member_id):
@@ -394,6 +399,19 @@ def remove_from_team(request, teacher_id, course_id, team_id, member_id):
         member = get_object_or_404(TeamMember, id=member_id, team_id=team_id)
         member.delete()
     return redirect('edit_team', teacher_id=teacher_id, course_id=course_id, team_id=team_id)
+
+def add_to_team(request, teacher_id, course_id, team_id, member_id):
+    if request.method == 'POST':
+        member = get_object_or_404(CourseMember, id=member_id)
+        team = get_object_or_404(Team, id=team_id)
+        if TeamMember.objects.filter(team=team, course_member=member).exists():
+            # Optional: Show a message that the member is already in the team
+            return redirect('edit_team', teacher_id=teacher_id, course_id=course_id, team_id=team_id)
+
+        # Add member to the team
+        TeamMember.objects.create(team=team, course_member=member)
+    return redirect('edit_team', teacher_id=teacher_id, course_id=course_id, team_id=team_id)
+
 
 def create_assessment(request, teacher_id, course_id, assessment_id=None):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")

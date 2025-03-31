@@ -1,6 +1,7 @@
 {% load static %}
 {% load dict_extras %}
 {% load widget_tweaks %}
+{% load custom_filters %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -24,10 +25,10 @@
 
 <div class="members-section">
   <h3>Current Members</h3>
-  {% for member in members %}
+  {% for team_member in team_members %}
     <div class="member-card">
-      <h4>{{ member.course_member }}</h4>
-      <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id member.id %}">
+      <h4>{{ team_member.course_member }}</h4>
+      <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id team_member.id %}">
         {% csrf_token %}
         <button class="remove-button" type="submit">Remove</button>
       </form>
@@ -38,11 +39,19 @@
 </div>
 
 <div class="invite-box">
-  <h3>Invite Students</h3>
-  <form method="POST" action="{% url 'edit_team' teacher.id course.id team.id %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Invite Students</button>
-  </form>
+  <h3>Students in {{ course }}</h3>
+  {% with course_members|exclude_team_members:team_members as filtered_course_members %}
+    {% for course_member in filtered_course_members %}
+      <div class="member-card">
+        <h4>{{ course_member }}</h4>
+        <form method="POST" action="{% url 'add_to_team' teacher.id course.id team.id course_member.id %}">
+          {% csrf_token %}
+          <button class="remove-button" type="submit">Add</button>
+        </form>
+      </div>
+    {% empty %}
+      <p style="text-align: center;">No other students in course</p>
+    {% endfor %}
+  {% endwith %}
 </div>
 
