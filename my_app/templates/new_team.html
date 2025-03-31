@@ -20,7 +20,7 @@
 
     <div class="new-course-box">
         <h3>Create a New Team</h3>
-        <form method="POST" action="{% url 'new_team' teacher.id course.id%}">
+        <form method="POST" action="{% url 'new_team' teacher.id course.id %}">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Create Team</button>

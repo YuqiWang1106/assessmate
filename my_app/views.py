@@ -308,8 +308,11 @@ def new_team(request, teacher_id, course_id):
             team = form.save(commit=False)
             team.course = course
             team.save()
-            #return redirect('teacher_courses')
-            return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))
+            return redirect(reverse('edit_team', kwargs={
+                'teacher_id': teacher_id, 
+                'course_id': course_id,
+                'team_id': team.id
+                }))
             # Save the course to the database or perform other actions
            
     else:
