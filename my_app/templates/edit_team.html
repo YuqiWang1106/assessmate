@@ -40,6 +40,27 @@
 
 <div class="invite-box">
   <h3>Students in {{ course }}</h3>
+  {% for entry in course_members_data %}
+    <div class="member-card">
+      <h4>{{ entry.course_member }}</h4>
+
+      {% if entry.team_name %}
+        <p style="color: red;">Already in team: <strong>{{ entry.team_name }}</strong></p>
+      {% else %}
+        <form method="POST" action="{% url 'add_to_team' teacher.id course.id team.id entry.course_member.id %}">
+          {% csrf_token %}
+          <button class="remove-button" type="submit">Add</button>
+        </form>
+      {% endif %}
+    </div>
+  {% empty %}
+    <p style="text-align: center;">No other students in course</p>
+  {% endfor %}
+</div>
+
+
+{% comment %} <div class="invite-box">
+  <h3>Students in {{ course }}</h3>
   {% with course_members|exclude_team_members:team_members as filtered_course_members %}
     {% for course_member in filtered_course_members %}
       <div class="member-card">
@@ -53,5 +74,7 @@
       <p style="text-align: center;">No other students in course</p>
     {% endfor %}
   {% endwith %}
-</div>
+</div> {% endcomment %}
+
+
 

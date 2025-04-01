@@ -15,22 +15,6 @@ class CourseForm(forms.Form):
     )
 '''
 
-# class CourseForm(forms.ModelForm):
-#     class Meta:
-#         model = Course
-#         fields = ['course_number', 'course_name', 'course_semester', 'course_year']
-#         # Adding placeholder attributes to the form fields
-#         widgets = {
-#             'course_number': forms.TextInput(attrs={'placeholder': 'ex. CSCI3356'}),
-#             'course_name': forms.TextInput(attrs={'placeholder': 'ex. Software Engineering'}),
-#             'course_semester': forms.TextInput(attrs={'placeholder': 'ex. Fall'}),
-#             'course_year': forms.TextInput(attrs={'placeholder': 'ex. 2025'})
-
-#         }
-
-from django import forms
-from .models import Course, Team
-
 class CourseForm(forms.ModelForm):
     SEMESTER_CHOICES = [
         ('Spring', 'Spring'),

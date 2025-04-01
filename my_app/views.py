@@ -375,27 +375,59 @@ def assessment_dashboard(request, teacher_id):
         "finished_assessments": finished_assessments,
     })
 
+# def edit_team(request, teacher_id, course_id, team_id=None):
+#     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+#     course = get_object_or_404(Course, id=course_id, teacher=teacher)
+#     team = None 
+
+#     if team_id:
+#         team = get_object_or_404(Team, id=team_id, course=course)
+    
+#     course_members = CourseMember.objects.filter(course=course)
+#     team_members = TeamMember.objects.filter(team=team)
+
+#     team_member_ids = team_members.values_list('course_member_id', flat=True)
+#     course_members = course_members.exclude(id__in=team_member_ids)
+
+#     return render(request, "edit_team.html", {
+#         "teacher":teacher,
+#         "course": course,
+#         "team":team,
+#         "team_members": team_members,
+#         "course_members": course_members
+#     })
+
+
 def edit_team(request, teacher_id, course_id, team_id=None):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     course = get_object_or_404(Course, id=course_id, teacher=teacher)
-    team = None 
+    team = None
 
     if team_id:
         team = get_object_or_404(Team, id=team_id, course=course)
-    
-    course_members = CourseMember.objects.filter(course=course)
-    team_members = TeamMember.objects.filter(team=team)
 
+    all_course_members = CourseMember.objects.filter(course=course)
+
+    team_members = TeamMember.objects.filter(team=team)
     team_member_ids = team_members.values_list('course_member_id', flat=True)
-    course_members = course_members.exclude(id__in=team_member_ids)
+    remaining_course_members = all_course_members.exclude(id__in=team_member_ids)
+
+    course_members_data = []
+    for cm in remaining_course_members:
+        existing_team_member = TeamMember.objects.filter(course_member=cm).first()
+        course_members_data.append({
+            "course_member": cm,
+            "team_name": existing_team_member.team.team_name if existing_team_member else None
+        })
 
     return render(request, "edit_team.html", {
-        "teacher":teacher,
+        "teacher": teacher,
         "course": course,
-        "team":team,
+        "team": team,
         "team_members": team_members,
-        "course_members": course_members
+        "course_members_data": course_members_data 
     })
+
 
 def remove_from_team(request, teacher_id, course_id, team_id, member_id):
     if request.method == 'POST':
@@ -576,45 +608,6 @@ See you on Assessmate!
     
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)}, status=500)
-
-# @csrf_exempt
-# @require_POST
-# def invite_student(request):
-#     """Invite a student to a course by email."""
-#     try:
-#         data = json.loads(request.body)
-#         email = data.get("email")
-#         course_id = data.get("course_id")
-
-#         if not email or not course_id:
-#             return JsonResponse({"success": False, "message": "Missing email or course ID."}, status=400)
-
-#         course = get_object_or_404(Course, id=course_id)
-        
-
-#         # Get or create user
-#         student, _ = User.objects.get_or_create(
-#             email=email,
-#             defaults={"name": email.split("@")[0], "role": "student", "created_at": timezone.now()}
-#         )
-
-#         # Create CourseMember if they don't already exist
-#         course_member, created = CourseMember.objects.get_or_create(course=course, user=student)
-
-#         # send email
-#         send_mail(
-#             subject="You're invited to join a course on Assessmate!",
-#             message=f"You have been invited to join the course '{course.course_name}' on Assessmate.",
-#             from_email="no-reply@assessmate.edu",
-#             recipient_list=[email],
-#             fail_silently=True
-#         )
-
-#         return JsonResponse({"success": True, "message": f"{email} has been invited!"})
-#     except Exception as e:
-#         return JsonResponse({"success": False, "message": str(e)}, status=500)
-
-
 
 
 # Student Accept Invitation
