@@ -26,4 +26,6 @@ urlpatterns = [
     path('invite-student/', invite_student, name='invite_student'),
     path("invite/accept/", views.accept_invitation, name="accept_invitation"),
     path("student_course_detail/<uuid:user_id>/<uuid:course_id>/", views.student_course_detail, name="student_course_detail"),
+    path("student_take_assessment/<uuid:user_id>/<uuid:course_id>/<uuid:assessment_id>/", views.student_take_assessment, name="student_take_assessment"),
+    path("student_view_results/<uuid:user_id>/<uuid:course_id>/<uuid:assessment_id>/", views.student_view_results, name="student_view_results"),
 ]

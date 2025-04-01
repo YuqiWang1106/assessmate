@@ -22,7 +22,9 @@
             <ul>
             {% for assessment in current_assessments %}
                 <li>
-                    <strong>{{ assessment.title }}</strong> - Due: {{ assessment.due_date|date:"Y-m-d H:i" }}
+                    <a href="{% url 'student_take_assessment' user.id course.id assessment.id %}">
+                        <strong>{{ assessment.title }}</strong>
+                    </a> - Due: {{ assessment.due_date|date:"Y-m-d H:i" }}
                 </li>
             {% endfor %}
             </ul>
@@ -39,6 +41,11 @@
             {% for assessment in finished_assessments %}
                 <li>
                     <strong>{{ assessment.title }}</strong> - Closed on: {{ assessment.due_date|date:"Y-m-d H:i" }}
+                    {% if assessment.results_released %}
+                        - <a href="{% url 'student_view_results' user.id course.id assessment.id %}">See results</a>
+                    {% else %}
+                        - <span style="color: gray;">Restuls not publish yet</span>
+                    {% endif %}
                 </li>
             {% endfor %}
             </ul>
@@ -46,6 +53,7 @@
             <p>No finished assessments yet.</p>
         {% endif %}
     </div>
+
 </div>
 
 </body>

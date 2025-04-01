@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ assessment.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'student_course_detail' student.id course.id %}" class="site-title">← Back</a>
+        <span class="welcome-text">Welcome, {{ student.name }}</span>
+    </div>
+
+    <div class="container">
+        <h2>{{ assessment.title }}</h2>
+        <p><strong>Course:</strong> {{ course.course_number }} - {{ course.course_name }}</p>
+
+        <h3>Peer Assessment Targets:</h3>
+        <ul>
+            {% for teammate in teammates %}
+                <li>
+                    Assessment for: <strong>{{ teammate.name }}</strong>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

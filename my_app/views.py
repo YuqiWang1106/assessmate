@@ -634,3 +634,45 @@ def student_course_detail(request, user_id, course_id):
         "current_assessments": current_assessments,
         "finished_assessments": finished_assessments,
     })
+
+
+def student_take_assessment(request, user_id, course_id, assessment_id):
+    student = get_object_or_404(User, id=user_id, role="student")
+    course = get_object_or_404(Course, id=course_id)
+    assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="published")
+
+    # Find course member
+    course_member = get_object_or_404(CourseMember, user=student, course=course)
+
+    # Find team
+    team_member = TeamMember.objects.filter(course_member=course_member).first()
+    if not team_member:
+        return HttpResponseForbidden("You are not in a team for this course.")
+
+    team = team_member.team
+
+    # Find teammates
+    teammate_members = TeamMember.objects.filter(team=team)
+    teammates = [tm.course_member.user for tm in teammate_members]
+
+    return render(request, "student_take_assessment.html", {
+        "student": student,
+        "course": course,
+        "assessment": assessment,
+        "teammates": teammates,
+    })
+
+
+def student_view_results(request, user_id, course_id, assessment_id):
+    student = get_object_or_404(User, id=user_id, role="student")
+    course = get_object_or_404(Course, id=course_id)
+    assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="finished")
+
+    if not assessment.results_released:
+        return HttpResponseForbidden("Results are not yet released.")
+
+    return render(request, "student_view_results.html", {
+        "student": student,
+        "course": course,
+        "assessment": assessment,
+    })

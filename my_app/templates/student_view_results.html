@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assessment Results</title>
+    <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'student_course_detail' student.id course.id %}" class="site-title">← Back</a>
+        <span class="welcome-text">Welcome, {{ student.name }}</span>
+    </div>
+
+    <div class="container">
+        <h2>Assessment Results</h2>
+        <p><strong>Course:</strong> {{ course.course_number }} - {{ course.course_name }}</p>
+        <p><strong>Assessment:</strong> {{ assessment.title }}</p>
+        <p><em>Results content coming soon...</em></p>
+    </div>
+</body>
+</html>
