@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.course_number }} - {{ course.course_name }}</title>
+    <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
+</head>
+<body>
+    <div class="header">
+        <a href="{% url 'student_courses' user.id %}" class="site-title">← Back</a>
+        <span class="welcome-text">Welcome, {{ user.name }}</span>
+    </div>
+
+    <div class="container">
+    <h2>{{ course.course_number }} - {{ course.course_name }}</h2>
+
+    <!-- Current Assessments -->
+    <div class="assessment-section">
+        <h3>Current Assessments</h3>
+        {% if current_assessments %}
+            <ul>
+            {% for assessment in current_assessments %}
+                <li>
+                    <strong>{{ assessment.title }}</strong> - Due: {{ assessment.due_date|date:"Y-m-d H:i" }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No current assessments.</p>
+        {% endif %}
+    </div>
+
+    <!-- Finished Assessments -->
+    <div class="assessment-section">
+        <h3>Finished Assessments</h3>
+        {% if finished_assessments %}
+            <ul>
+            {% for assessment in finished_assessments %}
+                <li>
+                    <strong>{{ assessment.title }}</strong> - Closed on: {{ assessment.due_date|date:"Y-m-d H:i" }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No finished assessments yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>

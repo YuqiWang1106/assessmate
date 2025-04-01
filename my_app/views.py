@@ -104,33 +104,27 @@ def google_callback(request):
 
     
 
-    # store the user session to restrict access to protected pages -> done in dashboard views
+    # store the user session to restrict access to protected pages
     request.session["user_id"] = str(user.id)
     request.session["user_email"] = user.email
     request.session["user_role"] = user.role
 
     # Invitation Logic
-    # 取出邀请信息
     invited_email = request.session.get("invited_email")
     invited_course_id = request.session.get("invited_course_id")
 
-    # 如果当前用户是学生，并且是通过邀请链接进来的
     if user.role == "student" and invited_email == email and invited_course_id:
         try:
             invited_course = Course.objects.get(id=invited_course_id)
-            # 如果还没有加入该课程，就创建 CourseMember
             if not CourseMember.objects.filter(user=user, course=invited_course).exists():
                 CourseMember.objects.create(user=user, course=invited_course)
         except Course.DoesNotExist:
-            pass  # 课程不合法就忽略
+            pass
 
-        # 清除 session 中的邀请信息
         request.session.pop("invited_email", None)
         request.session.pop("invited_course_id", None)
 
-    
 
-    # redirects user to their respective dashboard
     if user.role == "teacher":
         return redirect("teacher_dashboard", teacher_id=user.id)
     else:
@@ -375,29 +369,6 @@ def assessment_dashboard(request, teacher_id):
         "finished_assessments": finished_assessments,
     })
 
-# def edit_team(request, teacher_id, course_id, team_id=None):
-#     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
-#     course = get_object_or_404(Course, id=course_id, teacher=teacher)
-#     team = None 
-
-#     if team_id:
-#         team = get_object_or_404(Team, id=team_id, course=course)
-    
-#     course_members = CourseMember.objects.filter(course=course)
-#     team_members = TeamMember.objects.filter(team=team)
-
-#     team_member_ids = team_members.values_list('course_member_id', flat=True)
-#     course_members = course_members.exclude(id__in=team_member_ids)
-
-#     return render(request, "edit_team.html", {
-#         "teacher":teacher,
-#         "course": course,
-#         "team":team,
-#         "team_members": team_members,
-#         "course_members": course_members
-#     })
-
-
 def edit_team(request, teacher_id, course_id, team_id=None):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     course = get_object_or_404(Course, id=course_id, teacher=teacher)
@@ -624,3 +595,42 @@ def accept_invitation(request):
     return redirect(f"/accounts/google/login/?role=student")
 
 
+
+# def student_course_detail(request, user_id, course_id):
+#     if "user_id" not in request.session:
+#         return redirect("landing")
+
+#     student = get_object_or_404(User, id=user_id, role="student")
+#     course = get_object_or_404(Course, id=course_id)
+    
+#     return render(request, "student_course_detail.html", {
+#         "course": course,
+#         "user": student,
+#     })
+
+
+
+def student_course_detail(request, user_id, course_id):
+    if "user_id" not in request.session:
+        return redirect("landing")
+
+    student = get_object_or_404(User, id=user_id, role="student")
+    course = get_object_or_404(Course, id=course_id)
+
+    current_assessments = Assessment.objects.filter(
+        course=course,
+        status="published",
+        due_date__gte=now()
+    ).order_by("due_date")
+
+    finished_assessments = Assessment.objects.filter(
+        course=course,
+        status="finished"
+    ).order_by("-due_date")
+
+    return render(request, "student_course_detail.html", {
+        "course": course,
+        "user": student,
+        "current_assessments": current_assessments,
+        "finished_assessments": finished_assessments,
+    })

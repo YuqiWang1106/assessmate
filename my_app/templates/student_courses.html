@@ -21,13 +21,22 @@
       </div>
     <h2>Student Dashboard</h2> 
 
-    {% for course in courses %}
+    {% comment %} {% for course in courses %}
         <div class="course">
             <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
     </div>
 {% empty %}
     <p>No courses enrolled yet</p>
-{% endfor %}
+{% endfor %} {% endcomment %}
+
+    {% for course in courses %}
+        <div class="course" onclick="window.location.href='{% url 'student_course_detail' user.id course.id %}'" style="cursor: pointer;">
+            <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
+        </div>
+    {% empty %}
+        <p>No courses enrolled yet</p>
+    {% endfor %}
+
 </body>
 
 </html>

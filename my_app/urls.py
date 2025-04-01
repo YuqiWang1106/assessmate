@@ -25,5 +25,5 @@ urlpatterns = [
     path("delete_course/<uuid:teacher_id>/<uuid:course_id>/", delete_course, name="delete_course"),
     path('invite-student/', invite_student, name='invite_student'),
     path("invite/accept/", views.accept_invitation, name="accept_invitation"),
-
+    path("student_course_detail/<uuid:user_id>/<uuid:course_id>/", views.student_course_detail, name="student_course_detail"),
 ]

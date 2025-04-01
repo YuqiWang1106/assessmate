@@ -58,23 +58,3 @@
   {% endfor %}
 </div>
 
-
-{% comment %} <div class="invite-box">
-  <h3>Students in {{ course }}</h3>
-  {% with course_members|exclude_team_members:team_members as filtered_course_members %}
-    {% for course_member in filtered_course_members %}
-      <div class="member-card">
-        <h4>{{ course_member }}</h4>
-        <form method="POST" action="{% url 'add_to_team' teacher.id course.id team.id course_member.id %}">
-          {% csrf_token %}
-          <button class="remove-button" type="submit">Add</button>
-        </form>
-      </div>
-    {% empty %}
-      <p style="text-align: center;">No other students in course</p>
-    {% endfor %}
-  {% endwith %}
-</div> {% endcomment %}
-
-
-
