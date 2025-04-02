@@ -676,3 +676,63 @@ def student_view_results(request, user_id, course_id, assessment_id):
         "course": course,
         "assessment": assessment,
     })
+
+
+
+def student_take_assessment_form(request, user_id, course_id, assessment_id, target_user_id):
+    # 1. 验证主调学生
+    student = get_object_or_404(User, id=user_id, role="student")
+    # 2. 验证课程和Assess
+    course = get_object_or_404(Course, id=course_id)
+    assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="published")
+    # 3. 被评价的同学
+    target_user = get_object_or_404(User, id=target_user_id)  
+
+    # 加载Assessment的所有问题
+    questions = AssessmentQuestion.objects.filter(assessment=assessment)
+    questions_json = json.dumps([
+        {"question_type": q.question_type, "content": q.content}
+        for q in questions
+    ])
+
+    # 最后 render 那个“student_answer_assessment.html”
+    return render(request, "student_answer_assessment.html", {
+        "student": student,
+        "course": course,
+        "assessment": assessment,
+        "target_user": target_user,  # 以防后面用到
+        "questions_json": questions_json,
+    })
+
+
+
+@csrf_exempt
+@require_POST
+def submit_assessment(request):
+    try:
+        data = json.loads(request.body)
+        from_user_id = data.get("student_id")
+        to_user_id = data.get("target_user_id")
+        assessment_id = data.get("assessment_id")
+        answers = data.get("answers")
+
+        from_user = get_object_or_404(User, id=from_user_id, role="student")
+        to_user = get_object_or_404(User, id=to_user_id)
+        assessment = get_object_or_404(Assessment, id=assessment_id)
+
+        # 如果该学生已经提交过这个 assessment 针对这个人，更新即可（不重复创建）
+        response, created = AssessmentResponse.objects.update_or_create(
+            from_user=from_user,
+            to_user=to_user,
+            assessment=assessment,
+            defaults={
+                "answers": answers,
+                "submitted": True
+            }
+        )
+
+        return JsonResponse({"success": True})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)}, status=500)
+

@@ -28,16 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
               <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
             `;
 
-            // if (q.question_type === "likert") {
-            //     html += `
-            //     <div>
-            //         1 <input type="radio" disabled />
-            //         2 <input type="radio" disabled />
-            //         3 <input type="radio" disabled />
-            //         4 <input type="radio" disabled />
-            //         5 <input type="radio" disabled />
-            //     </div>`;
-            // } 
+
             if (q.question_type === "likert") {
               html += `
                 <div class="likert-track-container">
@@ -113,17 +104,6 @@ document.addEventListener("DOMContentLoaded", function() {
         `;
 
   
-      // if (type === "likert") {
-      //   html += `
-      //     <div style="margin-top: 10px;">
-      //       1 <input type="radio" disabled />
-      //       2 <input type="radio" disabled />
-      //       3 <input type="radio" disabled />
-      //       4 <input type="radio" disabled />
-      //       5 <input type="radio" disabled />
-      //     </div>
-      //   `;
-      // } 
       if (type === "likert") {
         html += `
           <div class="likert-track-container">
