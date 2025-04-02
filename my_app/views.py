@@ -602,6 +602,12 @@ def student_course_detail(request, user_id, course_id):
     student = get_object_or_404(User, id=user_id, role="student")
     course = get_object_or_404(Course, id=course_id)
 
+    Assessment.objects.filter(
+        course=course,
+        status="published",
+        due_date__lt=timezone.now()
+    ).update(status="finished")
+
     current_assessments = Assessment.objects.filter(
         course=course,
         status="published",
@@ -625,9 +631,13 @@ def student_take_assessment(request, user_id, course_id, assessment_id):
     student = get_object_or_404(User, id=user_id, role="student")
     course = get_object_or_404(Course, id=course_id)
     assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="published")
-    course_member = get_object_or_404(CourseMember, user=student, course=course)
 
+    if assessment.due_date and assessment.due_date < timezone.now():
+        return redirect("student_course_detail", user_id=student.id, course_id=course.id)
+   
+    course_member = get_object_or_404(CourseMember, user=student, course=course)
     team_member = TeamMember.objects.filter(course_member=course_member).first()
+
     if not team_member:
         return HttpResponseForbidden("You are not in a team for this course.")
 

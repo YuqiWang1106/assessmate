@@ -107,22 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
         //     });
         //   }
         // });
-        // 1) 定义 answers 为一个空对象，而不是数组
+
         const answers = {};
 
-        // 2) 遍历每个题目 block
+
         const blocks = document.querySelectorAll(".question-block");
         blocks.forEach((block, i) => {
         const index = i + 1;
         const type = block.querySelector(`input[name="question_type_${index}"]`).value;
 
-        // 如果是likert题
         if (type === "likert") {
             const selected = block.querySelector(`input[name="likert_${index}"]:checked`);
             // 3) 用 key: "likert_1", "likert_2" 来存
             answers[`likert_${index}`] = selected ? selected.value : null;
 
-        // 如果是open题
         } else if (type === "open") {
             const textarea = block.querySelector(`textarea[name="open_${index}"]`);
             answers[`open_${index}`] = textarea ? textarea.value.trim() : "";
@@ -158,8 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   
-  
-    // Likert 动画交互
+
     document.addEventListener("click", function (e) {
       if (e.target.name && e.target.name.startsWith("likert_")) {
         const container = e.target.closest(".likert-track-container");
