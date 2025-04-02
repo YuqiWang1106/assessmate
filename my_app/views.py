@@ -524,7 +524,7 @@ def delete_team(request, teacher_id, course_id, team_id):
         team.delete()
         return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))
 
-    return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))  # Fallback redirect
+    return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id})) 
 
 @csrf_exempt
 def delete_course(request, teacher_id, course_id):
@@ -535,7 +535,7 @@ def delete_course(request, teacher_id, course_id):
         course.delete()
         return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))
 
-    return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))  # Fallback redirect
+    return redirect(reverse('teacher_courses', kwargs={'teacher_id': teacher_id}))
 
 # Sending Invite to Student
 @csrf_exempt
@@ -555,24 +555,24 @@ def invite_student(request):
         invite_link = f"http://127.0.0.1:8000/invite/accept/?course_id={course_id}&email={email}"
 
         message = f"""
-Hi,
+                        Hi,
 
-You have been invited to join the course: "{course.course_name}" on Assessmate!
+                        You have been invited to join the course: "{course.course_name}" on Assessmate!
 
-Click the link below to join:
-{invite_link}
+                        Click the link below to join:
+                        {invite_link}
 
-After clicking the link, you’ll be prompted to log in or register using your @bc.edu Google account.
+                        After clicking the link, you’ll be prompted to log in or register using your @bc.edu Google account.
 
-See you on Assessmate!
-"""
+                        See you on Assessmate!
+                    """
 
         send_mail(
             subject=f"Invitation to join {course.course_name} on Assessmate",
             message=message,
             from_email="no-reply@assessmate.edu",
             recipient_list=[email],
-            fail_silently=False,  # True for production if you want to avoid errors
+            fail_silently=False,
         )
 
         return JsonResponse({"success": True, "message": f"Invitation sent to {email}"})
@@ -594,22 +594,7 @@ def accept_invitation(request):
 
     return redirect(f"/accounts/google/login/?role=student")
 
-
-
-# def student_course_detail(request, user_id, course_id):
-#     if "user_id" not in request.session:
-#         return redirect("landing")
-
-#     student = get_object_or_404(User, id=user_id, role="student")
-#     course = get_object_or_404(Course, id=course_id)
-    
-#     return render(request, "student_course_detail.html", {
-#         "course": course,
-#         "user": student,
-#     })
-
-
-
+# Sutudent Course Detail
 def student_course_detail(request, user_id, course_id):
     if "user_id" not in request.session:
         return redirect("landing")
@@ -635,23 +620,18 @@ def student_course_detail(request, user_id, course_id):
         "finished_assessments": finished_assessments,
     })
 
-
+# Student Take Assessment Page
 def student_take_assessment(request, user_id, course_id, assessment_id):
     student = get_object_or_404(User, id=user_id, role="student")
     course = get_object_or_404(Course, id=course_id)
     assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="published")
-
-    # Find course member
     course_member = get_object_or_404(CourseMember, user=student, course=course)
 
-    # Find team
     team_member = TeamMember.objects.filter(course_member=course_member).first()
     if not team_member:
         return HttpResponseForbidden("You are not in a team for this course.")
 
     team = team_member.team
-
-    # Find teammates
     teammate_members = TeamMember.objects.filter(team=team)
     teammates = [tm.course_member.user for tm in teammate_members]
 
@@ -662,46 +642,39 @@ def student_take_assessment(request, user_id, course_id, assessment_id):
         "teammates": teammates,
     })
 
-
-def student_view_results(request, user_id, course_id, assessment_id):
-    student = get_object_or_404(User, id=user_id, role="student")
-    course = get_object_or_404(Course, id=course_id)
-    assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="finished")
-
-    if not assessment.results_released:
-        return HttpResponseForbidden("Results are not yet released.")
-
-    return render(request, "student_view_results.html", {
-        "student": student,
-        "course": course,
-        "assessment": assessment,
-    })
-
-
-
+# Student Answer Assessment Page
 def student_take_assessment_form(request, user_id, course_id, assessment_id, target_user_id):
-    # 1. 验证主调学生
     student = get_object_or_404(User, id=user_id, role="student")
-    # 2. 验证课程和Assess
     course = get_object_or_404(Course, id=course_id)
     assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="published")
-    # 3. 被评价的同学
-    target_user = get_object_or_404(User, id=target_user_id)  
+    target_user = get_object_or_404(User, id=target_user_id)
 
-    # 加载Assessment的所有问题
+    if assessment.due_date and assessment.due_date < timezone.now():
+        return HttpResponseForbidden("This assessment is closed (past deadline).")
+
     questions = AssessmentQuestion.objects.filter(assessment=assessment)
     questions_json = json.dumps([
         {"question_type": q.question_type, "content": q.content}
         for q in questions
     ])
 
-    # 最后 render 那个“student_answer_assessment.html”
+    try:
+        previous_response = AssessmentResponse.objects.get(
+            from_user=student,
+            to_user=target_user,
+            assessment=assessment
+        )
+        previous_answers = previous_response.answers
+    except AssessmentResponse.DoesNotExist:
+        previous_answers = {}
+
     return render(request, "student_answer_assessment.html", {
         "student": student,
         "course": course,
         "assessment": assessment,
-        "target_user": target_user,  # 以防后面用到
+        "target_user": target_user,
         "questions_json": questions_json,
+        "previous_answers": json.dumps(previous_answers),
     })
 
 
@@ -720,7 +693,6 @@ def submit_assessment(request):
         to_user = get_object_or_404(User, id=to_user_id)
         assessment = get_object_or_404(Assessment, id=assessment_id)
 
-        # 如果该学生已经提交过这个 assessment 针对这个人，更新即可（不重复创建）
         response, created = AssessmentResponse.objects.update_or_create(
             from_user=from_user,
             to_user=to_user,
@@ -730,9 +702,24 @@ def submit_assessment(request):
                 "submitted": True
             }
         )
-
         return JsonResponse({"success": True})
 
     except Exception as e:
         return JsonResponse({"success": False, "message": str(e)}, status=500)
+
+
+# Student Result Page
+def student_view_results(request, user_id, course_id, assessment_id):
+    student = get_object_or_404(User, id=user_id, role="student")
+    course = get_object_or_404(Course, id=course_id)
+    assessment = get_object_or_404(Assessment, id=assessment_id, course=course, status="finished")
+
+    if not assessment.results_released:
+        return HttpResponseForbidden("Results are not yet released.")
+
+    return render(request, "student_view_results.html", {
+        "student": student,
+        "course": course,
+        "assessment": assessment,
+    })
 
