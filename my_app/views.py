@@ -16,12 +16,14 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
-import openai
 import os
 import json
+from openai import OpenAI
+from dotenv import load_dotenv
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -723,7 +725,8 @@ def submit_assessment(request):
         return JsonResponse({"success": False, "message": str(e)}, status=500)
 
 
-# Teacher Result Page
+
+# Teacher Result Page with LLM
 def teacher_view_results(request, teacher_id, course_id, assessment_id):
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     course = get_object_or_404(Course, id=course_id, teacher=teacher)
@@ -734,47 +737,112 @@ def teacher_view_results(request, teacher_id, course_id, assessment_id):
 
     selected_team = None
     team_members = []
-    open_question_responses = []
+    open_question_analyses = []
 
     if selected_team_id:
         selected_team = get_object_or_404(Team, id=selected_team_id, course=course)
         team_member_links = TeamMember.objects.filter(team=selected_team)
         team_members = [tm.course_member.user for tm in team_member_links]
-        questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
-        open_question_responses = []
 
-        for idx, q in enumerate(questions, start=1):
-            if q.question_type == "open":
-                question_key = f"open_{idx}"
-                responses_for_this_question = []
+        all_questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
+        for idx, q in enumerate(all_questions, start=1):
+            if q.question_type != "open":
+                continue
 
-                for from_user in team_members:
-                    for to_user in team_members:
-                        try:
-                            response = AssessmentResponse.objects.get(
-                                assessment=assessment,
-                                from_user=from_user,
-                                to_user=to_user,
-                            )
-                            answer = response.answers.get(question_key, None)
-                            if answer:
-                                responses_for_this_question.append({
-                                    "from": from_user.name,
-                                    "to": to_user.name,
-                                    "answer": answer
-                                })
-                        except AssessmentResponse.DoesNotExist:
-                            continue
+            question_key = f"open_{idx}"
+            all_responses = []
 
-                open_question_responses.append({
-                    "question_text": q.content,
-                    "responses": responses_for_this_question
-                })
+            print(f"\n=== Question {idx}: {q.content} ===")
 
-        for q_block in open_question_responses:
-            print("\nQUESTION:", q_block["question_text"])
-            for r in q_block["responses"]:
-                print(f"{r['from']} → {r['to']}: {r['answer']}")
+            for from_user in team_members:
+                for to_user in team_members:
+                    try:
+                        response = AssessmentResponse.objects.get(
+                            assessment=assessment,
+                            from_user=from_user,
+                            to_user=to_user,
+                        )
+                        answer = response.answers.get(question_key)
+                        if answer:
+                            line = f"{from_user.name} → {to_user.name}: {answer}"
+                            all_responses.append(line)
+                            print(line)
+                    except AssessmentResponse.DoesNotExist:
+                        continue
+
+            if all_responses:
+                full_prompt = f"""
+                You are a peer-assessment assistant. Below are all the answers to the question:
+
+                Question: "{q.content}"
+
+                Answers:
+                {chr(10).join(all_responses)}
+
+                Please generate a structured JSON with:
+                1. "summary": a concise summary of the general feedback or shared opinions from the team;
+                2. "analysis": a performance insight or observation about team collaboration based on the feedback.
+
+                Output JSON schema:
+                {{
+                    "summary": "...",
+                    "analysis": "..."
+                }}
+                """
+
+                print("\n==== Prompt to LLM ====\n", full_prompt)
+
+                try:
+                    response = client.responses.create(
+                        model="gpt-4o-2024-08-06",
+                        input=[
+                            {
+                                "role": "system",
+                                "content": "You are a helpful assistant that analyzes peer assessment data and outputs structured JSON."
+                            },
+                            {
+                                "role": "user",
+                                "content": full_prompt
+                            }
+                        ],
+                        text={
+                            "format": {
+                                "type": "json_schema",
+                                "name": "peer_assessment_analysis",
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "summary": {"type": "string"},
+                                        "analysis": {"type": "string"},
+                                    },
+                                    "required": ["summary", "analysis"],
+                                    "additionalProperties": False
+                                },
+                                "strict": True
+                            }
+                        }
+                    )
+
+                    result = json.loads(response.output_text)
+
+                    print("\n=== Parsed Summary & Analysis ===")
+                    print("Summary:", result.get("summary"))
+                    print("Analysis:", result.get("analysis"))
+
+                    open_question_analyses.append({
+                        "question": q.content,
+                        "summary": result["summary"],
+                        "analysis": result["analysis"]
+                    })
+
+
+                except Exception as e:
+                    print("[LLM ERROR]", e)
+                    open_question_analyses.append({
+                        "question": q.content,
+                        "summary": "LLM processing failed.",
+                        "analysis": str(e)
+                    })
 
     return render(request, "teacher_view_results.html", {
         "teacher": teacher,
@@ -783,8 +851,9 @@ def teacher_view_results(request, teacher_id, course_id, assessment_id):
         "teams": teams,
         "selected_team": selected_team,
         "team_members": team_members,
-        "open_question_responses": open_question_responses,
+        "open_question_analyses": open_question_analyses,
     })
+
 
 # Student Result Page
 def student_view_results(request, user_id, course_id, assessment_id):
