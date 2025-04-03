@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assessment Results</title>
+    <link rel="stylesheet" href="{% static 'css/assessment_dashboard.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Results for {{ assessment.title }} - {{ course.course_name }}</h1>
+
+        <!-- 下拉框选择团队 -->
+        <form method="get">
+            <label for="team-select">Select a team:</label>
+            <select name="team_id" id="team-select" onchange="this.form.submit()">
+                <option value="">-- Select a team --</option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}" {% if selected_team and team.id == selected_team.id %}selected{% endif %}>
+                        {{ team.team_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <hr>
+
+        <!-- 如果没有选择团队 -->
+        {% if not selected_team %}
+            <p>Please select a team to view results.</p>
+
+        <!-- 显示团队成员 -->
+        {% else %}
+            <h2>Members of {{ selected_team.team_name }}</h2>
+            <ul>
+                {% for member in team_members %}
+                    <li>{{ member.name }} ({{ member.email }})</li>
+                {% empty %}
+                    <p>No members in this team.</p>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>

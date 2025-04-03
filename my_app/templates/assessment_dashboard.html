@@ -39,7 +39,7 @@
                 {% for assessment in finished_assessments %}
                     <div class="ad-assessment-card">
                         <span>{{ assessment.title }}</span>
-                        <a href="#">Results</a>
+                        <a href="{% url 'teacher_view_results' teacher.id selected_course.id assessment.id %}">Results</a>
                     </div>
                 {% empty %}
                     <p class="ad-empty-msg">No finished assessments.</p>

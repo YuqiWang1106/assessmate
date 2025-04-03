@@ -16,7 +16,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
+import openai
+import os
+import json
 
+openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
@@ -718,6 +723,69 @@ def submit_assessment(request):
         return JsonResponse({"success": False, "message": str(e)}, status=500)
 
 
+# Teacher Result Page
+def teacher_view_results(request, teacher_id, course_id, assessment_id):
+    teacher = get_object_or_404(User, id=teacher_id, role="teacher")
+    course = get_object_or_404(Course, id=course_id, teacher=teacher)
+    assessment = get_object_or_404(Assessment, id=assessment_id, course=course)
+
+    selected_team_id = request.GET.get("team_id")
+    teams = Team.objects.filter(course=course)
+
+    selected_team = None
+    team_members = []
+    open_question_responses = []
+
+    if selected_team_id:
+        selected_team = get_object_or_404(Team, id=selected_team_id, course=course)
+        team_member_links = TeamMember.objects.filter(team=selected_team)
+        team_members = [tm.course_member.user for tm in team_member_links]
+        questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
+        open_question_responses = []
+
+        for idx, q in enumerate(questions, start=1):
+            if q.question_type == "open":
+                question_key = f"open_{idx}"
+                responses_for_this_question = []
+
+                for from_user in team_members:
+                    for to_user in team_members:
+                        try:
+                            response = AssessmentResponse.objects.get(
+                                assessment=assessment,
+                                from_user=from_user,
+                                to_user=to_user,
+                            )
+                            answer = response.answers.get(question_key, None)
+                            if answer:
+                                responses_for_this_question.append({
+                                    "from": from_user.name,
+                                    "to": to_user.name,
+                                    "answer": answer
+                                })
+                        except AssessmentResponse.DoesNotExist:
+                            continue
+
+                open_question_responses.append({
+                    "question_text": q.content,
+                    "responses": responses_for_this_question
+                })
+
+        for q_block in open_question_responses:
+            print("\nQUESTION:", q_block["question_text"])
+            for r in q_block["responses"]:
+                print(f"{r['from']} → {r['to']}: {r['answer']}")
+
+    return render(request, "teacher_view_results.html", {
+        "teacher": teacher,
+        "course": course,
+        "assessment": assessment,
+        "teams": teams,
+        "selected_team": selected_team,
+        "team_members": team_members,
+        "open_question_responses": open_question_responses,
+    })
+
 # Student Result Page
 def student_view_results(request, user_id, course_id, assessment_id):
     student = get_object_or_404(User, id=user_id, role="student")
@@ -732,4 +800,5 @@ def student_view_results(request, user_id, course_id, assessment_id):
         "course": course,
         "assessment": assessment,
     })
+
 

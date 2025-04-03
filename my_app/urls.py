@@ -30,5 +30,6 @@ urlpatterns = [
     path("student_view_results/<uuid:user_id>/<uuid:course_id>/<uuid:assessment_id>/", views.student_view_results, name="student_view_results"),
     path("student_take_assessment_form/<uuid:user_id>/<uuid:course_id>/<uuid:assessment_id>/<uuid:target_user_id>/", views.student_take_assessment_form, name="student_take_assessment_form"),
     path("submit_assessment/", views.submit_assessment, name="submit_assessment"),
+    path("teacher_view_results/<uuid:teacher_id>/<uuid:course_id>/<uuid:assessment_id>/", views.teacher_view_results, name="teacher_view_results"),
 
 ]
