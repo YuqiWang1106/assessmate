@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import User, Course, CourseMember, Team, TeamMember, Assessment, AssessmentQuestion, AssessmentResponse
-
+from .models import User, Course, CourseMember, Team, TeamMember, Assessment, AssessmentQuestion, AssessmentResponse, TeamAssessmentAnalysis, QuestionAnalysisCache
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "email", "name", "role", "created_at")  
@@ -58,6 +57,42 @@ class AssessmentResponseAdmin(admin.ModelAdmin):
     readonly_fields = ("id", "last_saved")
 
 
+
+class TeamAssessmentAnalysisAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "team",
+        "assessment",
+        "overall_rating",
+        "keywords",         
+        "summary",
+        "suggestions",
+        "radar_scores",     
+        "created_at"
+    )
+    search_fields = ("team__team_name", "assessment__title")
+    list_filter = ("team", "assessment")
+    readonly_fields = ("created_at",)
+
+
+class QuestionAnalysisCacheAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "team",
+        "assessment",
+        "question",
+        "question_type",
+        "summary",
+        "analysis",
+        "created_at"
+    )
+    search_fields = ("question__content", "team__team_name")
+    list_filter = ("question_type", "assessment")
+    readonly_fields = ("created_at",)
+
+
+admin.site.register(TeamAssessmentAnalysis, TeamAssessmentAnalysisAdmin)
+admin.site.register(QuestionAnalysisCache, QuestionAnalysisCacheAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseMember, CourseMemberAdmin)

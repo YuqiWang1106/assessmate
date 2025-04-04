@@ -112,3 +112,30 @@ class AssessmentResponse(models.Model):
     def __str__(self):
         return f"Response from {self.from_user} to {self.to_user} ({self.assessment.title})"
 
+# 9. TeamAssessmentAnalysis: overall
+class TeamAssessmentAnalysis(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    overall_rating = models.FloatField()
+    keywords = models.JSONField()
+    summary = models.TextField()
+    suggestions = models.TextField()
+    radar_scores = models.JSONField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("team", "assessment")
+
+
+# 10. QuestionAnalysisCache: Detail
+class QuestionAnalysisCache(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    question = models.ForeignKey(AssessmentQuestion, on_delete=models.CASCADE)
+    question_type = models.CharField(max_length=10)  # "likert" or "open"
+    summary = models.TextField()
+    analysis = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("team", "assessment", "question")
