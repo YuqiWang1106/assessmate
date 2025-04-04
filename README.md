@@ -12,7 +12,12 @@
 
 
 
-
+6. `python manage.py makemigrations`
+7. `python3 manage.py migrate`
+8. `pip install openai`
+9. `pip install dotenv`
+10. In the A-team folder, write a file called ".env". 
+11. Write "OPENAI_API_KEY=XXXXXXX" with API Key.
 
 
 ## **API Endpoints**
