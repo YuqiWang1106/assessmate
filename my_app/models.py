@@ -112,7 +112,7 @@ class AssessmentResponse(models.Model):
     def __str__(self):
         return f"Response from {self.from_user} to {self.to_user} ({self.assessment.title})"
 
-# 9. TeamAssessmentAnalysis: overall
+# 9. TeamAssessmentAnalysis: overall (LLM)
 class TeamAssessmentAnalysis(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
@@ -127,7 +127,7 @@ class TeamAssessmentAnalysis(models.Model):
         unique_together = ("team", "assessment")
 
 
-# 10. QuestionAnalysisCache: Detail
+# 10. QuestionAnalysisCache: Detail (LLM)
 class QuestionAnalysisCache(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
@@ -139,3 +139,17 @@ class QuestionAnalysisCache(models.Model):
 
     class Meta:
         unique_together = ("team", "assessment", "question")
+
+
+# 11. LLM Improvement for Open Ended Question
+class OpenEndedToneAnalysis(models.Model):
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    question = models.ForeignKey(AssessmentQuestion, on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tone_given")
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tone_received")
+    tone_feedback = models.TextField()
+    rewritten_answer = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("assessment", "question", "from_user", "to_user")

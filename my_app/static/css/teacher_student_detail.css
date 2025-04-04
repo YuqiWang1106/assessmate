@@ -1,0 +1,64 @@
+/* teacher_student_detail.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+ul li {
+    margin-bottom: 6px;
+}
+
+.feedback-block {
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #fafafa;
+    margin-bottom: 20px;
+}
+
+.feedback-block h3 {
+    margin-top: 0;
+    color: #444;
+}
+
+.feedback-block ul {
+    margin-top: 10px;
+}
+
+.feedback-block li {
+    margin-bottom: 10px;
+}
+
+.tone-analysis {
+    background-color: #f0f8ff;
+    border-left: 4px solid #1e90ff;
+    padding: 8px 12px;
+    margin-top: 8px;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+.tone-analysis p {
+    margin: 4px 0;
+}

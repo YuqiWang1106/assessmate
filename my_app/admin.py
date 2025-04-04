@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Course, CourseMember, Team, TeamMember, Assessment, AssessmentQuestion, AssessmentResponse, TeamAssessmentAnalysis, QuestionAnalysisCache
+from .models import User, Course, CourseMember, Team, TeamMember, Assessment, AssessmentQuestion, AssessmentResponse, TeamAssessmentAnalysis, QuestionAnalysisCache, OpenEndedToneAnalysis
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ("id", "email", "name", "role", "created_at")  
@@ -90,9 +90,27 @@ class QuestionAnalysisCacheAdmin(admin.ModelAdmin):
     list_filter = ("question_type", "assessment")
     readonly_fields = ("created_at",)
 
+class OpenEndedToneAnalysisAdmin(admin.ModelAdmin):
+    list_display = (
+        "id", 
+        "assessment", 
+        "question", 
+        "from_user", 
+        "to_user", 
+        "tone_feedback", 
+        "rewritten_answer", 
+        "created_at"
+    )
+    search_fields = (
+        "assessment__title", 
+        "question__content", 
+        "from_user__name", 
+        "to_user__name"
+    )
+    list_filter = ("assessment", "question", "created_at")
+    readonly_fields = ("id", "created_at")
 
-admin.site.register(TeamAssessmentAnalysis, TeamAssessmentAnalysisAdmin)
-admin.site.register(QuestionAnalysisCache, QuestionAnalysisCacheAdmin)
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseMember, CourseMemberAdmin)
@@ -101,3 +119,6 @@ admin.site.register(TeamMember, TeamMemberAdmin)
 admin.site.register(Assessment, AssessmentAdmin)
 admin.site.register(AssessmentQuestion, AssessmentQuestionAdmin)
 admin.site.register(AssessmentResponse, AssessmentResponseAdmin)
+admin.site.register(TeamAssessmentAnalysis, TeamAssessmentAnalysisAdmin)
+admin.site.register(QuestionAnalysisCache, QuestionAnalysisCacheAdmin)
+admin.site.register(OpenEndedToneAnalysis, OpenEndedToneAnalysisAdmin)

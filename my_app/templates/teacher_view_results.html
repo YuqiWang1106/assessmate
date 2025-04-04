@@ -31,8 +31,12 @@
             <h2>Members of {{ selected_team.team_name }}</h2>
             <ul>
                 {% for member in team_members %}
-                    <li>{{ member.name }} ({{ member.email }})</li>
-                {% empty %}
+                     <li>
+                        <a href="{% url 'teacher_student_detail' teacher.id course.id assessment.id selected_team.id member.id %}">
+                            {{ member.name }}
+                        </a> ({{ member.email }})
+                    </li>
+                            {% empty %}
                     <li>No members in this team.</li>
                 {% endfor %}
             </ul>

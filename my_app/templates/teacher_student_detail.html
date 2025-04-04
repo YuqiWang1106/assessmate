@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Student Detail - {{ selected_student.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/teacher_view_results.css' %}">
+    <link rel="stylesheet" href="{% static 'css/teacher_student_detail.css' %}">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Peer Assessment: {{ selected_student.name }}</h1>
+        <h3>Course: {{ course.course_name }} | Team: {{ team.team_name }}</h3>
+        <hr>
+
+        <h2>Teammates</h2>
+        <ul>
+            {% for member in team_members %}
+                <li>{{ member.name }} ({{ member.email }})</li>
+            {% endfor %}
+        </ul>
+
+        <hr>
+        <h2>Feedback for {{ selected_student.name }}</h2>
+        {% for block in all_answers %}
+            <div class="feedback-block">
+                <h3>From: {{ block.from_user.name }}</h3>
+                <ul>
+                    {% for item in block.answers %}
+                        <li style="margin-bottom: 15px;">
+                            <strong>{{ item.question }} ({{ item.type }}):</strong> {{ item.answer }}
+
+                            {% if item.type == "open" %}
+                                {% if item.tone_analysis or item.rewritten %}
+                                    <div class="tone-analysis">
+                                        {% if item.tone_analysis %}
+                                            <p><em>Tone Analysis:</em> {{ item.tone_analysis }}</p>
+                                        {% endif %}
+                                        {% if item.rewritten %}
+                                            <p><em>Rewritten Version:</em> {{ item.rewritten }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <hr>
+        {% empty %}
+            <p>No assessments submitted for this student yet.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
