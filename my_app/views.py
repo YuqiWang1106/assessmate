@@ -12,7 +12,7 @@ import json
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from django.core.mail import send_mail
 from django.conf import settings
 from django.http import JsonResponse
@@ -1097,11 +1097,11 @@ def teacher_student_detail(request, teacher_id, course_id, assessment_id, team_i
             item = {
                 "question": question.content,
                 "type": question.question_type,
-                "answer": original
+                "answer": original,
+                "key": key
             }
 
             if question.question_type == "open" and original != "No answer":
-                # 检查是否有缓存
                 cache = OpenEndedToneAnalysis.objects.filter(
                     assessment=assessment,
                     question=question,
@@ -1113,7 +1113,6 @@ def teacher_student_detail(request, teacher_id, course_id, assessment_id, team_i
                     item["tone_analysis"] = cache.tone_feedback
                     item["rewritten"] = cache.rewritten_answer
                 else:
-                    # LLM Prompt
                     prompt = f"""
                     You're a helpful assistant reviewing peer feedback for tone and language. 
                     A student wrote the following answer in a peer assessment:
@@ -1124,12 +1123,19 @@ def teacher_student_detail(request, teacher_id, course_id, assessment_id, team_i
                     1. "tone_feedback": a 3-sentence evaluation of the wording, tone, and appropriateness.
                     2. "rewritten_answer": a safer, kinder, and more constructive version of the same answer.
 
-                    Output:
+                    IMPORTANT:
+                    - The rewritten version should preserve the original meaning.
+                    - Keep the sentence **structure and number of sentences similar to the original**.
+                    - Try to match the **length and style** of the original, unless the original is clearly inappropriate.
+                    - Do NOT add extra commentary or explanations.
+
+                    Output JSON format:
                     {{
                         "tone_feedback": "...",
                         "rewritten_answer": "..."
                     }}
-                    """
+"""
+
 
                     try:
                         result = client.responses.create(
@@ -1186,53 +1192,31 @@ def teacher_student_detail(request, teacher_id, course_id, assessment_id, team_i
         "team_members": team_members,
         "all_answers": all_answers,
     })
-# def teacher_student_detail(request, teacher_id, course_id, assessment_id, team_id, student_id):
-#     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
-#     course = get_object_or_404(Course, id=course_id, teacher=teacher)
-#     assessment = get_object_or_404(Assessment, id=assessment_id, course=course)
-#     team = get_object_or_404(Team, id=team_id, course=course)
-#     selected_student = get_object_or_404(User, id=student_id)
 
-#     team_member_links = TeamMember.objects.filter(team=team)
-#     team_members = [tm.course_member.user for tm in team_member_links]
 
-#     questions = AssessmentQuestion.objects.filter(assessment=assessment)
-#     all_answers = []
 
-#     for from_user in team_members:
-#         try:
-#             response = AssessmentResponse.objects.get(
-#                 assessment=assessment,
-#                 from_user=from_user,
-#                 to_user=selected_student,
-#             )
-#         except AssessmentResponse.DoesNotExist:
-#             continue
+@require_POST
+@csrf_protect
+def edit_open_answer(request):
+    from_user_id = request.POST.get("from_user_id")
+    to_user_id = request.POST.get("to_user_id")
+    assessment_id = request.POST.get("assessment_id")
+    question_key = request.POST.get("question_key")
+    new_answer = request.POST.get("new_answer", "").strip()
 
-#         answer_block = {
-#             "from_user": from_user,
-#             "answers": []
-#         }
-
-#         for idx, question in enumerate(questions, start=1):
-#             key = f"{question.question_type}_{idx}"
-#             answer_block["answers"].append({
-#                 "question": question.content,
-#                 "type": question.question_type,
-#                 "answer": response.answers.get(key, "No answer")
-#             })
-
-#         all_answers.append(answer_block)
-
-#     return render(request, "teacher_student_detail.html", {
-#         "teacher": teacher,
-#         "course": course,
-#         "assessment": assessment,
-#         "team": team,
-#         "selected_student": selected_student,
-#         "team_members": team_members,
-#         "all_answers": all_answers,
-#     })
+    try:
+        response = AssessmentResponse.objects.get(
+            from_user_id=from_user_id,
+            to_user_id=to_user_id,
+            assessment_id=assessment_id
+        )
+        answers = response.answers or {}
+        answers[question_key] = new_answer
+        response.answers = answers
+        response.save()
+        return redirect(request.META.get("HTTP_REFERER", "/"))
+    except AssessmentResponse.DoesNotExist:
+        return JsonResponse({"success": False, "message": "Response not found."}, status=404)
 
 
 

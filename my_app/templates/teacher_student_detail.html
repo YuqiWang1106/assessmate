@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Detail - {{ selected_student.name }}</title>
-    <link rel="stylesheet" href="{% static 'css/teacher_view_results.css' %}">
     <link rel="stylesheet" href="{% static 'css/teacher_student_detail.css' %}">
-
 </head>
 <body>
     <div class="container">
@@ -23,25 +21,45 @@
 
         <hr>
         <h2>Feedback for {{ selected_student.name }}</h2>
+
         {% for block in all_answers %}
             <div class="feedback-block">
                 <h3>From: {{ block.from_user.name }}</h3>
                 <ul>
                     {% for item in block.answers %}
-                        <li style="margin-bottom: 15px;">
-                            <strong>{{ item.question }} ({{ item.type }}):</strong> {{ item.answer }}
+                        <li style="margin-bottom: 16px;">
+                            <strong>{{ item.question }} ({{ item.type }}):</strong><br>
 
                             {% if item.type == "open" %}
+                                <form method="post" action="{% url 'edit_open_answer' %}">
+                                    {% csrf_token %}
+                                    <textarea id="textarea-{{ block.from_user.id }}-{{ item.key }}" name="new_answer" rows="3" cols="80">{{ item.answer }}</textarea>
+                                    <input type="hidden" name="from_user_id" value="{{ block.from_user.id }}">
+                                    <input type="hidden" name="to_user_id" value="{{ selected_student.id }}">
+                                    <input type="hidden" name="assessment_id" value="{{ assessment.id }}">
+                                    <input type="hidden" name="question_key" value="{{ item.key }}">
+                                    <br>
+                                    <button type="submit" class="save-button">💾 Save</button>
+                                </form>
+
                                 {% if item.tone_analysis or item.rewritten %}
                                     <div class="tone-analysis">
                                         {% if item.tone_analysis %}
-                                            <p><em>Tone Analysis:</em> {{ item.tone_analysis }}</p>
+                                            <p><em>🧠 Tone Analysis:</em> {{ item.tone_analysis }}</p>
                                         {% endif %}
                                         {% if item.rewritten %}
-                                            <p><em>Rewritten Version:</em> {{ item.rewritten }}</p>
+                                            <p>
+                                                <em>✍️ Rewritten Version:</em>
+                                                <span id="rewritten-{{ block.from_user.id }}-{{ item.key }}">{{ item.rewritten }}</span>
+                                                <button type="button" class="replace-btn" onclick="replaceWithAI('{{ block.from_user.id }}', '{{ item.key }}', this)">
+                                                    🔁 Replace with AI Suggestion
+                                                </button>
+                                            </p>
                                         {% endif %}
                                     </div>
                                 {% endif %}
+                            {% else %}
+                                {{ item.answer }}
                             {% endif %}
                         </li>
                     {% endfor %}
@@ -52,5 +70,8 @@
             <p>No assessments submitted for this student yet.</p>
         {% endfor %}
     </div>
+
+
+<script src="{% static 'js/teacher_student_detail.js' %}"></script>
 </body>
 </html>
