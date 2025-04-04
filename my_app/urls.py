@@ -33,4 +33,5 @@ urlpatterns = [
     path("teacher_view_results/<uuid:teacher_id>/<uuid:course_id>/<uuid:assessment_id>/", views.teacher_view_results, name="teacher_view_results"),
     path('teacher/<uuid:teacher_id>/course/<uuid:course_id>/assessment/<uuid:assessment_id>/team/<uuid:team_id>/student/<uuid:student_id>/', views.teacher_student_detail, name='teacher_student_detail'),
     path("edit_open_answer/", views.edit_open_answer, name="edit_open_answer"),
+    path("toggle_results_publish/", views.toggle_results_publish, name="toggle_results_publish"),
 ]

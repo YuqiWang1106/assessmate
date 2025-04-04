@@ -20,6 +20,7 @@ import os
 import json
 from openai import OpenAI
 from dotenv import load_dotenv
+from django.contrib import messages
 
 
 load_dotenv()
@@ -1194,7 +1195,7 @@ def teacher_student_detail(request, teacher_id, course_id, assessment_id, team_i
     })
 
 
-
+# Edit Answer
 @require_POST
 @csrf_protect
 def edit_open_answer(request):
@@ -1218,6 +1219,34 @@ def edit_open_answer(request):
     except AssessmentResponse.DoesNotExist:
         return JsonResponse({"success": False, "message": "Response not found."}, status=404)
 
+
+# Publish Results
+@require_POST
+@csrf_protect
+def toggle_results_publish(request):
+    assessment_id = request.POST.get("assessment_id")
+    action = request.POST.get("action")
+    teacher_id = request.POST.get("teacher_id")
+    course_id = request.POST.get("course_id")
+
+    assessment = get_object_or_404(Assessment, id=assessment_id)
+
+    if action == "publish":
+        assessment.results_released = True
+        messages.success(request, "Results have been published successfully!")
+    elif action == "unpublish":
+        assessment.results_released = False
+        messages.info(request, "Results have been unpublished.")
+    else:
+        messages.error(request, "nvalid action.")
+        
+    assessment.save()
+
+    return redirect(reverse("teacher_view_results", kwargs={
+        "teacher_id": teacher_id,
+        "course_id": course_id,
+        "assessment_id": assessment_id
+    }))
 
 
 # Student Result Page
