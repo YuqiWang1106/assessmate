@@ -8,3 +8,17 @@ function replaceWithAI(fromUserId, key, button) {
         button.style.opacity = 0.6;
     }
 }
+
+
+function filterFeedback() {
+    const selected = document.getElementById("teammate-select").value;
+    const blocks = document.querySelectorAll(".feedback-block");
+
+    blocks.forEach(block => {
+        if (selected === "all") {
+            block.style.display = "block";
+        } else {
+            block.style.display = block.id === selected ? "block" : "none";
+        }
+    });
+}
