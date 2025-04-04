@@ -728,32 +728,31 @@ def submit_assessment(request):
 
 # Teacher Result Page with LLM
 def teacher_view_results(request, teacher_id, course_id, assessment_id):
+
     teacher = get_object_or_404(User, id=teacher_id, role="teacher")
     course = get_object_or_404(Course, id=course_id, teacher=teacher)
     assessment = get_object_or_404(Assessment, id=assessment_id, course=course)
-
     selected_team_id = request.GET.get("team_id")
     teams = Team.objects.filter(course=course)
 
     selected_team = None
     team_members = []
-    open_question_analyses = []
+    detail_analyses = []
+    profile_card = {}
 
     if selected_team_id:
         selected_team = get_object_or_404(Team, id=selected_team_id, course=course)
         team_member_links = TeamMember.objects.filter(team=selected_team)
         team_members = [tm.course_member.user for tm in team_member_links]
-
         all_questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
+
+        # 1. Detail Section
         for idx, q in enumerate(all_questions, start=1):
-            if q.question_type != "open":
-                continue
+            qtype = q.question_type
+            question_key = f"{qtype}_{idx}"
+            answers = []
 
-            question_key = f"open_{idx}"
-            all_responses = []
-
-            print(f"\n=== Question {idx}: {q.content} ===")
-
+            print(f"\n=== Question {idx}: {q.content} ({qtype}) ===")
             for from_user in team_members:
                 for to_user in team_members:
                     try:
@@ -765,84 +764,241 @@ def teacher_view_results(request, teacher_id, course_id, assessment_id):
                         answer = response.answers.get(question_key)
                         if answer:
                             line = f"{from_user.name} → {to_user.name}: {answer}"
-                            all_responses.append(line)
+                            answers.append(line)
                             print(line)
                     except AssessmentResponse.DoesNotExist:
                         continue
 
-            if all_responses:
-                full_prompt = f"""
-                You are a peer-assessment assistant. Below are all the answers to the question:
+            if not answers:
+                continue
 
-                Question: "{q.content}"
+            # Generate LLM prompt
+            if qtype == "open":
+                prompt = f"""
+                    You are a peer-assessment assistant. Below are all the answers to the question:
 
-                Answers:
-                {chr(10).join(all_responses)}
+                    Question: "{q.content}"
 
-                Please generate a structured JSON with:
-                1. "summary": a concise summary of the general feedback or shared opinions from the team;
-                2. "analysis": a performance insight or observation about team collaboration based on the feedback.
+                    Answers:
+                    {chr(10).join(answers)}
 
-                Output JSON schema:
-                {{
-                    "summary": "...",
-                    "analysis": "..."
-                }}
+                    Please generate a structured JSON with:
+                    1. "summary": a concise summary of the general feedback or shared opinions from the team;
+                    2. "analysis": a performance insight or observation about team collaboration based on the feedback.
+
+                    Output JSON schema:
+                    {{
+                        "summary": "...",
+                        "analysis": "..."
+                    }}
+                """
+            else:
+                prompt = f"""
+                    You are a peer-assessment assistant. Below are Likert scale answers to the question:
+
+                    Question: "{q.content}"
+
+                    Each answer is on a scale from 1 to 5:
+                    1 = Strongly Agree, 2 = Agree, 3 = Neutral, 4 = Disagree, 5 = Strongly Disagree
+
+                    Answers:
+                    {chr(10).join(answers)}
+
+                    Please analyze the overall sentiment and what it reflects about team collaboration.
+                    Output structured JSON with:
+                    {{
+                        "summary": "...",
+                        "analysis": "..."
+                    }}
                 """
 
-                print("\n==== Prompt to LLM ====\n", full_prompt)
+            print("\n==== Prompt to LLM ====\n", prompt)
 
-                try:
-                    response = client.responses.create(
-                        model="gpt-4o-2024-08-06",
-                        input=[
-                            {
-                                "role": "system",
-                                "content": "You are a helpful assistant that analyzes peer assessment data and outputs structured JSON."
-                            },
-                            {
-                                "role": "user",
-                                "content": full_prompt
-                            }
-                        ],
-                        text={
-                            "format": {
-                                "type": "json_schema",
-                                "name": "peer_assessment_analysis",
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "summary": {"type": "string"},
-                                        "analysis": {"type": "string"},
-                                    },
-                                    "required": ["summary", "analysis"],
-                                    "additionalProperties": False
+            try:
+                response = client.responses.create(
+                    model="gpt-4o-2024-08-06",
+                    input=[
+                        {"role": "system", "content": "You are a helpful assistant that analyzes peer assessment data and outputs structured JSON."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    text={
+                        "format": {
+                            "type": "json_schema",
+                            "name": "peer_assessment_analysis",
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "summary": {"type": "string"},
+                                    "analysis": {"type": "string"},
                                 },
-                                "strict": True
-                            }
+                                "required": ["summary", "analysis"],
+                                "additionalProperties": False
+                            },
+                            "strict": True
                         }
-                    )
+                    }
+                )
+                result = json.loads(response.output_text)
+                print("\n=== LLM Result ===")
+                print("Summary:", result.get("summary"))
+                print("Analysis:", result.get("analysis"))
 
-                    result = json.loads(response.output_text)
+                detail_analyses.append({
+                    "question": q.content,
+                    "type": qtype,
+                    "summary": result["summary"],
+                    "analysis": result["analysis"]
+                })
 
-                    print("\n=== Parsed Summary & Analysis ===")
-                    print("Summary:", result.get("summary"))
-                    print("Analysis:", result.get("analysis"))
+            except Exception as e:
+                print("[LLM ERROR]", e)
+                detail_analyses.append({
+                    "question": q.content,
+                    "type": qtype,
+                    "summary": "LLM error.",
+                    "analysis": str(e)
+                })
 
-                    open_question_analyses.append({
-                        "question": q.content,
-                        "summary": result["summary"],
-                        "analysis": result["analysis"]
-                    })
+        # 2. Overall Analysis
+        all_answer_blocks = []
+        for idx, q in enumerate(all_questions, start=1):
+            qtype = q.question_type
+            key = f"{qtype}_{idx}"
+            block = [f"Question: {q.content}"]
+            for from_user in team_members:
+                for to_user in team_members:
+                    try:
+                        r = AssessmentResponse.objects.get(
+                            assessment=assessment,
+                            from_user=from_user,
+                            to_user=to_user,
+                        )
+                        ans = r.answers.get(key)
+                        if ans:
+                            block.append(f"{from_user.name:<15} → {to_user.name:<15}: {ans}")
+                    except AssessmentResponse.DoesNotExist:
+                        continue
+            if len(block) > 1:
+                all_answer_blocks.append("\n".join(block))
+
+        joined_blocks = "\n\n".join(all_answer_blocks)
+
+        profile_prompt = f"""
+        You are a peer-assessment analyzer. Below is a full set of responses from a team, including open-ended answers and Likert scale ratings. 
+        Your task is to evaluate the team’s overall collaboration, communication, and group dynamics.
+
+        Likert scale values:
+        1 = Strongly Agree, 2 = Agree, 3 = Neutral, 4 = Disagree, 5 = Strongly Disagree
+
+        Assessment data:
+        {joined_blocks}
+
+        Please return a structured JSON with the following fields:
+
+        {{
+            "overall_rating": float,  // A number from 0 to 5 (inclusive), in steps of 0.5.
+
+            "keywords": list of 3 to 5 concise descriptive labels capturing team performance dimensions:
+                - teamwork (e.g., "collaborative", "conflict-prone", "supportive")
+                - communication (e.g., "clear", "unclear", "passive")
+                - participation (e.g., "engaged", "uneven", "inactive")
+                - consistency (e.g., "aligned", "discrepant", "self-critical")
+
+            "summary": A short summary (max 3 sentences) describing the team’s dynamics, key strengths, or issues.
+
+            "suggestions": A brief paragraph (max 2 sentences) giving constructive advice to help the team improve performance and collaboration.
+
+            "radar_scores": {{
+                "collaboration": int (0–100),
+                "communication": int (0–100),
+                "participation": int (0–100),
+                "respect": int (0–100),
+                "consistency": int (0–100)
+            }}
+        }}
+
+        Guidelines:
+        - Use radar_scores to reflect relative strengths (not just raw quality).
+        - Prefer mid-range values (40–80) unless data clearly indicates strong extremes.
+        - 100 means excellent and consistent performance; 0 means severe problems.
+        - Stay objective and constructive.
+
+        !!! Output only a valid JSON object. No explanations or extra text.
+        """
 
 
-                except Exception as e:
-                    print("[LLM ERROR]", e)
-                    open_question_analyses.append({
-                        "question": q.content,
-                        "summary": "LLM processing failed.",
-                        "analysis": str(e)
-                    })
+        print("\n==== Profile Card Prompt ====\n", profile_prompt)
+
+        try:
+            profile_response = client.responses.create(
+                model="gpt-4o-2024-08-06",
+                input=[
+                    {"role": "system", "content": "You summarize and evaluate peer assessments."},
+                    {"role": "user", "content": profile_prompt}
+                ],
+                text = {
+                "format": {
+                    "type": "json_schema",
+                    "name": "team_profile_card",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "overall_rating": {"type": "number"},
+                            "keywords": {
+                                "type": "array",
+                                "items": {"type": "string"}
+                            },
+                            "summary": {"type": "string"},
+                            "suggestions": {"type": "string"},
+                            "radar_scores": {
+                                "type": "object",
+                                "properties": {
+                                    "collaboration": {"type": "integer"},
+                                    "communication": {"type": "integer"},
+                                    "participation": {"type": "integer"},
+                                    "respect": {"type": "integer"},
+                                    "consistency": {"type": "integer"}
+                                },
+                                "required": ["collaboration", "communication", "participation", "respect", "consistency"],
+                                "additionalProperties": False
+                            }
+                        },
+                        "required": ["overall_rating", "keywords", "summary", "suggestions", "radar_scores"],
+                        "additionalProperties": False
+                    },
+                    "strict": True
+                }
+                }
+            )
+
+            print("\n=== Raw Profile Output ===")
+            print(profile_response.output_text)
+
+            profile_card = json.loads(profile_response.output_text)
+
+            print("\n=== Parsed Profile Card ===")
+            print(json.dumps(profile_card, indent=2))
+
+        except Exception as e:
+            print("[PROFILE CARD ERROR]", e)
+            if 'profile_response' in locals():
+                print("Raw LLM output (possibly invalid JSON):")
+                print(getattr(profile_response, "output_text", "[no output_text]"))
+
+            profile_card = {
+                "overall_rating": 0.0,
+                "keywords": [],
+                "summary": "LLM error.",
+                "suggestions": str(e)
+            }
+
+        except Exception as e:
+            profile_card = {
+                "overall_rating": 0.0,
+                "keywords": [],
+                "summary": "LLM error.",
+                "suggestions": str(e)
+            }
 
     return render(request, "teacher_view_results.html", {
         "teacher": teacher,
@@ -851,7 +1007,9 @@ def teacher_view_results(request, teacher_id, course_id, assessment_id):
         "teams": teams,
         "selected_team": selected_team,
         "team_members": team_members,
-        "open_question_analyses": open_question_analyses,
+        "detail_analyses": detail_analyses,
+        "profile_card": profile_card,
+        "radar_scores": profile_card.get("radar_scores", {}),
     })
 
 

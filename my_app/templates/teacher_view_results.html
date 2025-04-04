@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Assessment Results</title>
-    <link rel="stylesheet" href="{% static 'css/assessment_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/teacher_view_results.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Results for {{ assessment.title }} - {{ course.course_name }}</h1>
 
-        <!-- 下拉框选择团队 -->
         <form method="get">
             <label for="team-select">Select a team:</label>
             <select name="team_id" id="team-select" onchange="this.form.submit()">
@@ -25,21 +25,53 @@
 
         <hr>
 
-        <!-- 如果没有选择团队 -->
         {% if not selected_team %}
             <p>Please select a team to view results.</p>
-
-        <!-- 显示团队成员 -->
         {% else %}
             <h2>Members of {{ selected_team.team_name }}</h2>
             <ul>
                 {% for member in team_members %}
                     <li>{{ member.name }} ({{ member.email }})</li>
                 {% empty %}
-                    <p>No members in this team.</p>
+                    <li>No members in this team.</li>
                 {% endfor %}
             </ul>
+
+            <hr>
+
+            <h2>Team Performance Summary</h2>
+            <p><strong>Overall Rating:</strong> {{ profile_card.overall_rating }}/5</p>
+            <p><strong>Keywords:</strong> {{ profile_card.keywords|join:", " }}</p>
+            <p><strong>Summary:</strong> {{ profile_card.summary }}</p>
+            <p><strong>Suggestions:</strong> {{ profile_card.suggestions }}</p>
+
+            <h3>Team Radar Chart</h3>
+            <canvas id="radarChart"></canvas>
+
+            <hr>
+
+            <h2>Detailed Question Analysis</h2>
+            {% for item in detail_analyses %}
+                <div class="question-block">
+                    <h3>{{ item.question }} ({{ item.type }})</h3>
+                    <p><strong>Summary:</strong> {{ item.summary }}</p>
+                    <p><strong>Analysis:</strong> {{ item.analysis }}</p>
+                </div>
+                <hr>
+            {% empty %}
+                <p>No question analysis available.</p>
+            {% endfor %}
         {% endif %}
     </div>
+
+
+{% if selected_team %}
+    <script>
+        window.radarScores = {{ radar_scores|safe }};
+    </script>
+    <script src="{% static 'js/teacher_results_radar.js' %}"></script>
+{% endif %}
+
+
 </body>
 </html>
