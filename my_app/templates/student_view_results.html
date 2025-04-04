@@ -7,16 +7,47 @@
     <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
 </head>
 <body>
-    <div class="header">
-        <a href="{% url 'student_course_detail' student.id course.id %}" class="site-title">← Back</a>
-        <span class="welcome-text">Welcome, {{ student.name }}</span>
-    </div>
+<div class="header">
+    <a href="{% url 'student_course_detail' student.id course.id %}" class="site-title">← Back</a>
+    <span class="welcome-text">Welcome, {{ student.name }}</span>
+</div>
 
-    <div class="container">
-        <h2>Assessment Results</h2>
-        <p><strong>Course:</strong> {{ course.course_number }} - {{ course.course_name }}</p>
-        <p><strong>Assessment:</strong> {{ assessment.title }}</p>
-        <p><em>Results content coming soon...</em></p>
-    </div>
+<div class="container">
+    <h2>Assessment Results</h2>
+    <p><strong>Course:</strong> {{ course.course_number }} - {{ course.course_name }}</p>
+    <p><strong>Assessment:</strong> {{ assessment.title }}</p>
+
+    <hr>
+    <h3>Likert Questions (Rating)</h3>
+    {% for result in likert_results %}
+        <div class="likert-block">
+            <p><strong>{{ result.question }}</strong></p>
+            <ul>
+                <li>Your Average Score: <strong>{{ result.student_avg }}</strong></li>
+                <li>Lowest in Team: {{ result.team_low }}</li>
+                <li>Highest in Team: {{ result.team_high }}</li>
+                <li>Team Mean: {{ result.team_mean }}</li>
+            </ul>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No Likert question results available.</p>
+    {% endfor %}
+
+    <h3>Open-ended Questions</h3>
+    {% for result in open_ended_results %}
+        <div class="open-block">
+            <p><strong>{{ result.question }}</strong></p>
+            <ul>
+                {% for answer in result.answers %}
+                    <li>"{{ answer }}"</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No open-ended answers available.</p>
+    {% endfor %}
+</div>
 </body>
 </html>

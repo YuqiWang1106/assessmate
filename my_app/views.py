@@ -1258,10 +1258,73 @@ def student_view_results(request, user_id, course_id, assessment_id):
     if not assessment.results_released:
         return HttpResponseForbidden("Results are not yet released.")
 
+    course_member = get_object_or_404(CourseMember, user=student, course=course)
+    team_member = TeamMember.objects.filter(course_member=course_member).first()
+    if not team_member:
+        return HttpResponseForbidden("You are not in a team for this course.")
+    team = team_member.team
+
+    teammates = [tm.course_member.user for tm in TeamMember.objects.filter(team=team)]
+
+    questions = AssessmentQuestion.objects.filter(assessment=assessment)
+
+    likert_results = []
+    open_ended_results = []
+
+    for idx, question in enumerate(questions, start=1):
+        key = f"{question.question_type}_{idx}"
+
+        if question.question_type == "likert":
+            scores = []
+            for from_user in teammates:
+                try:
+                    response = AssessmentResponse.objects.get(
+                        assessment=assessment,
+                        from_user=from_user,
+                        to_user=student
+                    )
+                    score = int(response.answers.get(key, 0))
+                    scores.append(score)
+                except AssessmentResponse.DoesNotExist:
+                    continue
+
+            if scores:
+                likert_results.append({
+                    "question": question.content,
+                    "student_avg": round(sum(scores) / len(scores), 2),
+                    "team_low": min(scores),
+                    "team_high": max(scores),
+                    "team_mean": round(sum(scores) / len(scores), 2)
+                })
+
+        elif question.question_type == "open":
+            responses = []
+            for from_user in teammates:
+                try:
+                    response = AssessmentResponse.objects.get(
+                        assessment=assessment,
+                        from_user=from_user,
+                        to_user=student
+                    )
+                    answer = response.answers.get(key)
+                    if answer:
+                        responses.append(answer)
+                except AssessmentResponse.DoesNotExist:
+                    continue
+
+            if responses:
+                open_ended_results.append({
+                    "question": question.content,
+                    "answers": responses
+                })
+
     return render(request, "student_view_results.html", {
         "student": student,
         "course": course,
         "assessment": assessment,
+        "likert_results": likert_results,
+        "open_ended_results": open_ended_results,
     })
+
 
 
