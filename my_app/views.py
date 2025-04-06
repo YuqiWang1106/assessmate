@@ -1401,85 +1401,7 @@ def student_view_results(request, user_id, course_id, assessment_id):
         "open_ended_results": open_ended_results,
     })
 
-
-# @csrf_exempt
-# def teacher_chat(request):
-#     if request.method != "POST":
-#         return JsonResponse({"success": False, "message": "请求方式错误。"})
-
-#     try:
-#         data = json.loads(request.body)
-#         message = data.get('message')
-#         team_id = data.get('team_id')
-#         assessment_id = data.get('assessment_id')
-
-#         team = get_object_or_404(Team, id=team_id)
-#         assessment = get_object_or_404(Assessment, id=assessment_id)
-#         team_members = [tm.course_member.user for tm in team.teammember_set.all()]
-#         all_questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
-
-#         all_blocks = []
-#         for idx, q in enumerate(all_questions, start=1):
-#             key = f"{q.question_type}_{idx}"
-#             block = [f"Question: {q.content}"]
-#             for from_user in team_members:
-#                 for to_user in team_members:
-#                     try:
-#                         r = AssessmentResponse.objects.get(
-#                             assessment=assessment,
-#                             from_user=from_user,
-#                             to_user=to_user
-#                         )
-#                         ans = r.answers.get(key)
-#                         if ans:
-#                             block.append(f"{from_user.name} → {to_user.name}: {ans}")
-#                     except AssessmentResponse.DoesNotExist:
-#                         continue
-#             if len(block) > 1:
-#                 all_blocks.append("\n".join(block))
-#         joined_blocks = "\n\n".join(all_blocks)
-
-#         member_names = [user.name for user in team_members]
-#         context_info = f"Current Team Name: {team.team_name}. Team Member: {', '.join(member_names)}。"
-
-#         system_message = (
-#                "You are a helpful assistant who analyzes peer assessment data. "
-#                "Only respond to questions directly related to the current team's peer assessment. "
-#                "If a question is not relevant, politely respond with: "
-#                "'I can only answer questions related to the current team's peer assessment data.'"
-#         )
-
-#         prompt = f"""
-# {context_info}
-
-# Below is the full peer assessment data for this team, including Likert and open-ended questions.
-# Each response is marked with who gave feedback to whom.
-# Assessment Data:
-
-# {joined_blocks}
-
-# User Query: {message}
-
-# Please answer based only on the peer assessment data above. Stay focused on the team's performance, feedback patterns, or any insights that can be derived from the responses.
-# If the question is unrelated, reply: "I can only answer questions related to this team's peer assessment."
-# """
-        
-#         print("========================== Prompt ============================")
-#         print(prompt)
-#         response = client.responses.create(
-#             model="gpt-4o-2024-08-06",
-#             input=[
-#                 {"role": "system", "content": system_message},
-#                 {"role": "user", "content": prompt}
-#             ]
-#         )
-#         llm_response = response.output_text.strip()
-
-#         return JsonResponse({"success": True, "response": llm_response})
-#     except Exception as e:
-#         return JsonResponse({"success": False, "message": str(e)})
-
-
+# Teacher Chat Bot with Memory (History)
 @csrf_exempt
 def teacher_chat(request):
     if request.method != "POST":
@@ -1491,17 +1413,14 @@ def teacher_chat(request):
         team_id = data.get('team_id')
         assessment_id = data.get('assessment_id')
 
-        # 生成会话历史在 Session 中的 key，确保同一团队与评估共享历史
         conversation_key = f"chat_history_{team_id}_{assessment_id}"
         history = request.session.get(conversation_key, [])
 
-        # 获取团队和评估数据
         team = get_object_or_404(Team, id=team_id)
         assessment = get_object_or_404(Assessment, id=assessment_id)
         team_members = [tm.course_member.user for tm in team.teammember_set.all()]
         all_questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
 
-        # 拼接每道题目的原文和团队内所有成员的回答（“谁对谁回答了什么”）
         all_blocks = []
         for idx, q in enumerate(all_questions, start=1):
             key = f"{q.question_type}_{idx}"
@@ -1523,11 +1442,9 @@ def teacher_chat(request):
                 all_blocks.append("\n".join(block))
         joined_blocks = "\n\n".join(all_blocks)
 
-        # 基本上下文信息
         member_names = [user.name for user in team_members]
         context_info = f"Current Team Name: {team.team_name}. Team Members: {', '.join(member_names)}."
 
-        # 系统消息，用于限定回答范围
         system_message = (
             "You are an intelligent assistant that analyzes peer assessment data. "
             "You can provide insights, evaluations, and suggestions based on the provided peer assessment responses. "
@@ -1537,7 +1454,6 @@ def teacher_chat(request):
             "'I can only answer questions related to this team's peer assessment data.'"
         )
 
-        # 构造包含评估数据的基础 prompt
         base_prompt = f"""
 {context_info}
 
@@ -1547,7 +1463,6 @@ Assessment Data:
 
 {joined_blocks}
 """
-        # 构造当前用户的提问，要求仅基于上述数据回答
         user_message = (
             f"User Question: {message}\n\n"
             "Please answer based **only** on the peer assessment data and chat history above. You are encouraged to analyze both numerical patterns "
@@ -1558,32 +1473,27 @@ Assessment Data:
             "\"I can only answer questions related to this team's peer assessment data.\""
         )
 
-        # 如果历史为空，先初始化会话历史：加入系统消息和基础数据提示，然后加入当前提问
         if not history:
             history = [
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": base_prompt + "\n" + user_message}
             ]
         else:
-            # 多轮对话时只需要追加用户的新提问
             history.append({"role": "user", "content": user_message})
 
-        # DEBUG: 打印当前会话历史
         print("========================== Conversation History ============================")
         for msg in history:
             print(f"{msg['role']}: {msg['content']}")
         print("===========================================================================")
 
 
-        # 调用 OpenAI 接口时，将整个对话历史传递进去
         response_obj = client.responses.create(
             model="gpt-4o-2024-08-06",
             input=history,
-            store=False  # 我们自己管理会话历史，因此设为 False
+            store=False
         )
         llm_response = response_obj.output_text.strip()
 
-        # 将助手的回复追加到会话历史中，并保存回 Session
         history.append({"role": "assistant", "content": llm_response})
         request.session[conversation_key] = history
 

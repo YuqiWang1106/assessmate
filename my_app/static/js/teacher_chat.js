@@ -8,10 +8,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     openChatBtn.addEventListener('click', () => {
         chatWindow.style.display = 'flex';
+        openChatBtn.style.display = 'none';
     });
 
     closeChatBtn.addEventListener('click', () => {
         chatWindow.style.display = 'none';
+        openChatBtn.style.display = 'inline-block';
     });
 
     sendChatBtn.addEventListener('click', sendMessage);
@@ -53,13 +55,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // function appendMessage(sender, text) {
-    //     const msgDiv = document.createElement('div');
-    //     msgDiv.style.marginBottom = '10px';
-    //     msgDiv.innerHTML = `<strong>${sender}: </strong> ${text}`;
-    //     chatMessages.appendChild(msgDiv);
-    //     chatMessages.scrollTop = chatMessages.scrollHeight;
-    // }
     function appendMessage(sender, text) {
         const bubble = document.createElement('div');
         bubble.classList.add('chat-bubble');
