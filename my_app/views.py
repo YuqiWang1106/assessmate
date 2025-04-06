@@ -450,6 +450,22 @@ def create_assessment(request, teacher_id, course_id, assessment_id=None):
         status = "published" if request.POST.get("publish") == "true" else "draft"
         due_date = request.POST.get("due_date")
 
+        # if assessment:
+        #     assessment.title = title
+        #     assessment.status = status
+        #     assessment.publish_date = timezone.now() if status == "published" else None
+        #     assessment.due_date = due_date if due_date else None
+        #     assessment.save()
+        #     AssessmentQuestion.objects.filter(assessment=assessment).delete()
+        # else:
+        #     assessment = Assessment.objects.create(
+        #         course=course,
+        #         title=title,
+        #         status=status,
+        #         publish_date=timezone.now() if status == "published" else None,
+        #         due_date=due_date if due_date else None
+        #     )
+
         if assessment:
             assessment.title = title
             assessment.status = status
@@ -465,6 +481,37 @@ def create_assessment(request, teacher_id, course_id, assessment_id=None):
                 publish_date=timezone.now() if status == "published" else None,
                 due_date=due_date if due_date else None
             )
+
+        # New: Send email to students when published
+        if status == "published":
+            student_memberships = CourseMember.objects.filter(course=course)
+            student_emails = [cm.user.email for cm in student_memberships]
+
+            login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course.id}/"
+
+            message = f"""
+            Hello,
+
+            A new peer assessment titled **"{assessment.title}"** has just been published in your course **{course.course_number} - {course.course_name}** on Assessmate 📢.
+
+            🗓️ Due Date: {assessment.due_date}
+
+            Please log in and complete the assessment before the deadline.
+
+            👉 Click the link below to get started:
+            {login_link}
+
+            See you on Assessmate!
+            """
+
+            send_mail(
+                subject=f"[Assessmate] New Assessment Published: {assessment.title}",
+                message=message,
+                from_email="no-reply@assessmate.edu",
+                recipient_list=student_emails,
+                fail_silently=False,
+            )
+
 
         i = 1
         while True:
@@ -1236,11 +1283,9 @@ def toggle_results_publish(request):
         assessment.results_released = True
         assessment.save()
 
-        # 获取所有课程学生
         student_memberships = CourseMember.objects.filter(course=course)
         student_emails = [cm.user.email for cm in student_memberships]
 
-        # 构建跳转链接（到该课程下的 assessment results 页面）
         login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course_id}/"
 
         message = f"""
@@ -1278,34 +1323,6 @@ def toggle_results_publish(request):
         "course_id": course_id,
         "assessment_id": assessment_id
     }))
-
-# @require_POST
-# @csrf_protect
-# def toggle_results_publish(request):
-#     assessment_id = request.POST.get("assessment_id")
-#     action = request.POST.get("action")
-#     teacher_id = request.POST.get("teacher_id")
-#     course_id = request.POST.get("course_id")
-
-#     assessment = get_object_or_404(Assessment, id=assessment_id)
-
-#     if action == "publish":
-#         assessment.results_released = True
-#         messages.success(request, "Results have been published successfully!")
-#     elif action == "unpublish":
-#         assessment.results_released = False
-#         messages.info(request, "Results have been unpublished.")
-#     else:
-#         messages.error(request, "nvalid action.")
-        
-#     assessment.save()
-
-#     return redirect(reverse("teacher_view_results", kwargs={
-#         "teacher_id": teacher_id,
-#         "course_id": course_id,
-#         "assessment_id": assessment_id
-#     }))
-
 
 # Student Result Page
 def student_view_results(request, user_id, course_id, assessment_id):
