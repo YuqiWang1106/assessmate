@@ -1230,23 +1230,81 @@ def toggle_results_publish(request):
     course_id = request.POST.get("course_id")
 
     assessment = get_object_or_404(Assessment, id=assessment_id)
+    course = assessment.course
 
     if action == "publish":
         assessment.results_released = True
-        messages.success(request, "Results have been published successfully!")
+        assessment.save()
+
+        # 获取所有课程学生
+        student_memberships = CourseMember.objects.filter(course=course)
+        student_emails = [cm.user.email for cm in student_memberships]
+
+        # 构建跳转链接（到该课程下的 assessment results 页面）
+        login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course_id}/"
+
+        message = f"""
+        Hello,
+
+        The results for the assessment **"{assessment.title}"** in course **{course.course_number} - {course.course_name}** have just been released on Assessmate 🎉.
+
+        You can now log in to view your feedback and team summary.
+
+        👉 Click the link below to login and check it out:
+        {login_link}
+
+        See you on Assessmate!
+        """
+
+        send_mail(
+            subject=f"[Assessmate] Results released for {assessment.title}",
+            message=message,
+            from_email="no-reply@assessmate.edu",
+            recipient_list=student_emails,
+            fail_silently=False,
+        )
+
+        messages.success(request, "Results have been published and students notified!")
+
     elif action == "unpublish":
         assessment.results_released = False
+        assessment.save()
         messages.info(request, "Results have been unpublished.")
     else:
-        messages.error(request, "nvalid action.")
-        
-    assessment.save()
+        messages.error(request, "Invalid action.")
 
     return redirect(reverse("teacher_view_results", kwargs={
         "teacher_id": teacher_id,
         "course_id": course_id,
         "assessment_id": assessment_id
     }))
+
+# @require_POST
+# @csrf_protect
+# def toggle_results_publish(request):
+#     assessment_id = request.POST.get("assessment_id")
+#     action = request.POST.get("action")
+#     teacher_id = request.POST.get("teacher_id")
+#     course_id = request.POST.get("course_id")
+
+#     assessment = get_object_or_404(Assessment, id=assessment_id)
+
+#     if action == "publish":
+#         assessment.results_released = True
+#         messages.success(request, "Results have been published successfully!")
+#     elif action == "unpublish":
+#         assessment.results_released = False
+#         messages.info(request, "Results have been unpublished.")
+#     else:
+#         messages.error(request, "nvalid action.")
+        
+#     assessment.save()
+
+#     return redirect(reverse("teacher_view_results", kwargs={
+#         "teacher_id": teacher_id,
+#         "course_id": course_id,
+#         "assessment_id": assessment_id
+#     }))
 
 
 # Student Result Page
