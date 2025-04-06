@@ -1402,4 +1402,79 @@ def student_view_results(request, user_id, course_id, assessment_id):
     })
 
 
+@csrf_exempt
+def teacher_chat(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "message": "请求方式错误。"})
 
+    try:
+        data = json.loads(request.body)
+        message = data.get('message')
+        team_id = data.get('team_id')
+        assessment_id = data.get('assessment_id')
+
+        team = get_object_or_404(Team, id=team_id)
+        assessment = get_object_or_404(Assessment, id=assessment_id)
+        team_members = [tm.course_member.user for tm in team.teammember_set.all()]
+        all_questions = list(AssessmentQuestion.objects.filter(assessment=assessment))
+
+        all_blocks = []
+        for idx, q in enumerate(all_questions, start=1):
+            key = f"{q.question_type}_{idx}"
+            block = [f"Question: {q.content}"]
+            for from_user in team_members:
+                for to_user in team_members:
+                    try:
+                        r = AssessmentResponse.objects.get(
+                            assessment=assessment,
+                            from_user=from_user,
+                            to_user=to_user
+                        )
+                        ans = r.answers.get(key)
+                        if ans:
+                            block.append(f"{from_user.name} → {to_user.name}: {ans}")
+                    except AssessmentResponse.DoesNotExist:
+                        continue
+            if len(block) > 1:
+                all_blocks.append("\n".join(block))
+        joined_blocks = "\n\n".join(all_blocks)
+
+        member_names = [user.name for user in team_members]
+        context_info = f"Current Team Name: {team.team_name}. Team Member: {', '.join(member_names)}。"
+
+        system_message = (
+               "You are a helpful assistant who analyzes peer assessment data. "
+               "Only respond to questions directly related to the current team's peer assessment. "
+               "If a question is not relevant, politely respond with: "
+               "'I can only answer questions related to the current team's peer assessment data.'"
+        )
+
+        prompt = f"""
+{context_info}
+
+Below is the full peer assessment data for this team, including Likert and open-ended questions.
+Each response is marked with who gave feedback to whom.
+Assessment Data:
+
+{joined_blocks}
+
+User Query: {message}
+
+Please answer based only on the peer assessment data above. Stay focused on the team's performance, feedback patterns, or any insights that can be derived from the responses.
+If the question is unrelated, reply: "I can only answer questions related to this team's peer assessment."
+"""
+        
+        print("========================== Prompt ============================")
+        print(prompt)
+        response = client.responses.create(
+            model="gpt-4o-2024-08-06",
+            input=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        llm_response = response.output_text.strip()
+
+        return JsonResponse({"success": True, "response": llm_response})
+    except Exception as e:
+        return JsonResponse({"success": False, "message": str(e)})

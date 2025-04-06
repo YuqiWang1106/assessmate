@@ -100,5 +100,31 @@
         </script>
         <script src="{% static 'js/teacher_results_radar.js' %}"></script>
     {% endif %}
+
+
+
+    {% if selected_team %}
+<script>
+    const selectedTeamId = "{{ selected_team.id }}";
+    const assessmentId = "{{ assessment.id }}";
+</script>
+
+
+<div id="chat-container">
+    <button id="open-chat-btn">Chat</button>
+    <div id="chat-window">
+        <div id="chat-header">
+            <span>AI Assistant</span>
+            <button id="close-chat-btn">✖</button>
+        </div>
+        <div id="chat-messages"></div>
+        <textarea id="chat-input" placeholder="Please enter your question..."></textarea>
+        <button id="send-chat-btn">Send</button>
+    </div>
+</div>
+
+<script src="{% static 'js/teacher_chat.js' %}"></script>
+{% endif %}
+
 </body>
 </html>
