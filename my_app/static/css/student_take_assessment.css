@@ -1,0 +1,159 @@
+/* Base Reset & Font */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+    background: #6a69c7;
+    background-size: 400% 400%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+}
+
+/* Header */
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 16px 32px;
+    background-color: #f8f4fc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
+    border-bottom: 2px solid #eee;
+    z-index: 10;
+}
+
+.site-title {
+    font-size: 24px;
+    color: #6259c9;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.welcome-text {
+    font-size: 18px;
+    color: #6259c9;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Container Styling */
+.container {
+    background: #f5f6fc;
+    width: 85%;
+    max-width: 800px;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.container h2 {
+    font-size: 30px;
+    font-weight: 700;
+    color: #444;
+}
+
+.container p {
+    font-size: 18px;
+    color: #555;
+}
+
+.container h3 {
+    font-size: 22px;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* Assessment Targets List */
+.container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.container ul li {
+    background: #e3e3f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 14px;
+    font-size: 16px;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s;
+    opacity: 0;
+    animation: fadeSlideIn 0.5s ease-out forwards;
+}
+
+/* Hover effect */
+.container ul li:hover {
+    background: #d8d8ed;
+}
+
+/* Link Button */
+.container ul li a {
+    background-color: #6a69c7;
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: inline-block; /* Ensures it behaves like a button */
+    text-align: center; /* Centers the text inside the button */
+    width: auto; /* Removes any fixed width */
+    min-width: 100px; /* Ensures button has a minimum width */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Added smooth transform transition */
+}
+
+.container ul li a:hover {
+    background-color: #5d5cb0;
+    transform: translateY(-3px); /* Subtle lift on hover */
+}
+
+.container ul li a:active {
+    transform: translateY(1px); /* Slight "press" effect on click */
+}
+
+/* Animation */
+@keyframes fadeSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Animation delay for each list item */
+.container ul li:nth-child(1) {
+    animation-delay: 0.2s;
+}
+.container ul li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+.container ul li:nth-child(3) {
+    animation-delay: 0.6s;
+}
+.container ul li:nth-child(4) {
+    animation-delay: 0.8s;
+}
+.container ul li:nth-child(5) {
+    animation-delay: 1s;
+}
