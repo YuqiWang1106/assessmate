@@ -12,15 +12,44 @@
 
 
 
-6. `python manage.py makemigrations`
-7. `python3 manage.py migrate`
+
+**IMPORTANT CHANGE**
 8. `pip install openai`
 9. `pip install dotenv`
 10. In the A-team folder, write a file called ".env". 
 11. Write "OPENAI_API_KEY=XXXXXXX" with API Key.
+12. `pip install django-apscheduler`
+13. `brew install postgresql`(if you don't have homebrew, first install homebrew)
+14. `brew services start postgresql`
+15. `psql postgres`
+**After run step 15, run following three one by one in postgreSQL terminal**
+16. `CREATE USER assessmate_user WITH PASSWORD 'assessmate_pass';`
+17. `CREATE DATABASE assessmate_db OWNER assessmate_user;`
+18. `\q`
+19. `pip install psycopg2-binary`
+**Then, we need to remove current database tables and recreate them in new Database**
+20. `rm my_app/migrations/0*.py`
+**!!Before run the migration, please comment the following part in apps.py!!!**
+21. `def ready(self):
+        from . import scheduler
+        scheduler.start()`
+**Then we run the migration**
+22. `python manage.py makemigrations`
+23. `python manage.py migrate`
+**Create a new user for your PostgreSQL Databse, and login your django admin using this new user info** 
+23. `python manage.py createsuperuser`
+**!!Before you run the server, please comment back step 21 code!!**
+24. `python manage.py runserver`
 
-12.`pip install django-apscheduler`
-13. `python manage.py migrate`
+
+
+
+
+
+
+
+
+
 
 
 ## **API Endpoints**
