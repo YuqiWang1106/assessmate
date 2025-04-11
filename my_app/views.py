@@ -450,22 +450,6 @@ def create_assessment(request, teacher_id, course_id, assessment_id=None):
         status = "published" if request.POST.get("publish") == "true" else "draft"
         due_date = request.POST.get("due_date")
 
-        # if assessment:
-        #     assessment.title = title
-        #     assessment.status = status
-        #     assessment.publish_date = timezone.now() if status == "published" else None
-        #     assessment.due_date = due_date if due_date else None
-        #     assessment.save()
-        #     AssessmentQuestion.objects.filter(assessment=assessment).delete()
-        # else:
-        #     assessment = Assessment.objects.create(
-        #         course=course,
-        #         title=title,
-        #         status=status,
-        #         publish_date=timezone.now() if status == "published" else None,
-        #         due_date=due_date if due_date else None
-        #     )
-
         if assessment:
             assessment.title = title
             assessment.status = status

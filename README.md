@@ -19,6 +19,9 @@
 10. In the A-team folder, write a file called ".env". 
 11. Write "OPENAI_API_KEY=XXXXXXX" with API Key.
 
+12.`pip install django-apscheduler`
+13. `python manage.py migrate`
+
 
 ## **API Endpoints**
 

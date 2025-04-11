@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'my_app',
     'widget_tweaks',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
