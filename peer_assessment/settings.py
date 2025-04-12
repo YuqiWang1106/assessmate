@@ -31,9 +31,12 @@ ALLOWED_HOSTS = ['*']
 # Google OAuth
 # GOOGLE_CLIENT_ID = "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com"
 # GOOGLE_CLIENT_SECRET = "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"
+# GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+
+
 
 # Application definition
 
@@ -156,13 +159,24 @@ if not DEBUG:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Email Sending Settings
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #I put this here to make sure all email outputs are sent to the terminal for testing
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' 
 # EMAIL_HOST = 'smtp.gmail.com'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'assessmate101@gmail.com' 
 # EMAIL_HOST_PASSWORD = 'assessmate101!#!' 
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
 
 
 CSRF_TRUSTED_ORIGINS = [

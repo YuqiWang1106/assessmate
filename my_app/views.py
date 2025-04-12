@@ -29,8 +29,8 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
-# GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+# GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
 
 
 
@@ -39,11 +39,11 @@ def google_login(request):
     role = request.GET.get("role")
     print("DEBUG — redirecting to:", GOOGLE_REDIRECT_URI)
     if role not in ["student", "teacher"]:
-        return redirect("landing") # redirect back to landing page if role missing/invalid
+        return redirect("landing") 
     
-    # constructs Google OAuth login URL
     params = {
-        "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
+        # "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
+        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "response_type": "code",
         "scope": "openid email profile",
@@ -63,8 +63,10 @@ def google_callback(request):
     # authorization code is exchanged to get token ID
     data = {
         "code": code,
-        "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
-        "client_secret": "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",
+        # "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
+        # "client_secret": "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",
+        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+        "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"), 
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "grant_type": "authorization_code",
     }
@@ -495,7 +497,7 @@ def create_assessment(request, teacher_id, course_id, assessment_id=None):
             send_mail(
                 subject=f"[Assessmate] New Assessment Published: {assessment.title}",
                 message=message,
-                from_email="no-reply@assessmate.edu",
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=student_emails,
                 fail_silently=False,
             )
@@ -615,7 +617,7 @@ def invite_student(request):
         send_mail(
             subject=f"Invitation to join {course.course_name} on Assessmate",
             message=message,
-            from_email="no-reply@assessmate.edu",
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[email],
             fail_silently=False,
         )
@@ -1295,7 +1297,7 @@ def toggle_results_publish(request):
         send_mail(
             subject=f"[Assessmate] Results released for {assessment.title}",
             message=message,
-            from_email="no-reply@assessmate.edu",
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=student_emails,
             fail_silently=False,
         )

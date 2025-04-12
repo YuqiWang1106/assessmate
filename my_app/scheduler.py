@@ -4,6 +4,7 @@ from django_apscheduler.models import DjangoJobExecution
 from django.utils.timezone import now
 from django.core.mail import send_mail
 from datetime import timedelta
+from django.conf import settings
 
 from my_app.models import Assessment, CourseMember
 
@@ -36,7 +37,7 @@ def send_12h_reminder():
 
             See you on Assessmate!
             """,
-            from_email="no-reply@assessmate.edu",
+            from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=emails,
             fail_silently=False
         )
