@@ -164,3 +164,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #I put this her
 # EMAIL_HOST_PASSWORD = 'assessmate101!#!' 
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://assessmate-app.onrender.com'
+]
