@@ -40,7 +40,7 @@ def google_login(request):
     
     # constructs Google OAuth login URL
     params = {
-        "client_id": "***REMOVED***",
+        "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "response_type": "code",
         "scope": "openid email profile",
@@ -60,8 +60,8 @@ def google_callback(request):
     # authorization code is exchanged to get token ID
     data = {
         "code": code,
-        "client_id": "***REMOVED***",
-        "client_secret": "***REMOVED***",
+        "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
+        "client_secret": "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",
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "grant_type": "authorization_code",
     }
