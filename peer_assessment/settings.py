@@ -88,10 +88,16 @@ WSGI_APPLICATION = 'peer_assessment.wsgi.application'
 import dj_database_url
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://assessmate_user:assessmate_pass@localhost:5432/assessmate_db',
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     )
 }
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://assessmate_user:assessmate_pass@localhost:5432/assessmate_db',
+#         conn_max_age=600
+#     )
+# }
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
