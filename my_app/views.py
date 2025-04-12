@@ -37,6 +37,7 @@ GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 def google_login(request):
     """Sends user to correct login page, based on selected role"""
     role = request.GET.get("role")
+    print("DEBUG — redirecting to:", GOOGLE_REDIRECT_URI)
     if role not in ["student", "teacher"]:
         return redirect("landing") # redirect back to landing page if role missing/invalid
     
