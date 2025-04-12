@@ -23,6 +23,40 @@ from dotenv import load_dotenv
 from django.contrib import messages
 
 
+
+
+
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.conf import settings
+
+def test_email_view(request):
+    try:
+        send_mail(
+            subject='[Test] Email from Assessmate',
+            message='This is a test email sent from your Django app via Gmail.',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[settings.DEFAULT_FROM_EMAIL],
+            fail_silently=False,
+        )
+        return JsonResponse({'success': True, 'message': 'Email sent successfully!'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

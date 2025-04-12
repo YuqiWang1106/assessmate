@@ -35,4 +35,5 @@ urlpatterns = [
     path("edit_open_answer/", views.edit_open_answer, name="edit_open_answer"),
     path("toggle_results_publish/", views.toggle_results_publish, name="toggle_results_publish"),
     path('teacher_chat/', views.teacher_chat, name='teacher_chat'),
+    path('test-email/', views.test_email_view, name='test_email'),
 ]
