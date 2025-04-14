@@ -8,6 +8,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <div class="header">
+         <button class="back-button" onclick="window.location.href='{% url 'assessment_dashboard' teacher.id %}'">Return</button>
+     </div>
     <div class="container">
     {% if messages %}
         <div class="messages">
