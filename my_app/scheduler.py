@@ -54,5 +54,5 @@ def start():
         replace_existing=True,
         timezone='America/New_York'
     )
-    # scheduler.start()
+    scheduler.start()
     print("Scheduler started.")
