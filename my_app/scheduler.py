@@ -17,8 +17,8 @@ def send_12h_reminder():
     upcoming = Assessment.objects.filter(
         status='published',
         due_date__gt=now(),
-        # due_date__lte=now() + timedelta(hours=12) # 12 hour warning 
-        due_date__lte=now() + timedelta(minutes=1) # 1 min warning
+        due_date__lte=now() + timedelta(hours=12) # 12 hour warning 
+        # due_date__lte=now() + timedelta(minutes=1) # 1 min warning
     )
 
     for a in upcoming:
