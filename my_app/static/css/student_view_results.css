@@ -32,35 +32,36 @@ html, body {
 }
 
 .site-title {
-    font-size: 24px;
+    font-size: 26px;
     color: #6259c9;
     text-decoration: none;
     font-weight: bold;
 }
 
 .welcome-text {
-    font-size: 18px;
+    font-size: 20px;
     color: #6259c9;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
 }
 
-/* Container Styling */
+/* Main Container */
 .container {
     background: #f5f6fc;
-    width: 95%;
-    max-width: 1100px;
+    width: 100%;
+    max-width: 1100px; /* Set a fixed max width */
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto; /* Center the container */
     display: flex;
     flex-direction: column;
     gap: 24px;
 }
 
- 
 .container h2 {
     font-size: 30px;
     font-weight: 700;
@@ -72,13 +73,13 @@ html, body {
     color: #555;
 }
 
+/* Peer Assessment List */
 .container h3 {
     font-size: 22px;
     color: #444;
     margin-bottom: 10px;
 }
 
-/* Assessment Targets List */
 .container ul {
     list-style-type: none;
     padding: 0;
@@ -97,37 +98,25 @@ html, body {
     justify-content: space-between;
     align-items: center;
     transition: background 0.3s;
-    opacity: 0;
-    animation: fadeSlideIn 0.5s ease-out forwards;
 }
 
-/* Hover effect */
 .container ul li:hover {
     background: #d8d8ed;
 }
 
-/* Link Button */
+/* "Fill" Button Link */
 .container ul li a {
     background-color: #6a69c7;
     color: white;
     text-decoration: none;
-    padding: 12px 24px;
+    padding: 10px 16px;
     border-radius: 8px;
     font-weight: bold;
-    display: inline-block; /* Ensures it behaves like a button */
-    text-align: center; /* Centers the text inside the button */
-    width: auto; /* Removes any fixed width */
-    min-width: 100px; /* Ensures button has a minimum width */
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Added smooth transform transition */
+    transition: background-color 0.3s ease;
 }
 
 .container ul li a:hover {
     background-color: #5d5cb0;
-    transform: translateY(-3px); /* Subtle lift on hover */
-}
-
-.container ul li a:active {
-    transform: translateY(1px); /* Slight "press" effect on click */
 }
 
 /* Animation */
@@ -142,7 +131,11 @@ html, body {
     }
 }
 
-/* Animation delay for each list item */
+.container ul li {
+    opacity: 0;
+    animation: fadeSlideIn 0.5s ease-out forwards;
+}
+
 .container ul li:nth-child(1) {
     animation-delay: 0.2s;
 }
@@ -158,3 +151,43 @@ html, body {
 .container ul li:nth-child(5) {
     animation-delay: 1s;
 }
+
+.likert-block ul {
+    width: 100%;
+    min-width: 600px;
+}
+
+.likert-block ul li {
+    width: 100%;
+    min-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Score Gradient Classes */
+.score-color {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 8px;
+    color: white;
+}
+
+.score-1 {
+    background-color: #e74c3c;
+}
+.score-2 {
+    background-color: #f39c12; 
+}
+.score-3 {
+    background-color: #f1c40f;
+    color: #000;
+}
+.score-4 {
+    background-color: #2ecc71;
+}
+.score-5 {
+    background-color: #27ae60; 
+}
+

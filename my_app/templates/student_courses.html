@@ -28,15 +28,21 @@
 {% empty %}
     <p>No courses enrolled yet</p>
 {% endfor %} {% endcomment %}
-
+<div class="course-grid">
     {% for course in courses %}
-        <div class="course" onclick="window.location.href='{% url 'student_course_detail' user.id course.id %}'" style="cursor: pointer;">
-            <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
-        </div>
+      <div class="course">
+        <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
+        <a href="{% url 'student_course_detail' user.id course.id %}" class="course-description">
+            View Course Details
+          </a>
+      </div>
     {% empty %}
-        <p>No courses enrolled yet</p>
+      <p>No courses enrolled yet</p>
     {% endfor %}
+  </div>
 
 </body>
 
 </html>
+
+

@@ -4,7 +4,6 @@ body {
     padding: 0;
     background: #4346b2;
    
-    
 }
 
 .header {
@@ -60,7 +59,6 @@ button:hover {
 }
 
 
-
 h2 {
     background-color: #4346b2;
     color: white;
@@ -71,28 +69,40 @@ h2 {
 }
 
 
-
-
+.course-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    padding: 40px;
+  }
+  
 .course {
+    position: relative;
     background-color: white;
     padding: 20px;
-    margin: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    display: inline-block;
-    width: calc(30% - 40px);
-    vertical-align: top;
+    width: 300px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
-
-.course::after {
-    content: "";
-    display: block;
-    background-color: #E3E3F0;
-    
-    height: 80px;
+  
+.course-description {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background-color: #e4e2f2;
+    padding: 12px;
     border-radius: 8px;
-    margin-top: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
 }
+  
 
 h3 {
     margin: 0;

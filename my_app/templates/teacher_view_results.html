@@ -9,8 +9,23 @@
 </head>
 <body>
     <div class="header">
-         <button class="back-button" onclick="window.location.href='{% url 'assessment_dashboard' teacher.id %}'">Return</button>
-     </div>
+        <button class="back-button" id="backButton" data-url="{% url 'assessment_dashboard' teacher.id %}">Return</button>
+    </div>
+    <script>
+        const backButton = document.getElementById('backButton');
+        if (backButton) {
+            backButton.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    window.location.href = url;
+                } else {
+                    console.error('URL not found for back button.');
+                    window.history.back();
+                }
+            });
+        }
+    </script>
+ 
     <div class="container">
     {% if messages %}
         <div class="messages">
@@ -42,10 +57,10 @@
             <input type="hidden" name="teacher_id" value="{{ teacher.id }}">
             {% if assessment.results_released %}
                 <input type="hidden" name="action" value="unpublish">
-                <button type="submit" class="btn btn-warning">🔒 Unpublish Results</button>
+                <button type="submit" class="unpublish-btn"> 🔒 Unpublish Results </button>
             {% else %}
                 <input type="hidden" name="action" value="publish">
-                <button type="submit" class="btn btn-success">📢 Publish Results</button>
+                <button type="submit" class="publish-btn"> 📢 Publish Results </button>
             {% endif %}
         </form>
 
@@ -60,9 +75,8 @@
             <ul>
                 {% for member in team_members %}
                      <li>
-                        <a href="{% url 'teacher_student_detail' teacher.id course.id assessment.id selected_team.id member.id %}">
-                            {{ member.name }}
-                        </a> ({{ member.email }})
+                        <span>{{ member.name }} ({{ member.email }})</span>
+                        <a href="{% url 'teacher_student_detail' teacher.id course.id assessment.id selected_team.id member.id %}">View Results</a>
                     </li>
                 {% empty %}
                     <li>No members in this team.</li>
@@ -79,7 +93,7 @@
             <p><strong>Suggestions:</strong> {{ profile_card.suggestions }}</p>
 
             <h3>Team Radar Chart</h3>
-            <canvas id="radarChart"></canvas>
+            <canvas id="radarChart" width="400" height="120"></canvas>
 
             <hr>
 
@@ -114,7 +128,7 @@
 
 
 <div id="chat-container">
-    <button id="open-chat-btn">Chat</button>
+    <button id="open-chat-btn"> Chat</button>
     <div id="chat-window">
         <div id="chat-header">
             <span>AI Assistant</span>
@@ -131,3 +145,4 @@
 
 </body>
 </html>
+

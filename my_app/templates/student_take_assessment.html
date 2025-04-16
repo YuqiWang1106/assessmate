@@ -20,11 +20,13 @@
         <ul>
             {% for teammate in teammates %}
                 <li>
-                    Assessment for: <strong>{{ teammate.name }}</strong>
+                  
+                    Assessment for:<a href="{% url 'student_take_assessment_form' student.id course.id assessment.id teammate.id %}"><strong>{{ teammate.name }}</strong></a>
+                    
                 </li>
-                <a href="{% url 'student_take_assessment_form' student.id course.id assessment.id teammate.id %}">
+                <!--a href="{% url 'student_take_assessment_form' student.id course.id assessment.id teammate.id %}">
                     Fill
-                </a>
+                </a-->
             {% endfor %}
         </ul>
     </div>

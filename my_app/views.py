@@ -1414,11 +1414,18 @@ def student_view_results(request, user_id, course_id, assessment_id):
                 except AssessmentResponse.DoesNotExist:
                     continue
 
-            if responses:
-                open_ended_results.append({
-                    "question": question.content,
-                    "answers": responses
-                })
+    if responses:
+        responses.sort(key=lambda x: x.lower())
+        open_ended_results.append({
+            "question": question.content,
+            "answers": responses
+        })
+
+    """ context = {
+    'likert_results': likert_results,
+    'open_ended_results': open_ended_results,
+    'open_question_start': len(likert_results) + 1,
+    } """
 
     return render(request, "student_view_results.html", {
         "student": student,
@@ -1426,6 +1433,7 @@ def student_view_results(request, user_id, course_id, assessment_id):
         "assessment": assessment,
         "likert_results": likert_results,
         "open_ended_results": open_ended_results,
+        'open_question_start': len(likert_results) + 1
     })
 
 # Teacher Chat Bot with Memory (History)

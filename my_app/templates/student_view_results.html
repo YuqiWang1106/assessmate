@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Assessment Results</title>
-    <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/student_view_results.css' %}">
 </head>
 <body>
 <div class="header">
@@ -21,12 +21,23 @@
     <h3>Likert Questions (Rating)</h3>
     {% for result in likert_results %}
         <div class="likert-block">
-            <p><strong>{{ result.question }}</strong></p>
+            <p><strong>Question {{ forloop.counter }}: </strong>{{ result.question }}</p>
             <ul>
-                <li>Your Average Score: <strong>{{ result.student_avg }}</strong></li>
-                <li>Lowest in Team: {{ result.team_low }}</li>
-                <li>Highest in Team: {{ result.team_high }}</li>
-                <li>Team Mean: {{ result.team_mean }}</li>
+                <li>Your Average Score: 
+                    <strong>
+                        <span class="score-color score-{{ result.student_avg|floatformat:0 }}">{{ result.student_avg }}</span>
+                    </strong>
+                </li>
+                <li>Lowest in Team: 
+                    <span class="score-color score-{{ result.team_low|floatformat:0 }}">{{ result.team_low }}</span>
+                </li>
+                <li>Highest in Team: 
+                    <span class="score-color score-{{ result.team_high|floatformat:0 }}">{{ result.team_high }}</span>
+                </li>
+                <li>Team Mean: 
+                    <span class="score-color score-{{ result.team_mean|floatformat:0 }}">{{ result.team_mean }}</span>
+                </li>
+                
             </ul>
         </div>
         <hr>
@@ -37,7 +48,7 @@
     <h3>Open-ended Questions</h3>
     {% for result in open_ended_results %}
         <div class="open-block">
-            <p><strong>{{ result.question }}</strong></p>
+            <p><strong>Question {{ open_question_start|add:forloop.counter0 }}:</strong> {{ result.question }}</p>
             <ul>
                 {% for answer in result.answers %}
                     <li>"{{ answer }}"</li>

@@ -49,8 +49,8 @@ html, body {
 /* Main Container */
 .container {
     background: #f5f6fc;
-    width: 85%;
-    max-width: 800px;
+    width: 110%;
+    max-width: 1300px;
     padding: 40px;
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
