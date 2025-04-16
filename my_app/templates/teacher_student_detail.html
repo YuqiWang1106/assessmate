@@ -1,12 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html>    
 <head>
     <meta charset="UTF-8">
     <title>Student Detail - {{ selected_student.name }}</title>
     <link rel="stylesheet" href="{% static 'css/teacher_student_detail.css' %}">
 </head>
 <body>
+    <a href="{% url 'teacher_view_results' teacher_id=teacher.id course_id=course.id assessment_id=assessment.id %}" class="back-button">
+        Return
+    </a>
 <div class="container">
     <h1>Peer Assessment: {{ selected_student.name }}</h1>
     <h3>Course: {{ course.course_name }} | Team: {{ team.team_name }}</h3>
@@ -52,7 +55,7 @@
                                 <br>
                                 <button type="submit" class="save-button">💾 Save</button>
                             </form>
-
+                        
                             {% if item.tone_analysis or item.rewritten %}
                                 <div class="tone-analysis">
                                     {% if item.tone_analysis %}
@@ -69,6 +72,13 @@
                                     {% endif %}
                                 </div>
                             {% endif %}
+                        {% elif item.type == "likert" %}
+                            <div class="likert-container" data-score="{{ item.answer }}">
+                                <div class="likert-label">Score: {{ item.answer }}/5</div>
+                                <div class="likert-bar">
+                                    <div class="likert-fill"></div>
+                                </div>
+                            </div>
                         {% else %}
                             {{ item.answer }}
                         {% endif %}
@@ -82,5 +92,28 @@
     {% endfor %}
 </div>
 <script src="{% static 'js/teacher_student_detail.js' %}"></script>
+<script>
+    document.querySelectorAll('.likert-container').forEach(container => {
+        const score = parseFloat(container.dataset.score);
+        const percentage = (score / 5) * 100;
+
+        const fill = container.querySelector('.likert-fill');
+        fill.style.width = `${percentage}%`;
+
+        // Color based on score
+        let color;
+        if (score >= 4) {
+            color = "#4cd137"; // green
+        } else if (score >= 3) {
+            color = "#fbc531"; // yellow
+        } else if (score >= 2) {
+            color = "#e84118"; // orange-red
+        } else {
+            color = "#c23616"; // red
+        }
+
+        fill.style.backgroundColor = color;
+    });
+</script>
 </body>
 </html>
