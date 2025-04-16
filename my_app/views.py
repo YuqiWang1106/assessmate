@@ -1414,12 +1414,12 @@ def student_view_results(request, user_id, course_id, assessment_id):
                 except AssessmentResponse.DoesNotExist:
                     continue
 
-    if responses:
-        responses.sort(key=lambda x: x.lower())
-        open_ended_results.append({
-            "question": question.content,
-            "answers": responses
-        })
+            if responses:
+                responses.sort(key=lambda x: x.lower())
+                open_ended_results.append({
+                    "question": question.content,
+                    "answers": responses
+                })
 
     """ context = {
     'likert_results': likert_results,
