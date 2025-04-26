@@ -16,7 +16,7 @@
 <div class="header">
   <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
   <div class="button-container">
-    <button onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}'">Return</button>
+    <button onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}?course_id={{ course.id }}'">Return</button>
     <button onclick="window.location.href='/'">Logout</button>
   </div>
 </div>

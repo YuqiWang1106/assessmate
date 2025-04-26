@@ -92,6 +92,7 @@ body {
   cursor: pointer;
   box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
+  width: 120px;
 }
 
 .styled-dropdown:hover {
@@ -112,7 +113,7 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
   color: transparent;
   border-bottom: 2px solid;
   border-image: linear-gradient(to right, #6a69c7, #ffffff);
@@ -172,6 +173,8 @@ body {
   font-size: 14px;
   color: #6a69c7;
   margin-top: 5px;
+  font-size: 15px;
+  font-weight:600;
 }
 
 

@@ -29,7 +29,7 @@
         <ul class="team-list">
           {% for data in team_data %}
             <li class="course-item">
-              <strong>{{ data.team.team_name }}</strong>
+              {% comment %} <strong>{{ data.team.team_name }}</strong>
               <strong>{{ data.member_count }} Members</strong>
               <a href="{% url 'edit_team' teacher.id selected_course.id data.team.id %}">
                 <button class="edit-btn">Edit</button>
@@ -37,11 +37,20 @@
               <form action="{% url 'delete_team' teacher.id selected_course.id data.team.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit" class="edit-btn">Delete</button>
-              </form>
-              
-              <!-- <a href="{% url 'delete_team' teacher.id selected_course.id data.team.id %}">
-                <button class="edit-btn">Delete</button>
-              </a> -->
+              </form> {% endcomment %}
+
+              <strong>{{ data.team.team_name }}</strong>
+              <div class="member-count">{{ data.member_count }} Members</div>
+              <div class="button-group">
+                <a href="{% url 'edit_team' teacher.id selected_course.id data.team.id %}">
+                  <button class="edit-btn">Edit</button>
+                </a>
+                <form action="{% url 'delete_team' teacher.id selected_course.id data.team.id %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" class="edit-btn">Delete</button>
+                </form>
+              </div>
+
             </li>
           {% empty %}
             <li>No teams created yet.</li>

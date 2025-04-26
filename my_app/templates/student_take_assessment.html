@@ -4,31 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ assessment.title }}</title>
-    <link rel="stylesheet" href="{% static 'css/student_take_assessment.css' %}">
+    <link rel="stylesheet" href="{% static 'css/student_take_assessment.css' %}?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
     <div class="header">
-        <a href="{% url 'student_course_detail' student.id course.id %}" class="site-title">← Back</a>
-        <span class="welcome-text">Welcome, {{ student.name }}</span>
+        <a href="{{ user_dashboard_url }}" class="site-title">
+            <i class="fas fa-graduation-cap"></i> Assessmate
+        </a>
+        <span class="welcome-text">Welcome, <span id="username">{{ student.name }}</span></span>
+        <div class="button-container">
+            <a href="{% url 'student_course_detail' student.id course.id %}" class="nav-button">
+                <i class="fas fa-arrow-left"></i> Return
+            </a>
+            <button class="nav-button" onclick="window.location.href='/'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
     </div>
 
     <div class="container">
         <h2>{{ assessment.title }}</h2>
-        <p><strong>Course:</strong> {{ course.course_number }} - {{ course.course_name }}</p>
+        <p class="subtext"><i class="fas fa-book"></i> {{ course.course_number }} - {{ course.course_name }}</p>
 
-        <h3>Peer Assessment Targets:</h3>
-        <ul>
-            {% for teammate in teammates %}
-                <li>
-                  
-                    Assessment for:<a href="{% url 'student_take_assessment_form' student.id course.id assessment.id teammate.id %}"><strong>{{ teammate.name }}</strong></a>
-                    
-                </li>
-                <!--a href="{% url 'student_take_assessment_form' student.id course.id assessment.id teammate.id %}">
-                    Fill
-                </a-->
-            {% endfor %}
-        </ul>
+        <div class="assessment-section">
+            <h3>Peer Assessment Targets</h3>
+            {% if teammates %}
+                <ul>
+                    {% for teammate in teammates %}
+                        <li>
+                            <div>
+                                <strong>{{ teammate.name }}</strong>
+                            </div>
+                            <a href="{% url 'student_take_assessment_form' student.id course.id assessment.id teammate.id %}">
+                                <i class="fas fa-pen"></i> Fill Assessment
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No teammates to assess.</p>
+            {% endif %}
+        </div>
     </div>
+
 </body>
 </html>

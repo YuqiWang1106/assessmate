@@ -13,37 +13,89 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 100px;
+    padding-top: 40px;
 }
 
 /* Header */
+
+
 .header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 16px 32px;
-    background-color: #f8f4fc;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
+    padding: 16px 32px;
+    background-color: #fff;
+    color: #6259c9;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(98, 89, 201, 0.25);
     border-bottom: 2px solid #eee;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .site-title {
-    font-size: 26px;
+    font-size: 33px;
     color: #6259c9;
     text-decoration: none;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    padding-left:1rem;
+}
+
+.site-title:hover {
+    transform: translateX(-5px);
+    color: #7a6cb3;
+}
+
+.site-title i {
+    margin-right: 8px;
 }
 
 .welcome-text {
-    font-size: 20px;
+    font-size: 23px;
     color: #6259c9;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+#username {
+    font-weight: bold;
+}
+
+.button-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.nav-button {
+    background-color: #7a6cb3;
+    color: white;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 3px 8px rgba(98, 89, 201, 0.2);
+}
+
+.nav-button:hover {
+    background-color: #5e54aa;
+    transform: translateY(-2px);
 }
 
 /* Main Container */
@@ -71,6 +123,7 @@ html, body {
 .container p {
     font-size: 18px;
     color: #555;
+    margin-bottom: 10px;
 }
 
 /* Peer Assessment List */

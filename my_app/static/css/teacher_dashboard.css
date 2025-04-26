@@ -250,6 +250,11 @@ body .header button:hover {
     justify-content: space-between;
     align-items: center;
 }
+
+.team-list li {
+    font-weight: 500;
+}
+
 .team-list li:hover, .assessment-list li:hover {
     background: #D8D8ED;
 }
@@ -442,5 +447,106 @@ body .header button:hover {
     to {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+
+/* Invite Modal - Unified Style */
+#invite-modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px); /* ✨ 微微模糊背景 */
+}
+
+#invite-modal .modal-content {
+    background: #F5F6FC;
+    margin: 8% auto;
+    padding: 30px 40px;
+    border-radius: 20px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 8px 24px rgba(106, 105, 199, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeInModal 0.4s ease;
+    position: relative;
+}
+
+#invite-modal h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #6259c9;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#invite-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#invite-modal input[type="email"] {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#invite-modal input[type="email"]:focus {
+    border-color: #6a69c7;
+}
+
+#invite-modal button[type="submit"] {
+    background: linear-gradient(45deg, #6a69c7, #7776d2);
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(106, 105, 199, 0.3);
+    transition: all 0.3s ease;
+}
+
+#invite-modal button[type="submit"]:hover {
+    background: linear-gradient(45deg, #5d5cb0, #6a69c7);
+    box-shadow: 0 4px 10px rgba(106, 105, 199, 0.4);
+}
+
+#invite-modal .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+#invite-modal .close-btn:hover {
+    color: #333;
+}
+
+/* Modal fade-in animation */
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

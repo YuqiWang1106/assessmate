@@ -4,57 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ course.course_number }} - {{ course.course_name }}</title>
-    <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'css/student_dashboard.css' %}?v=3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
-        <a href="{% url 'student_courses' user.id %}" class="site-title">← Back</a>
-        <span class="welcome-text">Welcome, {{ user.name }}</span>
+        <!-- Assessmate title -->
+        <a href="{{ user_dashboard_url }}" class="site-title">
+            <i class="fas fa-graduation-cap"></i> Assessmate
+        </a>
+        
+        <span class="welcome-text">Welcome, <span id="username">{{ user.name }}</span></span>
+        
+        <div class="button-container">
+            <a href="{% url 'student_courses' user.id %}" class="nav-button">
+                <i class="fas fa-arrow-left"></i> Return
+            </a>
+            <button class="nav-button" onclick="window.location.href='/'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
     </div>
 
     <div class="container">
-    <h2>{{ course.course_number }} - {{ course.course_name }}</h2>
+        <h2>{{ course.course_number }} - {{ course.course_name }}</h2>
 
-    <!-- Current Assessments -->
-    <div class="assessment-section">
-        <h3>Current Assessments</h3>
-        {% if current_assessments %}
-            <ul>
-            {% for assessment in current_assessments %}
-                <li>
-                    <a href="{% url 'student_take_assessment' user.id course.id assessment.id %}">
-                        <strong>{{ assessment.title }}</strong>
-                    </a> - Due: {{ assessment.due_date|date:"Y-m-d H:i" }}
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No current assessments.</p>
-        {% endif %}
+        <!-- Current Assessments -->
+        <div class="assessment-section">
+            <h3>Current Assessments</h3>
+            {% if current_assessments %}
+                <ul>
+                {% for assessment in current_assessments %}
+                    <li>
+                        <div>
+                            <strong>{{ assessment.title }}</strong>
+                            <span><i class="far fa-calendar-alt"></i> Due: {{ assessment.due_date|date:"Y-m-d H:i" }}</span>
+                        </div>
+                        <a href="{% url 'student_take_assessment' user.id course.id assessment.id %}">
+                            <i class="fas fa-edit"></i> Take Assessment
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No current assessments available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Finished Assessments -->
+        <div class="assessment-section">
+            <h3>Finished Assessments</h3>
+            {% if finished_assessments %}
+                <ul>
+                {% for assessment in finished_assessments %}
+                    <li>
+                        <div>
+                            <strong>{{ assessment.title }}</strong>
+                            <span><i class="far fa-calendar-check"></i> Closed on: {{ assessment.due_date|date:"Y-m-d H:i" }}</span>
+                        </div>
+                        {% if assessment.results_released %}
+                            <a href="{% url 'student_view_results' user.id course.id assessment.id %}">
+                                <i class="fas fa-chart-bar"></i> See Results
+                            </a>
+                        {% else %}
+                            <span style="color: gray;"><i class="fas fa-lock"></i> Results not published yet</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No finished assessments yet.</p>
+            {% endif %}
+        </div>
     </div>
-
-    <!-- Finished Assessments -->
-    <div class="assessment-section">
-        <h3>Finished Assessments</h3>
-        {% if finished_assessments %}
-            <ul>
-            {% for assessment in finished_assessments %}
-                <li>
-                    <strong>{{ assessment.title }}</strong> - Closed on: {{ assessment.due_date|date:"Y-m-d H:i" }}
-                    {% if assessment.results_released %}
-                        - <a href="{% url 'student_view_results' user.id course.id assessment.id %}">See results</a>
-                    {% else %}
-                        - <span style="color: gray;">Results not published yet</span>
-                    {% endif %}
-                </li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No finished assessments yet.</p>
-        {% endif %}
-    </div>
-
-</div>
-
 </body>
 </html>

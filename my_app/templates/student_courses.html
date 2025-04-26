@@ -1,48 +1,41 @@
 {% load static %}
 {% load dict_extras %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Courses</title>
+    <title>Student Courses | Assessmate</title>
     <link rel="stylesheet" href="{% static 'css/student_courses.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
     <div class="header">
         <!-- Assessmate title -->
-        <a href="{{ user_dashboard_url }}"  class="site-title">Assessmate</a>
+        <a href="{{ user_dashboard_url }}" class="site-title">
+            <i class="fas fa-graduation-cap"></i> Assessmate
+        </a>
         <span class="welcome-text">Welcome, <span id="username">{{ user.name }}</span></span>
         <div class="button-container">
-            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
+            <button class="logout-button" onclick="window.location.href='/'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
-      </div>
-    <h2>Student Dashboard</h2> 
-
-    {% comment %} {% for course in courses %}
+    </div>
+    
+    <h2>My Courses</h2>
+    
+    <div class="course-grid">
+        {% for course in courses %}
         <div class="course">
             <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
+            <a href="{% url 'student_course_detail' user.id course.id %}" class="course-description">
+                <i class="fas fa-book-open"></i> View Assignments
+            </a>
+        </div>
+        {% empty %}
+        <p>No courses enrolled yet. Check back later or contact your administrator.</p>
+        {% endfor %}
     </div>
-{% empty %}
-    <p>No courses enrolled yet</p>
-{% endfor %} {% endcomment %}
-<div class="course-grid">
-    {% for course in courses %}
-      <div class="course">
-        <h3>{{ course.course_number }} - {{ course.course_name }}</h3>
-        <a href="{% url 'student_course_detail' user.id course.id %}" class="course-description">
-            View Course Details
-          </a>
-      </div>
-    {% empty %}
-      <p>No courses enrolled yet</p>
-    {% endfor %}
-  </div>
-
 </body>
-
 </html>
-
-

@@ -601,9 +601,11 @@ def delete_team(request, teacher_id, course_id, team_id):
 
     if request.method == "POST":  # Only allow POST requests for deletion
         team.delete()
-        return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))
+        # return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id}))
+        return redirect(f"/teams_dashboard/{teacher_id}/?course_id={course_id}")
 
-    return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id})) 
+    # return redirect(reverse('teams_dashboard', kwargs={'teacher_id': teacher_id})) 
+    return redirect(f"/teams_dashboard/{teacher_id}/?course_id={course_id}")
 
 @csrf_exempt
 def delete_course(request, teacher_id, course_id):
