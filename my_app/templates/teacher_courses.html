@@ -8,16 +8,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Page</title>
     <link rel="stylesheet" href="{% static 'css/teacher_courses.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer src="{% static 'js/teacher_course.js' %}"></script>
 </head>
 
 <body>
     <div class="header">
         <!-- Assessmate title -->
-        <a href="{{ user_dashboard_url }}" class="site-title">Assessmate</a>
+        <a href="{{ user_dashboard_url }}" class="site-title">
+            <i class="fas fa-graduation-cap"></i>Assessmate
+        </a>
         <div class="button-container">
-            <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">Return</button>
-            <button class="logout-button" onclick="window.location.href='/'">Logout</button>
+            <button class="back-button" onclick="window.location.href='{% url 'teacher_dashboard' teacher.id %}'">
+                <i class="fas fa-arrow-left"></i> Return
+            </button>
+            <button class="logout-button" onclick="window.location.href='/'">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
       </div>
     <div class="container">

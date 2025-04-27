@@ -28,21 +28,43 @@ body {
   color: #6259c9;
   text-decoration: none;
   padding-left: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  padding-left: 1rem;
 }
 
-.header button {
+.site-title:hover {
+  transform: translateX(-5px);
+  color: #7a6cb3;
+}
+
+.button-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.logout-button, .back-button {
   background-color: #7a6cb3;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 18px;
+  font-size: 15px;
   font-weight: 500;
   border: none;
   border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 3px 8px rgba(98, 89, 201, 0.2);
 }
 
 .header button:hover {
   background-color: #5e54aa;
+  transform: translateY(-2px);
 }
 
 /* === 页面主容器 === */

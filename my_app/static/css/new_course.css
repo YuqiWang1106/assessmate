@@ -1,31 +1,30 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding-top: 60px;
     background-color: #6a69c7;
   }
   
-  .header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #eee;
-    padding: 10px 20px;
-  }
   body .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8f4fc;
+    padding: 16px 32px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    background-color: #f8f4fc;
-    color: white;
-    position: fixed;
-    top: 0;  
-    left: 0;  
-    width: 100%;  
-    z-index: 10;
+    box-shadow: 0 2px 8px rgba(110, 99, 165, 0.2);
+    border-bottom: 2px solid #eee;
+}
 
-    width: 100%;
-    box-sizing: border-box;
+.button-container {
+  display: flex;
+  gap: 18px;
+  align-items: center;
 }
 
 body .site-title {
@@ -34,37 +33,38 @@ body .site-title {
   color: #6259c9;
   text-decoration: none;
   padding-left: 1rem;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  padding-left: 1rem;
 }
 
- body .header .welcome-text {
-    font-size: 24px; 
-    color: #6259c9;
-
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+.site-title:hover {
+  transform: translateX(-5px);
+  color: #7a6cb3;
 }
 
-
-body .header button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #7a6cb3;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+.logout-button, .back-button {
+  background-color: #7a6cb3;
+  color: white;
+  padding: 10px 18px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 3px 8px rgba(98, 89, 201, 0.2);
 }
 
-body .header button:hover {
-    background-color: #372f91;
+.header button:hover {
+  background-color: #5e54aa;
+  transform: translateY(-2px);
 }
-
-  .button-container {
-    display: flex;
-    gap: 10px;
-  }
 
 .add-new-header{
     background-color: white;
@@ -151,8 +151,6 @@ body .header button:hover {
     transform: translateY(0);
   }
 }
-
-
 
 .confirm-button{
     background-color: #4A4EAE;

@@ -10,51 +10,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teams Page</title>
     <link rel="stylesheet" href="{% static 'css/edit_team.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<div class="header">
-  <span class="welcome-text">Welcome, <span id="username">{{ teacher }}</span></span>
-  <div class="button-container">
-    <button onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}?course_id={{ course.id }}'">Return</button>
-    <button onclick="window.location.href='/'">Logout</button>
+  <div class="header">
+    <!-- Assessmate title -->
+    <a href="{{ user_dashboard_url }}" class="site-title">
+      <i class="fas fa-graduation-cap"></i> Assessmate
+    </a>  
+    
+    <div class="button-container">
+      <button onclick="window.location.href='{% url 'teams_dashboard' teacher.id %}?course_id={{ course.id }}'">
+        <i class="fas fa-arrow-left"></i> Return
+      </button>
+      <button onclick="window.location.href='/'">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
   </div>
-</div>
-
-<h2>Team Members in {{ team }}</h2>
-
-<div class="members-section">
-  <h3>Current Members</h3>
-  {% for team_member in team_members %}
-    <div class="member-card">
-      <h4>{{ team_member.course_member }}</h4>
-      <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id team_member.id %}">
-        {% csrf_token %}
-        <button class="remove-button" type="submit">Remove</button>
-      </form>
+  <div class="main-content">
+    <h2>Team Members in {{ team }}</h2>
+    <div class="members-section">
+      <h3>Current Members</h3>
+      {% for team_member in team_members %}
+        <div class="member-card">
+          <h4>{{ team_member.course_member }}</h4>
+          <form method="POST" action="{% url 'remove_from_team' teacher.id course.id team.id team_member.id %}">
+            {% csrf_token %}
+            <button class="remove-button" type="submit">Remove</button>
+          </form>
+        </div>
+      {% empty %}
+        <p style="text-align: center;">No members added yet</p>
+      {% endfor %}
     </div>
-  {% empty %}
-    <p style="text-align: center;">No members added yet</p>
-  {% endfor %}
-</div>
 
-<div class="invite-box">
-  <h3>Students in {{ course }}</h3>
-  {% for entry in course_members_data %}
-    <div class="member-card">
-      <h4>{{ entry.course_member }}</h4>
+    <div class="invite-box">
+      <h3>Students in {{ course }}</h3>
+      {% for entry in course_members_data %}
+        <div class="member-card">
+          <h4>{{ entry.course_member }}</h4>
 
-      {% if entry.team_name %}
-        <p style="color: red;">Already in team: <strong>{{ entry.team_name }}</strong></p>
-      {% else %}
-        <form method="POST" action="{% url 'add_to_team' teacher.id course.id team.id entry.course_member.id %}">
-          {% csrf_token %}
-          <button class="remove-button" type="submit">Add</button>
-        </form>
-      {% endif %}
+          {% if entry.team_name %}
+            <p style="color: red;">Already in team: <strong>{{ entry.team_name }}</strong></p>
+          {% else %}
+            <form method="POST" action="{% url 'add_to_team' teacher.id course.id team.id entry.course_member.id %}">
+              {% csrf_token %}
+              <button class="remove-button" type="submit">Add</button>
+            </form>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p style="text-align: center;">No other students in course</p>
+      {% endfor %}
     </div>
-  {% empty %}
-    <p style="text-align: center;">No other students in course</p>
-  {% endfor %}
-</div>
-
+  </div>
+</body>
