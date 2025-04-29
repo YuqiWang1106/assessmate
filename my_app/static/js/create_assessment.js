@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 </svg>
             </button>
             </div>
-            <input type="text" placeholder="Enter your question text here" style="width: 60%;" />
+            <input type="text" placeholder="Enter your question text here"/>
             <input type="hidden" value="${type}" />
         `;
 
