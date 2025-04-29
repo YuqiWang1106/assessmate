@@ -1,119 +1,149 @@
 {% load static %}
 <!DOCTYPE html>
-<html>    
+<html lang="en">    
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Detail - {{ selected_student.name }}</title>
     <link rel="stylesheet" href="{% static 'css/teacher_student_detail.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <a href="{% url 'teacher_view_results' teacher_id=teacher.id course_id=course.id assessment_id=assessment.id %}" class="back-button">
-        Return
+        <span class="back-icon">←</span> Return
     </a>
-<div class="container">
-    <h1>Peer Assessment: {{ selected_student.name }}</h1>
-    <h3>Course: {{ course.course_name }} | Team: {{ team.team_name }}</h3>
-    <hr>
+    
+    <div class="container">
+        <header class="page-header">
+            <div class="header-content">
+                <h1>Peer Assessment</h1>
+                <h2 class="student-name">{{ selected_student.name }}</h2>
+                <div class="course-info">
+                    <span class="course-label">Course:</span> {{ course.course_name }} 
+                    <span class="divider">|</span> 
+                    <span class="team-label">Team:</span> {{ team.team_name }}
+                </div>
+            </div>
+        </header>
 
-    <h2>Teammates</h2>
-    <ul>
-        {% for member in team_members %}
-            <li>{{ member.name }} ({{ member.email }})</li>
-        {% endfor %}
-    </ul>
-
-    <hr>
-    <h2>Feedback for {{ selected_student.name }}</h2>
-
-    <!-- 下拉选择框 -->
-    <label for="teammate-select">Show feedback from:</label>
-    <select id="teammate-select" onchange="filterFeedback()">
-        <option value="all">-- Show All --</option>
-        {% for block in all_answers %}
-            <option value="from-{{ block.from_user.id }}">{{ block.from_user.name }}</option>
-        {% endfor %}
-    </select>
-
-    <br><br>
-
-    {% for block in all_answers %}
-        <div class="feedback-block" id="from-{{ block.from_user.id }}">
-            <h3>From: {{ block.from_user.name }}</h3>
-            <ul>
-                {% for item in block.answers %}
-                    <li style="margin-bottom: 16px;">
-                        <strong>{{ item.question }} ({{ item.type }}):</strong><br>
-
-                        {% if item.type == "open" %}
-                            <form method="post" action="{% url 'edit_open_answer' %}">
-                                {% csrf_token %}
-                                <textarea id="textarea-{{ block.from_user.id }}-{{ item.key }}" name="new_answer" rows="3" cols="80">{{ item.answer }}</textarea>
-                                <input type="hidden" name="from_user_id" value="{{ block.from_user.id }}">
-                                <input type="hidden" name="to_user_id" value="{{ selected_student.id }}">
-                                <input type="hidden" name="assessment_id" value="{{ assessment.id }}">
-                                <input type="hidden" name="question_key" value="{{ item.key }}">
-                                <br>
-                                <button type="submit" class="save-button">💾 Save</button>
-                            </form>
-                        
-                            {% if item.tone_analysis or item.rewritten %}
-                                <div class="tone-analysis">
-                                    {% if item.tone_analysis %}
-                                        <p><em>🧠 Tone Analysis:</em> {{ item.tone_analysis }}</p>
-                                    {% endif %}
-                                    {% if item.rewritten %}
-                                        <p>
-                                            <em>✍️ Rewritten Version:</em>
-                                            <span id="rewritten-{{ block.from_user.id }}-{{ item.key }}">{{ item.rewritten }}</span>
-                                            <button type="button" class="replace-btn" onclick="replaceWithAI('{{ block.from_user.id }}', '{{ item.key }}', this)">
-                                                🔁 Replace with AI Suggestion
-                                            </button>
-                                        </p>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                        {% elif item.type == "likert" %}
-                            <div class="likert-container" data-score="{{ item.answer }}">
-                                <div class="likert-label">Score: {{ item.answer }}/5</div>
-                                <div class="likert-bar">
-                                    <div class="likert-fill"></div>
-                                </div>
-                            </div>
-                        {% else %}
-                            {{ item.answer }}
-                        {% endif %}
+        <section class="team-section">
+            <h2>Team Members</h2>
+            <ul class="team-list">
+                {% for member in team_members %}
+                    <li class="team-member">
+                        <span class="member-name">{{ member.name }}</span>
+                        <span class="member-email">({{ member.email }})</span>
                     </li>
                 {% endfor %}
             </ul>
-        </div>
-        <hr>
-    {% empty %}
-        <p>No assessments submitted for this student yet.</p>
-    {% endfor %}
-</div>
-<script src="{% static 'js/teacher_student_detail.js' %}"></script>
-<script>
-    document.querySelectorAll('.likert-container').forEach(container => {
-        const score = parseFloat(container.dataset.score);
-        const percentage = (score / 5) * 100;
+        </section>
 
-        const fill = container.querySelector('.likert-fill');
-        fill.style.width = `${percentage}%`;
+        <section class="feedback-section">
+            <div class="section-header">
+                <h2>Feedback for {{ selected_student.name }}</h2>
+                <div class="filter-container">
+                    <label for="teammate-select">Show feedback from:</label>
+                    <select id="teammate-select" onchange="filterFeedback()" class="custom-select">
+                        <option value="all">-- Show All --</option>
+                        {% for block in all_answers %}
+                            <option value="from-{{ block.from_user.id }}">{{ block.from_user.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
-        // Color based on score
-        let color;
-        if (score >= 4) {
-            color = "#4cd137"; // green
-        } else if (score >= 3) {
-            color = "#fbc531"; // yellow
-        } else if (score >= 2) {
-            color = "#e84118"; // orange-red
-        } else {
-            color = "#c23616"; // red
-        }
+            <div class="feedback-blocks">
+                {% for block in all_answers %}
+                    <div class="feedback-block" id="from-{{ block.from_user.id }}">
+                        <div class="block-header">
+                            <h3>From: {{ block.from_user.name }}</h3>
+                        </div>
+                        <ul class="feedback-list">
+                            {% for item in block.answers %}
+                                <li class="feedback-item">
+                                    <div class="question">{{ item.question }}</div>
+                                    <div class="question-type">({{ item.type }})</div>
 
-        fill.style.backgroundColor = color;
-    });
-</script>
+                                    {% if item.type == "open" %}
+                                        <form method="post" action="{% url 'edit_open_answer' %}" class="answer-form">
+                                            {% csrf_token %}
+                                            <textarea id="textarea-{{ block.from_user.id }}-{{ item.key }}" name="new_answer" rows="3">{{ item.answer }}</textarea>
+                                            <input type="hidden" name="from_user_id" value="{{ block.from_user.id }}">
+                                            <input type="hidden" name="to_user_id" value="{{ selected_student.id }}">
+                                            <input type="hidden" name="assessment_id" value="{{ assessment.id }}">
+                                            <input type="hidden" name="question_key" value="{{ item.key }}">
+                                            <button type="submit" class="save-button">
+                                                <span class="save-icon">💾</span> Save
+                                            </button>
+                                        </form>
+                                    
+                                        {% if item.tone_analysis or item.rewritten %}
+                                            <div class="tone-analysis">
+                                                {% if item.tone_analysis %}
+                                                    <p class="analysis">
+                                                        <span class="analysis-label">Analysis:</span> 
+                                                        <span class="analysis-content">{{ item.tone_analysis }}</span>
+                                                    </p>
+                                                {% endif %}
+                                                {% if item.rewritten %}
+                                                    <p class="rewritten">
+                                                        <span class="rewritten-label">Rewritten Version:</span>
+                                                        <span id="rewritten-{{ block.from_user.id }}-{{ item.key }}" class="rewritten-content">{{ item.rewritten }}</span>
+                                                    </p>
+                                                    <button type="button" class="replace-btn" onclick="replaceWithAI('{{ block.from_user.id }}', '{{ item.key }}', this)">
+                                                        Replace with AI Suggestion
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    {% elif item.type == "likert" %}
+                                        <div class="likert-container" data-score="{{ item.answer }}">
+                                            <div class="likert-label">Score: <span class="score-value">{{ item.answer }}/5</span></div>
+                                            <div class="likert-bar">
+                                                <div class="likert-fill"></div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="regular-answer">{{ item.answer }}</div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% empty %}
+                    <div class="no-feedback">
+                        <p>No assessments submitted for this student yet.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <script src="{% static 'js/teacher_student_detail.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.likert-container').forEach(container => {
+                const score = parseFloat(container.dataset.score);
+                const percentage = (score / 5) * 100;
+
+                const fill = container.querySelector('.likert-fill');
+                fill.style.width = `${percentage}%`;
+
+                // Color based on score
+                let color;
+                if (score >= 4) {
+                    color = "#4cd137"; 
+                } else if (score >= 3) {
+                    color = "#fbc531"; 
+                } else if (score >= 2) {
+                    color = "#e84118"; 
+                } else {
+                    color = "#c23616"; 
+                }
+
+                fill.style.backgroundColor = color;
+            });
+        });
+    </script>
 </body>
 </html>

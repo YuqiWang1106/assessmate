@@ -9,7 +9,10 @@
 </head>
 <body>
     <div class="header">
-        <button class="back-button" id="backButton" data-url="{% url 'assessment_dashboard' teacher.id %}">Return</button>
+        <button class="back-button" id="backButton" 
+            data-url="{% url 'assessment_dashboard' teacher.id %}?course_id={{ course.id }}">
+            Return
+        </button>
     </div>
     <script>
         const backButton = document.getElementById('backButton');
