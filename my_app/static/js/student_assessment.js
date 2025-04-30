@@ -24,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 type="text" 
                 name="question_text_${newIndex}" 
                 value="${q.content}" 
-                style="width: 60%;" 
                 disabled
               />
               <input type="hidden" name="question_type_${newIndex}" value="${q.question_type}" />
