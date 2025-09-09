@@ -63,8 +63,8 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth"
-GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
-# GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
+# GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
 
 
 
@@ -76,8 +76,8 @@ def google_login(request):
         return redirect("landing") 
     
     params = {
-        # "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
-        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+        "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
+        # "client_id": os.getenv("GOOGLE_CLIENT_ID"),
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "response_type": "code",
         "scope": "openid email profile",
@@ -97,10 +97,10 @@ def google_callback(request):
     # authorization code is exchanged to get token ID
     data = {
         "code": code,
-        # "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
-        # "client_secret": "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",
-        "client_id": os.getenv("GOOGLE_CLIENT_ID"),
-        "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"), 
+        "client_id": "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com",
+        "client_secret": "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",
+        # "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+        # "client_secret": os.getenv("GOOGLE_CLIENT_SECRET"), 
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "grant_type": "authorization_code",
     }
@@ -510,9 +510,9 @@ def create_assessment(request, teacher_id, course_id, assessment_id=None):
             student_memberships = CourseMember.objects.filter(course=course)
             student_emails = [cm.user.email for cm in student_memberships]
 
-            # login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course.id}/"
-            BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
-            login_link = f"{BASE_URL}/accounts/google/login/?role=student&next=/student_course_detail/{course.id}/"
+            login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course.id}/"
+            # BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
+            # login_link = f"{BASE_URL}/accounts/google/login/?role=student&next=/student_course_detail/{course.id}/"
             message = f"""
             Hello,
 
@@ -632,9 +632,9 @@ def invite_student(request):
             return JsonResponse({"success": False, "message": "Missing email or course ID."}, status=400)
 
         course = get_object_or_404(Course, id=course_id)
-        BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
-        # invite_link = f"http://127.0.0.1:8000/invite/accept/?course_id={course_id}&email={email}"
-        invite_link = f"{BASE_URL}/invite/accept/?course_id={course_id}&email={email}"
+        # BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
+        invite_link = f"http://127.0.0.1:8000/invite/accept/?course_id={course_id}&email={email}"
+        # invite_link = f"{BASE_URL}/invite/accept/?course_id={course_id}&email={email}"
 
 
         message = f"""
@@ -1313,9 +1313,9 @@ def toggle_results_publish(request):
 
         student_memberships = CourseMember.objects.filter(course=course)
         student_emails = [cm.user.email for cm in student_memberships]
-        BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
-        # login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course_id}/"
-        login_link = f"{BASE_URL}/accounts/google/login/?role=student&next=/student_course_detail/{course_id}/"
+        # BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:8000")
+        login_link = f"http://127.0.0.1:8000/accounts/google/login/?role=student&next=/student_course_detail/{course_id}/"
+        # login_link = f"{BASE_URL}/accounts/google/login/?role=student&next=/student_course_detail/{course_id}/"
 
         message = f"""
         Hello,

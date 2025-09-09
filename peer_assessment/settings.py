@@ -29,12 +29,12 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # Google OAuth
-# GOOGLE_CLIENT_ID = "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com"
-# GOOGLE_CLIENT_SECRET = "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"
-# GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+GOOGLE_CLIENT_ID = "228840362689-n3k5esjmq6uvh7mi6raodq5dqk60rodl.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET = "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"
+GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/accounts/google/callback/"
+# GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+# GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+# GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 
 
 
